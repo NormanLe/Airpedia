@@ -2,7 +2,6 @@ package classes;
 public class Auction {
 	Flight flight;
 	Customer customer;
-
 	private String seatNo;
 	private String flightClass;
 	private String meal;

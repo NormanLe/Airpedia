@@ -1,7 +1,7 @@
 package classes;
 
 public class Flight {
-	Airline airlineID;
+	Airline airline;
 	private int flightNo;
 	private int noOfSeats;
 	private String daysOperating; 
