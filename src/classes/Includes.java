@@ -1,12 +1,43 @@
 package classes;
-public class ReservationPassenger {
+
+import java.sql.Date;
+
+public class Includes {
 	Reservation reservation;
-	Passenger passenger;
+	Leg leg;
+	private int legNo;
+	private int fromStopNo;
+	private Date date;
 	private String seatNo;
 	private String flightClass;
 	private String meal;
 	
-	public ReservationPassenger () {
+	public Includes() {
+		
+	}
+
+	public int getLegNo() {
+		return legNo;
+	}
+
+	public void setLegNo(int legNo) {
+		this.legNo = legNo;
+	}
+
+	public int getFromStopNo() {
+		return fromStopNo;
+	}
+
+	public void setFromStopNo(int fromStopNo) {
+		this.fromStopNo = fromStopNo;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public String getSeatNo() {
@@ -32,4 +63,6 @@ public class ReservationPassenger {
 	public void setMeal(String meal) {
 		this.meal = meal;
 	}
+	
+	
 }
