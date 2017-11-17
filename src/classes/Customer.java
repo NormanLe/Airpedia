@@ -4,12 +4,12 @@ import java.sql.Date;
 
 public class Customer {
 	Person person;
-	int accountNo;
-	String creditcardNo;
-	String email;
-	double phone;
-	Date creationDate;
-	int rating;
+	private int accountNo;
+	private String creditcardNo;
+	private String email;
+	private double phone;
+	private Date creationDate;
+	private int rating;
 	
 	public Customer() {
 		

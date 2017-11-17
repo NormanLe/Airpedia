@@ -4,10 +4,10 @@ import java.sql.Date;
 
 public class Employee {
 	Person person;
-	int ssn;
-	boolean isManager;
-	Date startDate;
-	double hourlyRate;
+	private int ssn;
+	private boolean isManager;
+	private Date startDate;
+	private double hourlyRate;
 	
 	public Employee() {
 		
