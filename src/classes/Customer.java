@@ -10,6 +10,7 @@ public class Customer {
 	private double phone;
 	private Date creationDate;
 	private int rating;
+	private String password;
 	
 	public Customer() {
 		
@@ -63,5 +64,11 @@ public class Customer {
 		this.rating = rating;
 	}
 	
+	public String getPassword(){
+		return password;
+	}
 	
+	public void setPassword(String password){
+		this.password = password;
+	}
 }
