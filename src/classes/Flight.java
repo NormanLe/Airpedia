@@ -1,11 +1,32 @@
 package classes;
 
 public class Flight {
-	private int numSeats;
+	Airline airline;
+	private int flightNo;
+	private int noOfSeats;
 	private String daysOperating; 
 	private int minLengthOfStay;
 	private int maxLengthOfStay;
-	private String airline;
+	
+	public Flight(){
+		
+	}
+
+	public int getFlightNo() {
+		return flightNo;
+	}
+
+	public void setFlightNo(int flightNo) {
+		this.flightNo = flightNo;
+	}
+
+	public int getNoOfSeats() {
+		return noOfSeats;
+	}
+
+	public void setNoOfSeats(int noOfSeats) {
+		this.noOfSeats = noOfSeats;
+	}
 	
 	public String getDaysOperating() {
 		return daysOperating;
@@ -13,14 +34,6 @@ public class Flight {
 
 	public void setDaysOperating(String daysOperating) {
 		this.daysOperating = daysOperating;
-	}
-
-	public int getNumSeats() {
-		return numSeats;
-	}
-
-	public void setNoOfSeats(int numSeats) {
-		this.numSeats = numSeats;
 	}
 
 	public int getMinLengthOfStay() {
@@ -39,7 +52,5 @@ public class Flight {
 		this.maxLengthOfStay = maxLengthOfStay;
 	}
 
-	public Flight(){
-		
-	}
+	
 }
