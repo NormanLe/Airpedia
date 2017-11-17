@@ -1,6 +1,14 @@
+package classes;
 
 public class Airport {
 	private String name;
+	private String city;
+	private String country;
+	
+	public Airport(){
+		
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -24,11 +32,5 @@ public class Airport {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
-	private String city;
-	private String country;
 	
-	public Airport(){
-		
-	}
 }

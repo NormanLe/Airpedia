@@ -1,3 +1,4 @@
+package classes;
 
 public class Airline {
 	private String name;
