@@ -2,6 +2,7 @@ package utils;
 
 import java.sql.*;
 import classes.Customer;
+import classes.Employee;
 
 public class DBUtils {
 	private Connection con;
@@ -48,15 +49,16 @@ public class DBUtils {
 
 	// TODO: Change these in future
 	
-	private void addEmployee(int id, int ssn, boolean isManager, Date startDate, double hourlyRate, double newRate) {
-		try {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(String.format(
-					"UPDATE Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES (%d, %d, %b, %t, %f", id, ssn,
-					isManager, startDate, hourlyRate, newRate));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	private static void addEmployee(Connection conn, Employee employee) {
+//		try {
+//			Statement stmt = conn.createStatement();
+//			stmt.executeUpdate(String.format(
+//					"UPDATE Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES (%d, %d, %b, %t, %f", 
+//					employee.getSsn(), employee.getemployee.getStartDate(),
+//					isManager, startDate, hourlyRate, newRate));
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	// fix
