@@ -7,7 +7,7 @@ public class Reservation {
 	private Date resrDate;
 	private double bookingFee;
 	private double totalFare;
-	Customer cusomer;
+	Customer customer;
 	Employee employee;
 	
 	public Reservation() {
@@ -44,5 +44,21 @@ public class Reservation {
 
 	public void setTotalFare(double totalFare) {
 		this.totalFare = totalFare;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 }

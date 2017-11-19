@@ -1,8 +1,12 @@
 package utils;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import classes.Customer;
 import classes.Employee;
+import classes.Reservation;
 
 public class DBUtils {
 	private Connection con;
@@ -29,7 +33,7 @@ public class DBUtils {
 
 	public static Customer findCustomer(Connection conn, String email) throws SQLException {
 
-		String sql = "Select c.email, c.Password, Customer c"//
+		String sql = "Select c.email, c.Password from Customer c"//
 				+ " where c.email = ? ";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
@@ -47,18 +51,48 @@ public class DBUtils {
 		return null;
 	}
 
+	public static List<Reservation> queryReservation(Connection conn) {
+		String sql = "Select a.Code, a.Name, a.Price from Reservation r ";
+
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+
+			ResultSet rs = pstm.executeQuery();
+			int i = 1;
+			while (rs.next()) {
+				int resrNo = rs.getInt("ResrNo");
+				Object customerAsObject = rs.getObject(i++);
+				Customer customer = (Customer) customerAsObject;
+				Object employeeAsObject = rs.getObject("Employee");
+				Customer employee = (Customer) employeeAsObject;
+				double fee = rs.getDouble("BookingFee");
+				double fare = rs.getDouble("TotalFare");
+				Reservation reservation = new Reservation();
+				Date date = rs.getDate("Date");
+
+				reservation.setTotalFare(fare);
+				list.add(reservation);
+			}
+		} catch (Exception e) {
+
+		}
+		return list;
+	}
+
 	// TODO: Change these in future
-	
+
 	private static void addEmployee(Connection conn, Employee employee) {
-//		try {
-//			Statement stmt = conn.createStatement();
-//			stmt.executeUpdate(String.format(
-//					"UPDATE Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES (%d, %d, %b, %t, %f", 
-//					employee.getSsn(), employee.getemployee.getStartDate(),
-//					isManager, startDate, hourlyRate, newRate));
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// Statement stmt = conn.createStatement();
+		// stmt.executeUpdate(String.format(
+		// "UPDATE Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES
+		// (%d, %d, %b, %t, %f",
+		// employee.getSsn(), employee.getemployee.getStartDate(),
+		// isManager, startDate, hourlyRate, newRate));
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	// fix
@@ -151,4 +185,5 @@ public class DBUtils {
 			return null;
 		}
 	}
+
 }
