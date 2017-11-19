@@ -18,10 +18,10 @@ public class MySQLConnUtils {
 	public static Connection getMySQLConnection(String hostName, String dbName, String userName, String password)
 			throws SQLException, ClassNotFoundException {
 
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 
 		String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
-
+		connectionURL += "?useLegacyDatetimeCode=false&serverTimezone=EST&autoReconnect=true&useSSL=false";
 		Connection conn = DriverManager.getConnection(connectionURL, userName, password);
 		return conn;
 	}
