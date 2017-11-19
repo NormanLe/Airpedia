@@ -79,11 +79,8 @@ public class JDBCFilter implements Filter {
 			try {
 				conn = MySQLConnUtils.getMySQLConnection();
 				conn.setAutoCommit(false);
-
 				MyUtils.storeConnection(request, conn);
-
 				chain.doFilter(request, response);
-
 				conn.commit();
 			} catch (Exception e) {
 				e.printStackTrace();
