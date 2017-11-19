@@ -10,15 +10,12 @@
  </head>
  <body>
  
-    <%-- <jsp:include page="_header.jsp"></jsp:include> --%>
     <jsp:include page="_menu.jsp"></jsp:include>
  
     <h3>Hello: ${customer.email}</h3>
  
     Email: ${customer.email}
 	Password: ${customer.password}
-    <br />
-    
-    <%-- <jsp:include page="_footer.jsp"></jsp:include> --%>
+
  </body>
 </html>

@@ -10,12 +10,11 @@
     </head>
   <body>
  
-     <%-- <jsp:include page="_header.jsp"></jsp:include> --%>
      <jsp:include page="_menu.jsp"></jsp:include>
-    
-      <%-- <h3>Home Page</h3> --%>
       
-      <h1>Book Your Reservation</h1>
+      <h1>Plan Your Next Trip</h1>
+      
+      	<form method="POST" action="${pageContext.request.contextPath}/flights">
         <table>
             <tr>
                 <td> <input type="radio" name="tripType" checked>Round-Trip </td>
@@ -39,10 +38,9 @@
             </tr>
             
             <tr>
-                <td colspan=2 align="center"> <input type="submit"></td>
+                <td colspan=2 align="center"> <input type="submit" value="Search For Flights"></td>
         </table>
- 
-     <%-- <jsp:include page="_footer.jsp"></jsp:include> --%>
- 	
+        </form>
+
   </body>
 </html>
