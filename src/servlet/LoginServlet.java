@@ -84,7 +84,7 @@ public class LoginServlet extends HttpServlet {
 		}
 		// If no error
 		// Store user information in Session
-		// And redirect to userInfo page.
+		// And redirect to profile page.
 		else {
 			HttpSession session = request.getSession();
 			MyUtils.storeLoginedCustomer(session, customer);
@@ -99,7 +99,7 @@ public class LoginServlet extends HttpServlet {
 			}
 
 			// Redirect to userInfo page.
-			response.sendRedirect(request.getContextPath() + "/userInfo");
+			response.sendRedirect(request.getContextPath() + "/profile");
 		}
 	}
 

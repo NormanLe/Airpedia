@@ -13,11 +13,11 @@ import javax.servlet.http.HttpSession;
 import classes.Customer;
 import utils.MyUtils;
  
-@WebServlet(urlPatterns = { "/userInfo" })
-public class UserInfoServlet extends HttpServlet {
+@WebServlet(urlPatterns = { "/profile" })
+public class ProfileServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
  
-    public UserInfoServlet() {
+    public ProfileServlet() {
         super();
     }
  
@@ -39,9 +39,9 @@ public class UserInfoServlet extends HttpServlet {
         request.setAttribute("customer", loginedCustomer);
  
         // If the user has logged in, then forward to the page
-        // /WEB-INF/views/userInfoView.jsp
+        // /WEB-INF/views/profileView.jsp
         RequestDispatcher dispatcher //
-                = this.getServletContext().getRequestDispatcher("/WEB-INF/views/userInfoView.jsp");
+                = this.getServletContext().getRequestDispatcher("/WEB-INF/views/profileView.jsp");
         dispatcher.forward(request, response);
  
     }
