@@ -40,8 +40,6 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		String rememberMeStr = request.getParameter("rememberMe");
-		boolean remember = "Y".equals(rememberMeStr);
 
 		Customer customer = null;
 		boolean hasError = false;
@@ -88,15 +86,6 @@ public class LoginServlet extends HttpServlet {
 		else {
 			HttpSession session = request.getSession();
 			MyUtils.storeLoginedCustomer(session, customer);
-
-			// If user checked "Remember me".
-			if (remember) {
-				MyUtils.storeUserCookie(response, customer);
-			}
-			// Else delete cookie.
-			else {
-				MyUtils.deleteUserCookie(response);
-			}
 
 			// Redirect to userInfo page.
 			response.sendRedirect(request.getContextPath() + "/profile");

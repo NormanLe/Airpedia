@@ -14,7 +14,7 @@ public class DBUtils {
 	public static Customer findCustomer(Connection conn, 
 			String email, String password) throws SQLException {
 
-		String sql = "Select c.email, c.Password from Customer c " 
+		String sql = "Select * from Customer c" 
 				+ " where c.email = ? and c.password = ?";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
@@ -23,17 +23,28 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
-			Customer user = new Customer();
-			user.setEmail(email);
-			user.setPassword(password);
-			return user;
+			int number = rs.getInt("AccountNo");
+			String creditcardNo = rs.getString("CreditCardNo");
+			double phone = rs.getDouble("Phone");
+			Date creationDate = rs.getDate("CreationDate");
+			int rating = rs.getInt("Rating");
+			
+			Customer customer = new Customer();
+			customer.setAccountNo(number);
+			customer.setEmail(email);
+			customer.setPassword(password);
+			customer.setCreditcardNo(creditcardNo);
+			customer.setPhone(phone);
+			customer.setCreationDate(creationDate);
+			customer.setRating(rating);
+			return customer;
 		}
 		return null;
 	}
 
 	public static Customer findCustomer(Connection conn, String email) throws SQLException {
 
-		String sql = "Select c.email, c.Password from Customer c"
+		String sql = "Select * from Customer c"
 				+ " where c.email = ? ";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
@@ -43,9 +54,20 @@ public class DBUtils {
 
 		if (rs.next()) {
 			String password = rs.getString("Password");
+			int number = rs.getInt("AccountNo");
+			String creditcardNo = rs.getString("CreditCardNo");
+			double phone = rs.getDouble("Phone");
+			Date creationDate = rs.getDate("CreationDate");
+			int rating = rs.getInt("Rating");
+			
 			Customer customer = new Customer();
+			customer.setAccountNo(number);
 			customer.setEmail(email);
 			customer.setPassword(password);
+			customer.setCreditcardNo(creditcardNo);
+			customer.setPhone(phone);
+			customer.setCreationDate(creationDate);
+			customer.setRating(rating);
 			return customer;
 		}
 		return null;
@@ -62,17 +84,21 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
-			int number = rs.getInt("AccountNo");
-			String email = rs.getString("Email"); 
+			String email = rs.getString("Email");
+			String password = rs.getString("Password");
+			String creditcardNo = rs.getString("CreditCardNo");
 			double phone = rs.getDouble("Phone");
+			Date creationDate = rs.getDate("CreationDate");
 			int rating = rs.getInt("Rating");
 			
 			Customer customer = new Customer();
-			customer.setAccountNo(number);
+			customer.setAccountNo(accountNo);
 			customer.setEmail(email);
+			customer.setPassword(password);
+			customer.setCreditcardNo(creditcardNo);
 			customer.setPhone(phone);
+			customer.setCreationDate(creationDate);
 			customer.setRating(rating);
-			
 			return customer;
 		}
 		return null;
