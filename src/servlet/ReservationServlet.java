@@ -16,7 +16,7 @@ import classes.Reservation;
 import utils.DBUtils;
 import utils.MyUtils;
 
-@WebServlet(urlPatterns = { "/productList" })
+@WebServlet(urlPatterns = { "/reservationList" })
 public class ReservationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -31,15 +31,14 @@ public class ReservationServlet extends HttpServlet {
 
 		String errorString = null;
 		List<Reservation> list = null;
+//		try{
 		list = DBUtils.queryReservation(conn);
-
-		// Store info in request attribute, before forward to views
+//		}catch(SQLException e){	}
 		request.setAttribute("errorString", errorString);
-		request.setAttribute("productList", list);
+		request.setAttribute("reservationList", list);
 
-		// Forward to /WEB-INF/views/productListView.jsp
 		RequestDispatcher dispatcher = request.getServletContext()
-				.getRequestDispatcher("/WEB-INF/views/productListView.jsp");
+				.getRequestDispatcher("/WEB-INF/views/reservationListView.jsp");
 		dispatcher.forward(request, response);
 	}
 

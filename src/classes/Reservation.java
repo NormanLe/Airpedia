@@ -14,6 +14,16 @@ public class Reservation {
 		
 	}
 
+	public Reservation(int resrNo, Date resrDate, double bookingFee, double totalFare,
+			Customer customer, Employee employee){
+		this.resrNo = resrNo;
+		this.resrDate = resrDate;
+		this.bookingFee = bookingFee;
+		this.totalFare = totalFare;
+		this.customer = customer;
+		this.employee = employee;
+	}
+	
 	public int getResrNo() {
 		return resrNo;
 	}

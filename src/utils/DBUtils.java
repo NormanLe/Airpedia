@@ -11,11 +11,11 @@ import classes.Reservation;
 public class DBUtils {
 	private Connection con;
 
-	public static Customer findCustomer(Connection conn, //
+	public static Customer findCustomer(Connection conn, 
 			String email, String password) throws SQLException {
 
-		String sql = "Select c.email, c.Password from Customer c " //
-				+ " where c.email = ? and c.password= ?";
+		String sql = "Select c.email, c.Password from Customer c " 
+				+ " where c.email = ? and c.password = ?";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, email);
@@ -33,7 +33,7 @@ public class DBUtils {
 
 	public static Customer findCustomer(Connection conn, String email) throws SQLException {
 
-		String sql = "Select c.email, c.Password from Customer c"//
+		String sql = "Select c.email, c.Password from Customer c"
 				+ " where c.email = ? ";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
@@ -50,32 +50,83 @@ public class DBUtils {
 		}
 		return null;
 	}
+	
+	public static Customer findCustomer(Connection conn, int accountNo) throws SQLException {
+
+		String sql = "Select * from Customer"
+				+ " where AccountNo = ? ";
+
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setInt(1, accountNo);
+
+		ResultSet rs = pstm.executeQuery();
+
+		if (rs.next()) {
+			int number = rs.getInt("AccountNo");
+			String email = rs.getString("Email"); 
+			double phone = rs.getDouble("Phone");
+			int rating = rs.getInt("Rating");
+			
+			Customer customer = new Customer();
+			customer.setAccountNo(number);
+			customer.setEmail(email);
+			customer.setPhone(phone);
+			customer.setRating(rating);
+			
+			return customer;
+		}
+		return null;
+	}
+	
+	public static Employee findEmployee(Connection conn, int repSSN) throws SQLException {
+
+		String sql = "Select * from Employee"
+				+ " where SSN = ? ";
+		
+		// Do I need to query for the person entity related to employee a.k.a the parent class
+		// If so, do we assign to the employee we create?
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setInt(1, repSSN);
+
+		ResultSet rs = pstm.executeQuery();
+
+		if (rs.next()) {
+			int number = rs.getInt("SSN");
+			Employee employee = new Employee();
+			employee.setSsn(number);
+			
+			return employee;
+		}
+		return null;
+	}
 
 	public static List<Reservation> queryReservation(Connection conn) {
-		String sql = "Select a.Code, a.Name, a.Price from Reservation r ";
+		String sql = "Select * from Reservation ";
 
 		List<Reservation> list = new ArrayList<Reservation>();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
-
 			ResultSet rs = pstm.executeQuery();
-			int i = 1;
+			
 			while (rs.next()) {
 				int resrNo = rs.getInt("ResrNo");
-				Object customerAsObject = rs.getObject(i++);
-				Customer customer = (Customer) customerAsObject;
-				Object employeeAsObject = rs.getObject("Employee");
-				Customer employee = (Customer) employeeAsObject;
+				java.sql.Date sqlDate = rs.getDate("ResrDate");
+				Date date = new Date(sqlDate.getTime());
+				
 				double fee = rs.getDouble("BookingFee");
 				double fare = rs.getDouble("TotalFare");
-				Reservation reservation = new Reservation();
-				Date date = rs.getDate("Date");
-
-				reservation.setTotalFare(fare);
+				int accountNo = rs.getInt("AccountNo");
+				int repSSN = rs.getInt("RepSSN");
+				
+				// Won't create the person references yet - not sure if necessary yet
+				Customer customer = findCustomer(conn, accountNo);
+				Employee employee = findEmployee(conn, repSSN);
+				Reservation reservation = new Reservation(resrNo, date, fee, fare, customer, employee);
 				list.add(reservation);
 			}
 		} catch (Exception e) {
-
+			System.out.println("Something went wrong in querying resrvations");
 		}
 		return list;
 	}
