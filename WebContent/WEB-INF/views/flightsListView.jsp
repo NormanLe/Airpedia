@@ -6,17 +6,18 @@
  <head>
     <meta charset="UTF-8">
     <title>List of flights</title>
+    <style>
+        <%@include file="/WEB-INF/views/css/style.css"%>
+    </style>
  </head>
  <body>
- 
-    <jsp:include page="_header.jsp"></jsp:include>
     <jsp:include page="_menu.jsp"></jsp:include>
  
-    <h3>Flights List</h3>
+    <h1>Flights List</h1>
  
     <p style="color: red;">${errorString}</p>
  
-    <table border="1" cellpadding="5" cellspacing="1" >
+    <table class="tableStyle">
        <tr>
           <th>Airline Name</th>
           <th>Flight #</th>
@@ -24,6 +25,7 @@
           <th>Days Operating</th>
           <th>Min length of stay</th>
           <th>Max length of stay</th>
+          <th>Reserve</th>
        </tr>
        <c:forEach items="${flightList}" var="flight" >
           <tr>
@@ -39,8 +41,6 @@
           </tr>
        </c:forEach>
     </table>
- 
-    <jsp:include page="_footer.jsp"></jsp:include>
  
  </body>
 </html>

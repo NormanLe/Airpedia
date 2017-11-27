@@ -7,6 +7,8 @@
    
    <a href="${pageContext.request.contextPath}/profile">Profile</a>
    
+   <a href="${pageContext.request.contextPath}/reservationList">Reservations</a>
+   
    <a href="${pageContext.request.contextPath}/login">Login</a> 
    <!-- or log out depending on whether user is logged in... -->
     

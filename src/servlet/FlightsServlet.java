@@ -18,7 +18,7 @@ import utils.MyUtils;
 /**
  * Servlet implementation class Flights
  */
-@WebServlet(urlPatterns = { "/flights" })
+@WebServlet(urlPatterns = { "/flightsList" })
 public class FlightsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     public FlightsServlet() {
