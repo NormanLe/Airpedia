@@ -22,8 +22,10 @@
             </tr>
             
             <tr>
-                <td> Flying From <br> <input type="text" placeholder="city or airport"></td>
-                <td> Flying To <br> <input type="text" placeholder="city or airport"></td>
+                <td> Flying From <br> <input type="text" name="tripFrom" 
+                	placeholder="city or airport"></td>
+                <td> Flying To <br> <input type="text" name="tripTo"
+                	placeholder="city or airport"></td>
             </tr>
             
             <tr>
@@ -33,8 +35,8 @@
             </tr>
             
             <tr>
-                <td> Number of People <br> <input type="number" value="1"> </td>
-                <td> Class <br> <input type="text" value="Economy"></td>
+                <td> Number of People <br> <input type="number" name="numPeople" value="1"> </td>
+                <td> Class <br> <input type="text" name="class" value="Economy"></td>
             </tr>
             
             <tr>
