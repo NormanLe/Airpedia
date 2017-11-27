@@ -12,6 +12,23 @@ public class Flight {
 		
 	}
 
+	public Flight(Airline airline, int flightNo, int numSeats, String daysOperating, int minStay, int maxStay) {
+		this.airline = airline;
+		this.flightNo = flightNo;
+		this.noOfSeats = numSeats;
+		this.daysOperating = daysOperating;
+		this.minLengthOfStay = minStay;
+		this.maxLengthOfStay = maxStay;
+	}
+
+	public Airline getAirline(){
+		return airline;
+	}
+	
+	public void setAirline(Airline airline){
+		this.airline = airline;
+	}
+	
 	public int getFlightNo() {
 		return flightNo;
 	}
