@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,41 +10,39 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import classes.*;
-import utils.DBUtils;
 import utils.MyUtils;
 
 /**
- * Servlet implementation class Flights
+ * Servlet implementation class RegistrationServlet
  */
-@WebServlet(urlPatterns = { "/flightsList" })
-public class FlightsServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/registration"})
+public class RegistrationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    public FlightsServlet() {
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public RegistrationServlet() {
         super();
     }
 
-    @Override
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+			
 		Connection conn = MyUtils.getStoredConnection(request);
-
-		String errorString = null;
-		List<Flight> list = DBUtils.queryFlight(conn);
-		request.setAttribute("errorString", errorString);
-		request.setAttribute("flightList", list);
+		
 		RequestDispatcher dispatcher //
-		= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
+		= this.getServletContext().getRequestDispatcher("/WEB-INF/views/registration.jsp");
 
 		dispatcher.forward(request, response);
 	}
 
-	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

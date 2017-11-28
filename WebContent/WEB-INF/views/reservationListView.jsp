@@ -6,17 +6,20 @@
  <head>
     <meta charset="UTF-8">
     <title>Reservation List</title>
+     <style>
+        <%@include file="/WEB-INF/views/css/style.css"%>
+       </style>
  </head>
  <body>
  
-    <jsp:include page="_header.jsp"></jsp:include>
     <jsp:include page="_menu.jsp"></jsp:include>
  
-    <h3>Reservation List</h3>
+    <h1>Reservation List</h1>
  
     <p style="color: red;">${errorString}</p>
  
-    <table border="1" cellpadding="5" cellspacing="1" >
+ 	<a href="createReservation">Create Reservation</a>
+    <table class="tableStyle">
        <tr>
           <th>ResrNo</th>
           <th>Date</th>
@@ -24,6 +27,8 @@
           <th>Fare</th>
           <th>AccountNo</th>
           <th>RepSSN</th>
+          <th>Edit</th>
+          <th>Delete</th>
        </tr>
        <c:forEach items="${reservationList}" var="reservation" >
           <tr>
@@ -43,9 +48,7 @@
        </c:forEach>
     </table>
  
-    <a href="createReservation" >Create Reservation</a>
- 
-    <jsp:include page="_footer.jsp"></jsp:include>
+   
  
  </body>
 </html>
