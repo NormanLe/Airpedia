@@ -34,7 +34,6 @@ public class FlightsServlet extends HttpServlet {
 		List<Flight> list = DBUtils.queryFlight(conn);
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("flightList", list);
-		System.out.println(list.get(0).getAirline().getName());
 		RequestDispatcher dispatcher //
 		= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
 

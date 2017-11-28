@@ -205,18 +205,22 @@ public class DBUtils {
 			String tripClass, int numPeople) throws SQLException {
 		String sql = "Select * " + 
 				"From Flight Fl " +
-				"Where Fl.FlightNo IN " +
-					"(SELECT L.FlightNo " +
-					"From Leg L, Airport A1, Airport A2, Fare F " +
-					"Where L.DepAirportID = A1.Id " +
-						"AND L.ArrAirportID = A2.Id " +
-						"AND A1.City = ? " +
-						"AND A2.City = ? " +
-						"AND F.FareType = ? " +
-						"AND F.Class = ? " +
-					") " +
-					"AND Fl.NoOfSeats > ?";
-
+				"Where Fl.AirlineID IN " +
+					"(SELECT L.AirlineID " +
+					"From Leg L " + 
+					"Where L.AirlineID IN " +
+						"(SELECT F.AirlineID " + 
+						"FROM Fare F, Airport A1, Airport A2 " +
+						"Where F.AirlineID = L.AirlineID " +
+							"AND A1.City = ? " +
+							"AND A2.City = ? " +
+							"AND F.FareType = ? " +
+							"AND F.Class = ? " +
+							"AND Fl.NoOfSeats > ? " +
+							"AND L.DepAirportID = A1.Id " +
+							"AND L.ArrAirportID = A2.Id " +
+						"))";
+// still need to use departing and returning date
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		
 		pstm.setString(1, tripFrom);
@@ -234,13 +238,12 @@ public class DBUtils {
 			String daysOperating = rs.getString("DaysOperating");
 			int minStay = rs.getInt("MinLengthOfStay");
 			int maxStay = rs.getInt("MaxLengthOfStay");
-			
 			Airline airline = findAirline(conn, airlineId);
 			Flight flight = 
 					new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
 			list.add(flight);
 		}
-		return null;
+		return list;
 	}
 
 	// TODO: Change these in future

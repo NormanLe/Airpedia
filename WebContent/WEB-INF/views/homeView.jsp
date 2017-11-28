@@ -14,11 +14,11 @@
       
       <h1>Plan Your Next Trip</h1>
       
-      	<form method="POST" action="${pageContext.request.contextPath}/flights">
+      	<form method="POST">
         <table>
             <tr>
-                <td> <input type="radio" name="tripType" checked>Round-Trip </td>
-                <td> <input type="radio" name="tripType">One-Way </td>
+                <td> <input type="radio" name="tripType" checked value="Round-Trip"> Round-Trip </td>
+                <td> <input type="radio" name="tripType" value="One-Way"> One-Way </td>
             </tr>
             
             <tr>

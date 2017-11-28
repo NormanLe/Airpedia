@@ -48,25 +48,33 @@ public class HomeServlet extends HttpServlet {
         	numPeople = Integer.parseInt(request.getParameter("numPeople"));
         } catch (Exception e) {
         }
-        
+
+		System.out.printf("tripType is %s \ntripFrom is %s\n" 
+				+ "tripTo is %s \ntripClass is %s \nnumPeople is %d\n", tripType, tripFrom, tripTo, tripClass, numPeople);
 		List<Flight> list = null;
 		String errorString = null;
 		try {
 			list = DBUtils.queryFlights(conn, tripType, tripFrom, tripTo, tripClass, numPeople);
 
 			if (list == null) {
-				errorString = "User Name or password invalid";
+				errorString = "Invalid input";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			errorString = e.getMessage();
 		}
+		for (Flight f: list){
+			System.out.println(f.getFlightNo() + " " + f.getAirline().getName());
+		}
 		
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("flightList", list);
  
-        response.sendRedirect(request.getContextPath() + "/flights");
-        
+//        response.sendRedirect(request.getContextPath() + "/flights");
+		RequestDispatcher dispatcher //
+		= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
+
+		dispatcher.forward(request, response);
  
 	}
 
