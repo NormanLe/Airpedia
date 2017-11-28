@@ -17,8 +17,8 @@
       	<form method="POST" action="${pageContext.request.contextPath}/flights">
         <table>
             <tr>
-                <td> <input type="radio" name="tripType" checked>Round-Trip </td>
-                <td> <input type="radio" name="tripType">One-Way </td>
+                <td> <input type="radio" name="tripType" checked onclick="toggleOneWay()">Round-Trip </td>
+                <td> <input type="radio" name="tripType" onclick="toggleOneWay()">One-Way </td>
             </tr>
             
             <tr>
@@ -30,8 +30,7 @@
             
             <tr>
                 <td> Departing Date <br> <input type="text" placeholder="mm-dd-yyyy"> </td>
-                <td> Returning Date <br> <input type="text" placeholder="mm-dd-yyyy"> </td> 
-                <!-- Disabled if one way-->
+                <td> Returning Date <br> <input type="text" placeholder="mm-dd-yyyy" id="returningDate"> </td> 
             </tr>
             
             <tr>
@@ -43,6 +42,17 @@
                 <td colspan=2 align="center"> <input type="submit" value="Search For Flights"></td>
         </table>
         </form>
-
+        <script>
+            function toggleOneWay() {
+                var tripTypes = document.getElementsByName("tripType");
+                var returningDate = document.getElementById("returningDate");
+                if (tripTypes[0].checked) 
+                    returningDate.disabled = false;  
+                else {
+                    returningDate.disabled = true;
+                    returningDate.value = "";
+                }
+            }
+        </script>
   </body>
 </html>
