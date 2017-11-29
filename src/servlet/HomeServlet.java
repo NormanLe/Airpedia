@@ -25,9 +25,22 @@ public class HomeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+
+		Connection conn = MyUtils.getStoredConnection(request);
+
+		String errorString = null;
+		Flight bestSeller = null;
+		try {
+			bestSeller = DBUtils.bestSeller(conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		request.setAttribute("errorString", errorString);
+		request.setAttribute("bestSeller", bestSeller);
 
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/homeView.jsp");
-
 		dispatcher.forward(request, response);
 
 	}

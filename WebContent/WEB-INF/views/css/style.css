@@ -30,5 +30,10 @@ a {
 	text-align: center;
 	background-color: #4C586F;
 	padding: 5px;
+	width: 100%;
 }
 
+#bestSeller {
+	width: 70%;
+	margin: 0 auto;
+}

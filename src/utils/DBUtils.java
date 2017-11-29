@@ -245,6 +245,40 @@ public class DBUtils {
 		}
 		return list;
 	}
+	
+	public static Flight bestSeller (Connection conn) throws SQLException {
+		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" +
+				" FROM Flight F, Includes I" + 
+				" WHERE F.FlightNo = I.FlightNo" + 
+				" AND F.AirlineId = I.AirlineId" +
+				" GROUP BY I.ResrNo" +
+				" ORDER BY NumFlights DESC LIMIT 1";
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		Flight flight = null;
+		if (rs.next()) {
+			String resrNo = rs.getString("ResrNo");
+			System.out.println(resrNo);
+			
+			String newSql = "select * from includes i , flight f where f.flightno = i.flightno and f.airlineid = i.airlineid and i.resrno = " + resrNo +" LIMIT 1";
+			PreparedStatement p = conn.prepareStatement(newSql);
+			ResultSet r = p.executeQuery();
+			
+			if (r.next()) {
+			String airlineId = r.getString("AirlineID");
+			int flightNo = r.getInt("FlightNo");
+			int numSeats = r.getInt("NoOfSeats");
+			String daysOperating = r.getString("DaysOperating");
+			int minStay = r.getInt("MinLengthOfStay");
+			int maxStay = r.getInt("MaxLengthOfStay");
+			Airline airline = findAirline(conn, airlineId);
+			flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+			}
+
+		}
+		return flight;
+	}
 
 	// TODO: Change these in future
 
