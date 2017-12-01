@@ -53,10 +53,12 @@ public class LoginServlet extends HttpServlet {
 			try {
 				// Find the user in the DB.
 				customer = DBUtils.findCustomer(conn, email, password);
-
+				
 				if (customer == null) {
 					hasError = true;
 					errorString = "User Name or password invalid";
+				} else {
+					System.out.println("i'm at loginservlet and " + customer.getEmail() + " " + customer.getAccountNo());
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

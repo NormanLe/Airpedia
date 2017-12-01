@@ -279,6 +279,33 @@ public class DBUtils {
 		}
 		return flight;
 	}
+	
+	public static List<Flight> personalizedFlights (Connection conn, int accountNo) throws SQLException {
+		String sql = "SELECT * FROM FLIGHT F" + 
+					 " WHERE F.FlightNo NOT IN" + 
+					 " (SELECT I.FlightNo" + 
+					 " FROM Makes M, Includes I" + 
+					 " WHERE M.AccountNo = " + accountNo +
+					 " AND I.ResrNo = M.ResrNo)";
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		ArrayList<Flight> flights = new ArrayList<>();
+		
+		while (rs.next()) {
+			String airlineId = rs.getString("AirlineID");
+			int flightNo = rs.getInt("FlightNo");
+			int numSeats = rs.getInt("NoOfSeats");
+			String daysOperating = rs.getString("DaysOperating");
+			int minStay = rs.getInt("MinLengthOfStay");
+			int maxStay = rs.getInt("MaxLengthOfStay");
+			Airline airline = findAirline(conn, airlineId);
+			Flight flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+			flights.add(flight);
+		}
+		
+		return flights;
+	}
 
 	// TODO: Change these in future
 

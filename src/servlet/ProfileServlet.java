@@ -28,13 +28,14 @@ public class ProfileServlet extends HttpServlet {
  
         // Check User has logged on
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
- 
+       
         // Not logged in
         if (loginedCustomer == null) {
             // Redirect to login page.
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+       
         // Store info to the request attribute before forwarding.
         request.setAttribute("customer", loginedCustomer);
  

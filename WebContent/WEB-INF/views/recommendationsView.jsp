@@ -5,18 +5,19 @@
 <html>
  <head>
     <meta charset="UTF-8">
-    <title>List of flights</title>
+    <title>Recommendations</title>
     <style>
         <%@include file="/WEB-INF/views/css/style.css"%>
     </style>
  </head>
- <body>
+ <body id="recommendations">
     <jsp:include page="_menu.jsp"></jsp:include>
  
-    <h1>Flights List</h1>
+    <h1>Recommendations</h1>
  
     <p style="color: red;">${errorString}</p>
- 
+ 	
+ 	<h2> Best Seller </h2>
     <table class="tableStyle">
        <tr>
           <th>Airline Name</th>
@@ -40,6 +41,32 @@
              </td>
           </tr>
        
+    </table>
+    
+    <h2> Personalized Flight Suggestions</h2>
+    <table class="tableStyle">
+       <tr>
+          <th>Airline Name</th>
+          <th>Flight #</th>
+          <th>Seats Remaining</th>
+          <th>Days Operating</th>
+          <th>Min length of stay</th>
+          <th>Max length of stay</th>
+          <th>Reserve</th>
+       </tr>
+       <c:forEach items="${personalizedFlights}" var="flight" >
+          <tr>
+             <td>${flight.airline.name}</td>
+             <td>${flight.flightNo}</td>
+             <td>${flight.noOfSeats}</td>
+             <td>${flight.daysOperating}</td>
+             <td>${flight.minLengthOfStay}</td>
+             <td>${flight.maxLengthOfStay}</td>
+             <td>
+                <a href="createReservation?code=${flight.flightNo}">Make a reservation</a>
+             </td>
+          </tr>
+       </c:forEach>
     </table>
  
  </body>
