@@ -30,8 +30,8 @@
             </tr>
             
             <tr>
-                <td> Departing Date <br> <input type="text" placeholder="mm-dd-yyyy"> </td>
-                <td> Returning Date <br> <input type="text" placeholder="mm-dd-yyyy" id="returningDate"> </td> 
+                <td> Departing Date <br> <input type="text" name="departDate" placeholder="mm-dd-yyyy"> </td>
+                <td> Returning Date <br> <input type="text" name="returnDate" placeholder="mm-dd-yyyy" id="returningDate"> </td> 
             </tr>
             
             <tr>

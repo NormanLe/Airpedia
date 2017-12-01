@@ -3,6 +3,8 @@ package servlet;
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -44,6 +46,10 @@ public class HomeServlet extends HttpServlet {
         String tripClass = (String) request.getParameter("class");
         int numPeople = 0;
         
+        String departDate = (String) request.getParameter("departTime");
+        String returnDate = (String) request.getParameter("returnDate");
+
+        
         try {
         	numPeople = Integer.parseInt(request.getParameter("numPeople"));
         } catch (Exception e) {
@@ -52,8 +58,8 @@ public class HomeServlet extends HttpServlet {
 		List<Flight> list = null;
 		String errorString = null;
 		try {
-			list = DBUtils.queryFlights(conn, tripType, tripFrom, tripTo, tripClass, numPeople);
-
+			list = DBUtils.queryFlights(
+					conn, tripType, tripFrom, tripTo, departDate, returnDate, tripClass, numPeople);
 			if (list == null) {
 				errorString = "Invalid input";
 			}
@@ -62,17 +68,21 @@ public class HomeServlet extends HttpServlet {
 			errorString = e.getMessage();
 		}
 		
-		if (list != null && !list.isEmpty()){
+		if (list == null || list.isEmpty()){
+//			doGet(request, response);
+			RequestDispatcher dispatcher //
+			= this.getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp");
+			
+			dispatcher.forward(request, response);
+		}
+		else{
 			request.setAttribute("errorString", errorString);
 			request.setAttribute("flightList", list);
 	//        response.sendRedirect(request.getContextPath() + "/flights");
 			RequestDispatcher dispatcher //
 			= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
-	
+			
 			dispatcher.forward(request, response);
-		}
-		else{
-			doGet(request, response);
 		}
  
 	}

@@ -1,19 +1,22 @@
 package utils;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import classes.*;
 
 public class DBUtils {
 	private Connection con;
 
-	public static Customer findCustomer(Connection conn, 
-			String email, String password) throws SQLException {
+	public static Customer findCustomer(Connection conn, String email, String password) throws SQLException {
 
-		String sql = "Select * from Customer c" 
-				+ " where c.email = ? and c.password = ?";
+		String sql = "Select * from Customer c" + " where c.email = ? and c.password = ?";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, email);
@@ -26,7 +29,7 @@ public class DBUtils {
 			double phone = rs.getDouble("Phone");
 			Date creationDate = rs.getDate("CreationDate");
 			int rating = rs.getInt("Rating");
-			
+
 			Customer customer = new Customer();
 			customer.setAccountNo(number);
 			customer.setEmail(email);
@@ -42,8 +45,7 @@ public class DBUtils {
 
 	public static Customer findCustomer(Connection conn, String email) throws SQLException {
 
-		String sql = "Select * from Customer c"
-				+ " where c.email = ? ";
+		String sql = "Select * from Customer c" + " where c.email = ? ";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, email);
@@ -57,7 +59,7 @@ public class DBUtils {
 			double phone = rs.getDouble("Phone");
 			Date creationDate = rs.getDate("CreationDate");
 			int rating = rs.getInt("Rating");
-			
+
 			Customer customer = new Customer();
 			customer.setAccountNo(number);
 			customer.setEmail(email);
@@ -70,11 +72,10 @@ public class DBUtils {
 		}
 		return null;
 	}
-	
+
 	public static Customer findCustomer(Connection conn, int accountNo) throws SQLException {
 
-		String sql = "Select * from Customer"
-				+ " where AccountNo = ? ";
+		String sql = "Select * from Customer" + " where AccountNo = ? ";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setInt(1, accountNo);
@@ -88,7 +89,7 @@ public class DBUtils {
 			double phone = rs.getDouble("Phone");
 			Date creationDate = rs.getDate("CreationDate");
 			int rating = rs.getInt("Rating");
-			
+
 			Customer customer = new Customer();
 			customer.setAccountNo(accountNo);
 			customer.setEmail(email);
@@ -101,15 +102,15 @@ public class DBUtils {
 		}
 		return null;
 	}
-	
+
 	public static Employee findEmployee(Connection conn, int repSSN) throws SQLException {
 
-		String sql = "Select * from Employee"
-				+ " where SSN = ? ";
-		
-		// Do I need to query for the person entity related to employee a.k.a the parent class
+		String sql = "Select * from Employee" + " where SSN = ? ";
+
+		// Do I need to query for the person entity related to employee a.k.a
+		// the parent class
 		// If so, do we assign to the employee we create?
-		
+
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setInt(1, repSSN);
 
@@ -119,16 +120,15 @@ public class DBUtils {
 			int number = rs.getInt("SSN");
 			Employee employee = new Employee();
 			employee.setSsn(number);
-			
+
 			return employee;
 		}
 		return null;
 	}
-	
+
 	public static Airline findAirline(Connection conn, String airlineId) throws SQLException {
-		String sql = "Select * from Airline"
-				+ " where Id = ? ";
-		
+		String sql = "Select * from Airline" + " where Id = ? ";
+
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, airlineId);
 
@@ -138,7 +138,7 @@ public class DBUtils {
 			String id = rs.getString("Id");
 			String name = rs.getString("Name");
 			Airline airline = new Airline(id, name);
-			
+
 			return airline;
 		}
 		return null;
@@ -151,18 +151,19 @@ public class DBUtils {
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			
+
 			while (rs.next()) {
 				int resrNo = rs.getInt("ResrNo");
 				java.sql.Date sqlDate = rs.getDate("ResrDate");
 				Date date = new Date(sqlDate.getTime());
-				
+
 				double fee = rs.getDouble("BookingFee");
 				double fare = rs.getDouble("TotalFare");
 				int accountNo = rs.getInt("AccountNo");
 				int repSSN = rs.getInt("RepSSN");
-				
-				// Won't create the person references yet - not sure if necessary yet
+
+				// Won't create the person references yet - not sure if
+				// necessary yet
 				Customer customer = findCustomer(conn, accountNo);
 				Employee employee = findEmployee(conn, repSSN);
 				Reservation reservation = new Reservation(resrNo, date, fee, fare, customer, employee);
@@ -173,7 +174,7 @@ public class DBUtils {
 		}
 		return list;
 	}
-	
+
 	public static List<Flight> queryFlight(Connection conn) {
 		String sql = "Select * from Flight ";
 
@@ -181,7 +182,7 @@ public class DBUtils {
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			
+
 			while (rs.next()) {
 				String airlineId = rs.getString("AirlineID");
 				int flightNo = rs.getInt("FlightNo");
@@ -189,10 +190,9 @@ public class DBUtils {
 				String daysOperating = rs.getString("DaysOperating");
 				int minStay = rs.getInt("MinLengthOfStay");
 				int maxStay = rs.getInt("MaxLengthOfStay");
-				
+
 				Airline airline = findAirline(conn, airlineId);
-				Flight flight = 
-						new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+				Flight flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
 				list.add(flight);
 			}
 		} catch (Exception e) {
@@ -200,35 +200,121 @@ public class DBUtils {
 		}
 		return list;
 	}
-	
+
 	public static List<Flight> queryFlights(Connection conn, String tripType, String tripFrom, String tripTo,
-			String tripClass, int numPeople) throws SQLException {
-		String sql = "Select * " + 
-				"From Flight Fl " +
-				"Where Fl.AirlineID IN " +
-					"(SELECT L.AirlineID " +
-					"From Leg L " + 
-					"Where L.AirlineID IN " +
-						"(SELECT F.AirlineID " + 
-						"FROM Fare F, Airport A1, Airport A2 " +
-						"Where F.AirlineID = L.AirlineID " +
-							"AND A1.City = ? " +
-							"AND A2.City = ? " +
-							"AND F.FareType = ? " +
-							"AND F.Class = ? " +
-							"AND Fl.NoOfSeats > ? " +
-							"AND L.DepAirportID = A1.Id " +
-							"AND L.ArrAirportID = A2.Id " +
-						"))";
-// still need to use departing and returning date
+			String departDate, String returnDate, String tripClass, int numPeople) throws SQLException {
+		// String sql = "Select * " +
+		// "From Flight Fl " +
+		// "Where Fl.AirlineID IN " +
+		// "(SELECT L.AirlineID " +
+		// "From Leg L " +
+		// "Where L.AirlineID IN " +
+		// "(SELECT F.AirlineID " +
+		// "From Fare F, Airport A1, Airport A2 " +
+		// "Where F.AirlineID = L.AirlineID " +
+		// "AND A1.City = ? " +
+		// "AND A2.City = ? " +
+		// "AND F.FareType = ? " +
+		// "AND F.Class = ? " +
+		// "AND Fl.NoOfSeats > ? " +
+		// "AND L.DepAirportID = A1.Id " +
+		// "AND L.ArrAirportID = A2.Id " +
+		// "))";
+
+		// String sql2 = "Select * " +
+		// "From Flight Fl, Fare F, Airport A1, Airport A2, Leg L " +
+		// "Where F.FareType = ? " +
+		// "AND F.Class = ? " +
+		// "AND F.AirlineID = L.AirlineID" +
+		// "AND Fl.NoOfSeats >= ? " +
+		// "AND Fl.AirlineID = L.AirlineID " +
+
+		// "AND A1.City = ? " +
+		// "AND A2.City = ? " +
+		// "AND L.DepAirportID = A1.Id " +
+		// "AND L.ArrAirportID = A2.Id ";
+		// AND DATES
+		String sql = "Select * " + "From Flight Fl, Fare F, Airport A1, Airport A2, Leg L " + "Where F.FareType = ? "
+				+ "AND F.Class = ? " + "AND F.AirlineID = L.AirlineID " + "AND Fl.NoOfSeats >= ? ";
+
+		if (tripFrom != null || tripTo != null) {
+			sql += "AND Fl.AirlineID = L.AirlineID ";
+			if (tripFrom != null) {
+				sql += "AND A1.City = ? ";
+				sql += "AND L.DepAirportID = A1.Id ";
+			}
+			if (tripTo != null) {
+				sql += "AND A2.City = ? ";
+				sql += "AND L.ArrAirportID = A2.Id ";
+			}
+		}
+
+		String pattern = "^\\d{4}-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$";
+		Pattern r = Pattern.compile(pattern);
+		Matcher mDepart = null, mReturn = null;
+		if (departDate != null) {
+
+			mDepart = r.matcher(departDate);
+			if (mDepart.find()) {
+				sql += "AND L.DepTime = ?";
+			}
+		}
+		if (returnDate != null) {
+			mReturn = r.matcher(returnDate);
+			if (mReturn.find()) {
+				sql += "AND L.ArrTime = ? ";
+			}
+		}
+
+		int numArgs = 1;
+		// Guaranteed strings are: fareType (roundway/one trip), class
+		// (business/economy/first), numPeople
+		// Empty strings are: tripFrom, tripTo, departDate, returnDate
+		// prepare statements at the end, maybe add the strings to a list and
+		// append em all at the end
 		PreparedStatement pstm = conn.prepareStatement(sql);
-		
-		pstm.setString(1, tripFrom);
-		pstm.setString(2, tripTo);
-		pstm.setString(3, tripType);
-		pstm.setString(4, tripClass);
-		pstm.setInt(5, numPeople);
-		
+
+		pstm.setString(1, tripType);
+		if (tripClass != null) {
+			pstm.setString(++numArgs, tripClass);
+		}
+
+		if (numPeople > 0) {
+			pstm.setInt(++numArgs, numPeople);
+		}
+
+		if (tripFrom != null) {
+			pstm.setString(++numArgs, tripFrom);
+		}
+
+		if (tripTo != null) {
+			pstm.setString(++numArgs, tripTo);
+		}
+
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-DD");
+
+		if (mDepart != null && mDepart.find()) {
+			Date dDate;
+			try {
+				dDate = (Date) formatter.parse(departDate);
+				pstm.setDate(++numArgs, dDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				System.out.println("Bad date");
+			}
+		}
+		if (mReturn != null && mReturn.find()) {
+			Date rDate;
+			try {
+				rDate = (Date) formatter.parse(returnDate);
+				pstm.setDate(++numArgs, rDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				System.out.println("Bad date");
+			}
+
+		}
+
 		List<Flight> list = new ArrayList<Flight>();
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
@@ -239,8 +325,7 @@ public class DBUtils {
 			int minStay = rs.getInt("MinLengthOfStay");
 			int maxStay = rs.getInt("MaxLengthOfStay");
 			Airline airline = findAirline(conn, airlineId);
-			Flight flight = 
-					new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+			Flight flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
 			list.add(flight);
 		}
 		return list;
@@ -351,7 +436,5 @@ public class DBUtils {
 			return null;
 		}
 	}
-
-	
 
 }
