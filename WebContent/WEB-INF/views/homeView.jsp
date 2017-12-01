@@ -43,7 +43,7 @@
                 <td colspan=2 align="center"> <input type="submit" value="Search For Flights"></td>
         </table>
 		<p>
-		<div style="text-align:center; width: 50%; margin: 0 auto"> Unsure what to search for? Click <a href="${pageContext.request.contextPath}/recommendations">here</a> for recommendations! </div>
+		<div> Unsure what to search for? Click <a href="${pageContext.request.contextPath}/recommendations">here</a> for recommendations! </div>
 		</form>
 	<script>
 		function toggleOneWay() {
