@@ -8,7 +8,7 @@
         	<%@include file="/WEB-INF/views/css/style.css"%>
         </style>
     </head>
-  <body>
+  <body id="home">
  
      <jsp:include page="_menu.jsp"></jsp:include>
       
@@ -36,24 +36,32 @@
             
             <tr>
                 <td> Number of People <br> <input type="number" name="numPeople" value="1"> </td>
-                <td> Class <br> <input type="text" name="class" value="Economy"></td>
-            </tr>
+				<td>Class <br> 
+					<select>
+						<option value="economy">Economy</option>
+						<option value="business">Business</option>
+						<option value="firstClass">First Class</option>
+					</select>
+				</td>
+			</tr>
             
             <tr>
                 <td colspan=2 align="center"> <input type="submit" value="Search For Flights"></td>
         </table>
-        </form>
-        <script>
-            function toggleOneWay() {
-                var tripTypes = document.getElementsByName("tripType");
-                var returningDate = document.getElementById("returningDate");
-                if (tripTypes[0].checked) 
-                    returningDate.disabled = false;  
-                else {
-                    returningDate.disabled = true;
-                    returningDate.value = "";
-                }
-            }
-        </script>
-  </body>
+		<p>
+		<div> Unsure what to search for? Click <a href="${pageContext.request.contextPath}/recommendations">here</a> for recommendations! </div>
+		</form>
+	<script>
+		function toggleOneWay() {
+			var tripTypes = document.getElementsByName("tripType");
+			var returningDate = document.getElementById("returningDate");
+			if (tripTypes[0].checked)
+				returningDate.disabled = false;
+			else {
+				returningDate.disabled = true;
+				returningDate.value = "";
+			}
+		}
+	</script>
+</body>
 </html>

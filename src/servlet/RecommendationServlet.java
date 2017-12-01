@@ -1,8 +1,8 @@
 package servlet;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,22 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Customer;
-import classes.Reservation;
-import utils.DBUtils;
-import utils.MyUtils;
+import classes.Flight;
+import utils.*;
 
-@WebServlet(urlPatterns = { "/reservationList" })
-public class ReservationServlet extends HttpServlet {
+@WebServlet(urlPatterns = { "/recommendations" })
+public class RecommendationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public ReservationServlet() {
+	public RecommendationServlet() {
 		super();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
 		HttpSession session = request.getSession();
 		 
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
@@ -38,24 +36,36 @@ public class ReservationServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-      
+       
+        request.setAttribute("customer", loginedCustomer);
+        
+
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
-		List<Reservation> list = null;
-		list = DBUtils.queryReservationByCustomer(conn, loginedCustomer.getAccountNo());
+		Flight bestSeller = null;
+		List <Flight> personalizedFlights = null;
+		try {
+			bestSeller = DBUtils.bestSeller(conn);
+			personalizedFlights = DBUtils.personalizedFlights(conn, loginedCustomer.getAccountNo());
+		} catch (SQLException e) {
+			System.out.println("No best seller");
+		}
 		request.setAttribute("errorString", errorString);
-		request.setAttribute("reservationList", list);
+		request.setAttribute("bestSeller", bestSeller);
+		request.setAttribute("personalizedFlights", personalizedFlights);
 
-		RequestDispatcher dispatcher = request.getServletContext()
-				.getRequestDispatcher("/WEB-INF/views/reservationListView.jsp");
+		
+			
+		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/recommendationsView.jsp");
 		dispatcher.forward(request, response);
+
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doGet(request, response);
-	}
+		
+		}
 
 }

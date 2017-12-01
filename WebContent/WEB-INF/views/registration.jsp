@@ -69,6 +69,7 @@
                 var currentType = "";
                 var customers = document.getElementsByClassName("customer");
                 var employees = document.getElementsByClassName("employee");
+                
                 for (var i = 0; i < userTypes.length; i++) {
                     if (userTypes[i].checked) {
                         userTypes[i].value == 'customer' ?

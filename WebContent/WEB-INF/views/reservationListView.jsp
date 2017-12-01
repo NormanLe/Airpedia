@@ -14,11 +14,11 @@
  
     <jsp:include page="_menu.jsp"></jsp:include>
  
-    <h1>Reservation List</h1>
+    <h1>My Reservations</h1>
  
     <p style="color: red;">${errorString}</p>
  
- 	<a href="createReservation">Create Reservation</a>
+ 	<a href="${pageContext.request.contextPath}">Create Reservation</a>
     <table class="tableStyle">
        <tr>
           <th>ResrNo</th>

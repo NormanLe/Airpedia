@@ -9,7 +9,7 @@
         	
      </style>
  </head>
- <body>
+ <body id="profile">
  	
  	<!-- should differentiate between employee, manager, and customer -->
     <jsp:include page="_menu.jsp"></jsp:include>

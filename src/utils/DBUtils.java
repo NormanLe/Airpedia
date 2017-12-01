@@ -174,7 +174,35 @@ public class DBUtils {
 		}
 		return list;
 	}
+	
+	public static List<Reservation> queryReservationByCustomer(Connection conn, int accountNo) {
+		String sql = "Select * from Reservation where AccountNo = " + accountNo;
 
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			
+			while (rs.next()) {
+				int resrNo = rs.getInt("ResrNo");
+				java.sql.Date sqlDate = rs.getDate("ResrDate");
+				Date date = new Date(sqlDate.getTime());
+				
+				double fee = rs.getDouble("BookingFee");
+				double fare = rs.getDouble("TotalFare");
+				int repSSN = rs.getInt("RepSSN");
+				
+				// Won't create the person references yet - not sure if necessary yet
+				Customer customer = findCustomer(conn, accountNo);
+				Employee employee = findEmployee(conn, repSSN);
+				Reservation reservation = new Reservation(resrNo, date, fee, fare, customer, employee);
+				list.add(reservation);
+			}
+		} catch (Exception e) {
+			System.out.println("Something went wrong in querying reservations");
+		}
+		return list;
+	}
 	public static List<Flight> queryFlight(Connection conn) {
 		String sql = "Select * from Flight ";
 
@@ -329,6 +357,67 @@ public class DBUtils {
 			list.add(flight);
 		}
 		return list;
+	}
+	
+	public static Flight bestSeller (Connection conn) throws SQLException {
+		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" +
+				" FROM Flight F, Includes I" + 
+				" WHERE F.FlightNo = I.FlightNo" + 
+				" AND F.AirlineId = I.AirlineId" +
+				" GROUP BY I.ResrNo" +
+				" ORDER BY NumFlights DESC LIMIT 1";
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		Flight flight = null;
+		if (rs.next()) {
+			String resrNo = rs.getString("ResrNo");
+			System.out.println(resrNo);
+			
+			String newSql = "select * from includes i , flight f where f.flightno = i.flightno and f.airlineid = i.airlineid and i.resrno = " + resrNo +" LIMIT 1";
+			PreparedStatement p = conn.prepareStatement(newSql);
+			ResultSet r = p.executeQuery();
+			
+			if (r.next()) {
+			String airlineId = r.getString("AirlineID");
+			int flightNo = r.getInt("FlightNo");
+			int numSeats = r.getInt("NoOfSeats");
+			String daysOperating = r.getString("DaysOperating");
+			int minStay = r.getInt("MinLengthOfStay");
+			int maxStay = r.getInt("MaxLengthOfStay");
+			Airline airline = findAirline(conn, airlineId);
+			flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+			}
+
+		}
+		return flight;
+	}
+	
+	public static List<Flight> personalizedFlights (Connection conn, int accountNo) throws SQLException {
+		String sql = "SELECT * FROM FLIGHT F" + 
+					 " WHERE F.FlightNo NOT IN" + 
+					 " (SELECT I.FlightNo" + 
+					 " FROM Makes M, Includes I" + 
+					 " WHERE M.AccountNo = " + accountNo +
+					 " AND I.ResrNo = M.ResrNo)";
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		ArrayList<Flight> flights = new ArrayList<>();
+		
+		while (rs.next()) {
+			String airlineId = rs.getString("AirlineID");
+			int flightNo = rs.getInt("FlightNo");
+			int numSeats = rs.getInt("NoOfSeats");
+			String daysOperating = rs.getString("DaysOperating");
+			int minStay = rs.getInt("MinLengthOfStay");
+			int maxStay = rs.getInt("MaxLengthOfStay");
+			Airline airline = findAirline(conn, airlineId);
+			Flight flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+			flights.add(flight);
+		}
+		
+		return flights;
 	}
 
 	// TODO: Change these in future
