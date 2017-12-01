@@ -4,6 +4,7 @@ body {
 	font-family: 'Open Sans';
 	margin: 0 auto;
 	text-align: center;
+	color: #2E2E2E;
 }
 
 h1 {
@@ -19,20 +20,37 @@ table {
 	border:1px solid #CCCCCC;
 	padding: 4px;
 }
+
+.tableStyle th {
+	background-color: #D59EA7;
+	color: #FFF;
+}
 a {
-	color: #4B5770;
+	color: #6EA5C5;
 	text-decoration: none;
+}
+
+a:hover {
+	transition: 500ms ease-in-out;
+	color: #808080;
 }
 .navigation a {
 	color: #FFF;
 	text-decoration: none;
 }
 
+.navigation a:hover {
+	transition: 500ms ease-in-out;
+	text-decoration: underline;
+}
+
 .navigation {
 	text-align: center;
-	background-color: #4C586F;
+	background-color: #79A5C3;
 	padding: 5px;
 	width: 100%;
+	height: 40px;	
+	line-height: 40px;
 }
 
 #recommendations table {
@@ -40,6 +58,6 @@ a {
 	margin: 0 auto;
 }
 
-select {
-	width: 150px;
+#home input[type="text"], select {
+	width: 130px;
 }
