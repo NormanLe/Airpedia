@@ -36,8 +36,14 @@
             
             <tr>
                 <td> Number of People <br> <input type="number" name="numPeople" value="1"> </td>
-                <td> Class <br> <input type="text" name="class" value="Economy"></td>
-            </tr>
+				<td>Class <br> 
+					<select>
+						<option value="economy">Economy</option>
+						<option value="business">Business</option>
+						<option value="firstClass">First Class</option>
+					</select>
+				</td>
+			</tr>
             
             <tr>
                 <td colspan=2 align="center"> <input type="submit" value="Search For Flights"></td>
