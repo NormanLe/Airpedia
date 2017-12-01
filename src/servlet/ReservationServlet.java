@@ -11,7 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import classes.Customer;
 import classes.Reservation;
 import utils.DBUtils;
 import utils.MyUtils;
@@ -27,13 +29,21 @@ public class ReservationServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		HttpSession session = request.getSession();
+		 
+        Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
+       
+        if (loginedCustomer == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+      
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
 		List<Reservation> list = null;
-//		try{
-		list = DBUtils.queryReservation(conn);
-//		}catch(SQLException e){	}
+		list = DBUtils.queryReservationByCustomer(conn, loginedCustomer.getAccountNo());
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("reservationList", list);
 
