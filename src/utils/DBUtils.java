@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import classes.*;
+import classes.FlightData;
 
 public class DBUtils {
 	private Connection con;
@@ -921,24 +922,28 @@ public class DBUtils {
 	}
 	
 	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
-		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = %s AND FlightNo = %d;", airlineId, flightNo);
-		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = %s AND FlightNo = %d;", airlineId, flightNo);
+		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
+		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
 		
 		FlightData fd = new FlightData();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
-			PreparedStatement pstm2 = conn.prepareStatement(sql2);
 			ResultSet rs = pstm.executeQuery();
-			ResultSet rs2 = pstm2.executeQuery();
-			while (rs.next()) {
+			
+			if (rs.next()) {
 				fd.setDepartAirport(rs.getString("DepAirportID"));
 				fd.setArrivalAirport(rs.getString("ArrAirportID"));
 				fd.setDepartDate(rs.getDate("DepTime"));
 				fd.setArrivalDate(rs.getDate("ArrTime"));
+			}
+			
+			PreparedStatement pstm2 = conn.prepareStatement(sql2);
+			ResultSet rs2 = pstm2.executeQuery();
+			if (rs2.next()) {
 				fd.setFare(rs2.getDouble("Fare"));
 			}
 		} catch (Exception e) {
-			System.out.println("SQL Error.");
+			e.printStackTrace();
 		}
 		return fd;
 	}
