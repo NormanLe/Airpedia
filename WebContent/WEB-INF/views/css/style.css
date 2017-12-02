@@ -61,3 +61,26 @@ a:hover {
 #home input[type="text"], select {
 	width: 130px;
 }
+
+.flightsData {
+	margin: 0 auto;
+	width: 80%;
+}
+
+.flightsData h2 {
+	margin-bottom: 6px;
+	color: #E099A5;
+}
+
+.chooseFlight {
+	background-color: #E099A5;
+	width: 110px;
+	padding: 5px;
+	color: #FFF;
+	margin: 0 auto;
+	margin-top: 6px;
+}
+
+.chooseFlight a {
+	color: #FFF;
+}

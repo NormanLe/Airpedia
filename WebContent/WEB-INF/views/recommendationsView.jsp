@@ -13,60 +13,31 @@
  <body id="recommendations">
     <jsp:include page="_menu.jsp"></jsp:include>
  
-    <h1>Recommendations</h1>
+    <h1>Best Seller</h1>
  
     <p style="color: red;">${errorString}</p>
  	
- 	<h2> Best Seller </h2>
-    <table class="tableStyle">
-       <%-- <tr>
-          <th>Airline Name</th>
-          <th>Flight #</th>
-          <th>Seats Remaining</th>
-          <th>Days Operating</th>
-          <th>Min length of stay</th>
-          <th>Max length of stay</th>
-          <th>Reserve</th>
-       </tr> 
-       --%>
-       <tr>
-             <td>${bestSeller.departAirport}</td>
-             <td>${bestSeller.arrivalAirport}</td>
-             <td>${bestSeller.departDate}</td>
-             <td>${bestSeller.arrivalDate}</td>
-             <td>${bestSeller.fare}</td>
-             <td>
-             <%--<a href="createReservation?code=${bestSeller.flightNo}">Make a reservation</a>--%>
-             </td>
-          </tr>
-       
-    </table>
+    <div class="flightsData">
+    	<h2> ${bestSeller.departAirport} to ${bestSeller.arrivalAirport} </h2>
+		$${bestSeller.fare} <br>
+		${bestSeller.departDate} to ${bestSeller.arrivalDate}
+		<div class="chooseFlight"> <a href="">Choose Flight</a></div>
+	</div>
+           
+    <h1> Personalized Flight Suggestions </h1>       
+    <div class="flightsData">
+    	<c:forEach items="${personalizedFlights}" var="flight">
+    		<h2> ${flight.departAirport} to ${flight.arrivalAirport} </h2>
+			$${flight.fare} <br>
+			${flight.departDate} to ${flight.arrivalDate}
+			<div class="chooseFlight"> <a href="">Choose Flight</a></div>
+    	</c:forEach>
     
-    <h2> Personalized Flight Suggestions</h2>
-    <table class="tableStyle">
-       <tr>
-          <th>Airline Name</th>
-          <th>Flight #</th>
-          <th>Seats Remaining</th>
-          <th>Days Operating</th>
-          <th>Min length of stay</th>
-          <th>Max length of stay</th>
-          <th>Reserve</th>
-       </tr>
-       <c:forEach items="${personalizedFlights}" var="flight" >
-          <tr>
-             <td>${flight.airline.name}</td>
-             <td>${flight.flightNo}</td>
-             <td>${flight.noOfSeats}</td>
-             <td>${flight.daysOperating}</td>
-             <td>${flight.minLengthOfStay}</td>
-             <td>${flight.maxLengthOfStay}</td>
-             <td>
-                <a href="createReservation?code=${flight.flightNo}">Make a reservation</a>
-             </td>
-          </tr>
-       </c:forEach>
-    </table>
+    </div>
+    <%--<a href="createReservation?code=${bestSeller.flightNo}">Make a reservation</a>
+          
+    
  
+ --%>
  </body>
 </html>
