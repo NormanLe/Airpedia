@@ -875,23 +875,26 @@ public class DBUtils {
 		return 0.0;
 	}
 	
-	public static Leg getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
+	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
 		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = %s AND FlightNo = %d;", airlineId, flightNo);
+		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = %s AND FlightNo = %d;", airlineId, flightNo);
 		
-		Leg l = new Leg();
+		FlightData fd = new FlightData();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
+			PreparedStatement pstm2 = conn.prepareStatement(sql2);
 			ResultSet rs = pstm.executeQuery();
+			ResultSet rs2 = pstm2.executeQuery();
 			while (rs.next()) {
-				l.setArrTime(rs.getDate("ArrTime"));
-				l.setDepTime(rs.getDate("DepTime"));
-				l.setLegNo(rs.getInt("LegNo"));
-				l.setOnTime(rs.getBoolean("OnTime"));
-				
+				fd.setDepartAirport(rs.getString("DepAirportID"));
+				fd.setArrivalAirport(rs.getString("ArrAirportID"));
+				fd.setDepartDate(rs.getDate("DepTime"));
+				fd.setArrivalDate(rs.getDate("ArrTime"));
+				fd.setFare(rs2.getDouble("Fare"));
 			}
 		} catch (Exception e) {
 			System.out.println("SQL Error.");
 		}
-		return null;
+		return fd;
 	}
 }
