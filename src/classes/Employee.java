@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class Employee {
 	Person person;
+	private int id;
 	private int ssn;
 	private boolean isManager;
 	private Date startDate;
@@ -11,6 +12,14 @@ public class Employee {
 	
 	public Employee() {
 		
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getSsn() {

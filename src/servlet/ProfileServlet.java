@@ -1,6 +1,8 @@
 package servlet;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
  
 import classes.Customer;
+import classes.Person;
+import utils.DBUtils;
 import utils.MyUtils;
  
 @WebServlet(urlPatterns = { "/profile" })
@@ -26,22 +30,19 @@ public class ProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
  
-        // Check User has logged on
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
        
-        // Not logged in
         if (loginedCustomer == null) {
-            // Redirect to login page.
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-       
-        // Store info to the request attribute before forwarding.
+        
+        Connection conn = MyUtils.getStoredConnection(request);
+        Person p = DBUtils.findPersonById(conn, loginedCustomer.getId());
         request.setAttribute("customer", loginedCustomer);
- 
-        // If the user has logged in, then forward to the page
-        // /WEB-INF/views/profileView.jsp
-        RequestDispatcher dispatcher //
+        request.setAttribute("person", p);
+        
+        RequestDispatcher dispatcher
                 = this.getServletContext().getRequestDispatcher("/WEB-INF/views/profileView.jsp");
         dispatcher.forward(request, response);
  

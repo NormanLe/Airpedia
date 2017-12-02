@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import classes.Customer;
 import classes.Flight;
+import classes.FlightData;
 import utils.*;
 
 @WebServlet(urlPatterns = { "/recommendations" })
@@ -44,17 +45,21 @@ public class RecommendationServlet extends HttpServlet {
 
 		String errorString = null;
 		Flight bestSeller = null;
+		FlightData best = null;
 		List <Flight> personalizedFlights = null;
 		try {
 			bestSeller = DBUtils.bestSeller(conn);
+			best= DBUtils.getFlightDataFromAirlineFlight(conn, bestSeller.getAirline().getId(), bestSeller.getFlightNo());
+			System.out.print(best);
 			personalizedFlights = DBUtils.personalizedFlights(conn, loginedCustomer.getAccountNo());
+//			for (int i = 0; i < personalizedFlights.size(); i++DBUtils.getFlightDataFromAirlineFlight
 		} catch (SQLException e) {
 			System.out.println("No best seller");
 		}
 		request.setAttribute("errorString", errorString);
-		request.setAttribute("bestSeller", bestSeller);
+		request.setAttribute("bestSeller", best);
 		request.setAttribute("personalizedFlights", personalizedFlights);
-
+		
 		
 			
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/recommendationsView.jsp");

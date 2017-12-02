@@ -14,6 +14,45 @@ import classes.*;
 public class DBUtils {
 	private Connection con;
 
+	public static Person findPersonById(Connection conn, int id) {
+		String sql = "Select * from Person where id = " + id;
+		Person person = null;
+		try {
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		
+			if (rs.next()) {
+			String firstName = rs.getString("FirstName");
+			String lastName = rs.getString("LastName");
+			String address = rs.getString("Address");
+			String city = rs.getString("City");
+			String state = rs.getString("State");
+			String zipCode = rs.getString("ZipCode");
+			
+			person = new Person();
+			person.setId(id);
+			person.setFirstName(firstName);
+			person.setLastName(lastName);
+			person.setAddress(address);
+			person.setCity(city);
+			person.setState(state);
+			person.setZipCode(zipCode);
+			}
+		} catch (Exception e) {
+			System.out.println("error with finding person by id");
+		}
+		return person;
+	}
+	
+	public static Person findPersonBySSN(Connection conn, int SSN) {
+		try {
+			return findPersonById(conn, findEmployee(conn, SSN).getId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static Customer findCustomer(Connection conn, String email, String password) throws SQLException {
 
 		String sql = "Select * from Customer c" + " where c.email = ? and c.password = ?";
@@ -24,6 +63,7 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			int id = rs.getInt("Id");
 			int number = rs.getInt("AccountNo");
 			String creditcardNo = rs.getString("CreditCardNo");
 			double phone = rs.getDouble("Phone");
@@ -31,6 +71,7 @@ public class DBUtils {
 			int rating = rs.getInt("Rating");
 
 			Customer customer = new Customer();
+			customer.setId(id);
 			customer.setAccountNo(number);
 			customer.setEmail(email);
 			customer.setPassword(password);
@@ -53,6 +94,7 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			int id = rs.getInt("Id");
 			String password = rs.getString("Password");
 			int number = rs.getInt("AccountNo");
 			String creditcardNo = rs.getString("CreditCardNo");
@@ -61,6 +103,7 @@ public class DBUtils {
 			int rating = rs.getInt("Rating");
 
 			Customer customer = new Customer();
+			customer.setId(id);
 			customer.setAccountNo(number);
 			customer.setEmail(email);
 			customer.setPassword(password);
@@ -83,6 +126,7 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			int id = rs.getInt("Id");
 			String email = rs.getString("Email");
 			String password = rs.getString("Password");
 			String creditcardNo = rs.getString("CreditCardNo");
@@ -91,6 +135,7 @@ public class DBUtils {
 			int rating = rs.getInt("Rating");
 
 			Customer customer = new Customer();
+			customer.setId(id);
 			customer.setAccountNo(accountNo);
 			customer.setEmail(email);
 			customer.setPassword(password);
@@ -864,23 +909,30 @@ public class DBUtils {
 		return 0.0;
 	}
 
-	public static Leg getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
-		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = %s AND FlightNo = %d;", airlineId, flightNo);
-
-		Leg l = new Leg();
+	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
+		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
+		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
+		
+		FlightData fd = new FlightData();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			while (rs.next()) {
-				l.setArrTime(rs.getDate("ArrTime"));
-				l.setDepTime(rs.getDate("DepTime"));
-				l.setLegNo(rs.getInt("LegNo"));
-				l.setOnTime(rs.getBoolean("OnTime"));
-
+			
+			if (rs.next()) {
+				fd.setDepartAirport(rs.getString("DepAirportID"));
+				fd.setArrivalAirport(rs.getString("ArrAirportID"));
+				fd.setDepartDate(rs.getDate("DepTime"));
+				fd.setArrivalDate(rs.getDate("ArrTime"));
+			}
+			
+			PreparedStatement pstm2 = conn.prepareStatement(sql2);
+			ResultSet rs2 = pstm2.executeQuery();
+			if (rs2.next()) {
+				fd.setFare(rs2.getDouble("Fare"));
 			}
 		} catch (Exception e) {
-			System.out.println("SQL Error.");
+			e.printStackTrace();
 		}
-		return null;
+		return fd;
 	}
 }

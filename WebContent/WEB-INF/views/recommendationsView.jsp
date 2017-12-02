@@ -19,7 +19,7 @@
  	
  	<h2> Best Seller </h2>
     <table class="tableStyle">
-       <tr>
+       <%-- <tr>
           <th>Airline Name</th>
           <th>Flight #</th>
           <th>Seats Remaining</th>
@@ -27,17 +27,16 @@
           <th>Min length of stay</th>
           <th>Max length of stay</th>
           <th>Reserve</th>
-       </tr>
-       
-          <tr>
-             <td>${bestSeller.airline.name}</td>
-             <td>${bestSeller.flightNo}</td>
-             <td>${bestSeller.noOfSeats}</td>
-             <td>${bestSeller.daysOperating}</td>
-             <td>${bestSeller.minLengthOfStay}</td>
-             <td>${bestSeller.maxLengthOfStay}</td>
+       </tr> 
+       --%>
+       <tr>
+             <td>${bestSeller.departAirport}</td>
+             <td>${bestSeller.arrivalAirport}</td>
+             <td>${bestSeller.departDate}</td>
+             <td>${bestSeller.arrivalDate}</td>
+             <td>${bestSeller.fare}</td>
              <td>
-             <a href="createReservation?code=${bestSeller.flightNo}">Make a reservation</a>
+             <%--<a href="createReservation?code=${bestSeller.flightNo}">Make a reservation</a>--%>
              </td>
           </tr>
        

@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Customer;
+import classes.Person;
 import classes.Reservation;
 import utils.DBUtils;
 import utils.MyUtils;
@@ -44,6 +44,7 @@ public class ReservationServlet extends HttpServlet {
 		String errorString = null;
 		List<Reservation> list = null;
 		list = DBUtils.queryReservationByCustomer(conn, loginedCustomer.getAccountNo());
+		
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("reservationList", list);
 
