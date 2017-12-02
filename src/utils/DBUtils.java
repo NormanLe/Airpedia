@@ -570,5 +570,376 @@ public class DBUtils {
 			return null;
 		}
 	}
+	public static List<Flight> getAllFlights(Connection conn) {
+		String sql = "SELECT * FROM Flight;";
 
+		List<Flight> list = new ArrayList<Flight>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Flight f = new Flight();
+				f.setFlightNo(rs.getInt(2));
+				f.setNoOfSeats(rs.getInt(3));
+				f.setDaysOperating(rs.getString(4));
+				f.setMinLengthOfStay(rs.getInt(5));
+				f.setMaxLengthOfStay(rs.getInt(6));
+				list.add(f);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Reservation> getReservationByFlightNumber(Connection conn, int flightNo) {
+		String sql = String.format("SELECT * FROM Reservation R WHERE R.ResrNo IN (SELECT I.ResrNo FROM Includes I WHERE I.FlightNo = %d);", flightNo);
+		
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Reservation r = new Reservation();
+				r.setBookingFee(rs.getDouble("BookingFee"));
+				r.setTotalFare(rs.getDouble("TotalFare"));
+				r.setResrDate(rs.getDate("ResrDate"));
+				r.setResrNo(rs.getInt("ResrNo"));
+				r.setEmployee(DBUtils.findEmployee(conn, rs.getInt("RepSSN")));
+				r.setCustomer(DBUtils.findCustomer(conn, rs.getInt("AccountNo")));
+				list.add(r);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Reservation> getReservationByCustomerNumber(Connection conn, int id) {
+		String sql = String.format("SELECT * FROM Reservation R WHERE R.ResrNo IN (SELECT M.ResrNo FROM Makes M WHERE M.Id = :Id);", id);
+		
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Reservation r = new Reservation();
+				r.setBookingFee(rs.getDouble("BookingFee"));
+				r.setTotalFare(rs.getDouble("TotalFare"));
+				r.setResrDate(rs.getDate("ResrDate"));
+				r.setResrNo(rs.getInt("ResrNo"));
+				r.setEmployee(DBUtils.findEmployee(conn, rs.getInt("RepSSN")));
+				r.setCustomer(DBUtils.findCustomer(conn, rs.getInt("AccountNo")));
+				list.add(r);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Reservation> getRevenueByFlight(Connection conn, int flightNo) {
+		String sql = String.format("SELECT R.ResrNo, R.BookingFee FROM Reservation R WHERE R.ResrNo IN (SELECT I.ResrNo FROM Includes I, Leg L WHERE L.FlightNo = %d AND L.FlightNo = I.FlightNo)", flightNo);
+		
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Reservation r = new Reservation();
+				r.setBookingFee(rs.getDouble("BookingFee"));
+				r.setResrNo(rs.getInt("ResrNo"));
+				list.add(r);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Reservation> getRevenueByDestination(Connection conn, String city) {
+		String sql = String.format("SELECT DISTINCT I.ResrNo, R.BookingFee, A.City FROM Includes I, Leg L, Airport A, Reservation R WHERE L.ArrAirportID = A.Id AND A.City = %s AND R.ResrNo = I.ResrNo AND L.AirlineId = I.AirlineId AND L.FlightNo = I.FlightNo;", city);
+		
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Reservation r = new Reservation();
+				r.setBookingFee(rs.getDouble("BookingFee"));
+				r.setResrNo(rs.getInt("ResrNo"));
+				list.add(r);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Reservation> getRevenueByCustomer(Connection conn, int accountNo) {
+		String sql = String.format("SELECT R.ResrNo, R.BookingFee FROM Reservation R WHERE R.ResrNo IN (SELECT M.ResrNo FROM Makes M WHERE M.AccountNo = %d)", accountNo);
+		
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Reservation r = new Reservation();
+				r.setBookingFee(rs.getDouble("BookingFee"));
+				r.setResrNo(rs.getInt("ResrNo"));
+				list.add(r);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	//[accountNo, totalRevenue]
+	public static int[] getCustomerMostRevenue(Connection conn) {
+		String sql = "SELECT summed.AccountNo, MAX(SumRevenue) FROM (SELECT C.AccountNo, SUM(R.BookingFee) AS SumRevenue FROM Reservation R, Customer C, Makes M WHERE M.ResrNo = R.ResrNo AND M.AccountNo = C.AccountNo GROUP BY  C.AccountNo) summed GROUP BY summed.AccountNo ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
+		
+		int[] arr = new int[2];
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				arr[0] = rs.getInt("AccountNo");
+				arr[1] = rs.getInt("SumRevenue");
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return arr;
+	}
+	
+	public static int[] getRepMostRevenue(Connection conn) {
+		String sql = "SELECT summed.RepSSN, MAX(SumRevenue) FROM (SELECT RepSSN, SUM(BookingFee) AS SumRevenue FROM Reservation GROUP BY RepSSN) summed GROUP BY summed.RepSSN ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
+		
+		int[] arr = new int[2];
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				arr[0] = rs.getInt("RepSSN");
+				arr[1] = rs.getInt("SumRevenue");
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return arr;
+	}
+	
+	//[flightNo, numflights]
+	public static int[] getMostActiveFlight(Connection conn) {
+		String sql = "SELECT counted.FlightNo, MAX(NumFlights)FROM (SELECT F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights) DESC LIMIT 1;";
+		
+		int[] arr = new int[2];
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				arr[0] = rs.getInt("FlightNo");
+				arr[1] = rs.getInt("NumFlights");
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return arr;
+	}
+	
+	public static List<Customer> getCustomersOnFlight(Connection conn, int flightNo) {
+		String sql = String.format("SELECT * FROM Customer C WHERE C.AccountNo IN (SELECT RP.AccountNo FROM ReservationPassenger RP, Includes I WHERE RP.ResrNo = I.ResrNo AND I.FlightNo = %d);", flightNo);
+		
+		List<Customer> list = new ArrayList<Customer>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Customer c = new Customer();
+				c.setAccountNo(rs.getInt("AccountNo"));
+				c.setCreditcardNo(rs.getString("CreditCardNo"));
+				c.setEmail(rs.getString("Email"));
+				c.setPassword(rs.getString("Password"));
+				c.setPhone(rs.getDouble("Phone"));
+				c.setCreationDate(rs.getDate("CreationDate"));
+				c.setRating(rs.getInt("Rating"));
+				list.add(c);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Flight> getFlightsForAirport(Connection conn, String airportId) {
+		String sql = String.format("SELECT * FROM Flight F WHERE F.FlightNo IN (SELECT L.FlightNo FROM Leg L, Airport A, Flight F WHERE (L.DepAirportID = A.Id OR L.ArrAirportID = A.Id) AND A.Id = %s AND F.AirlineId = L.AirlineId);", airportId);
+		
+		List<Flight> list = new ArrayList<Flight>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Flight f = new Flight();
+				f.setFlightNo(rs.getInt("FlightNo"));
+				f.setNoOfSeats(rs.getInt("NoOfSeats"));
+				f.setDaysOperating(rs.getString(rs.getString("DaysOperating")));
+				f.setMinLengthOfStay(rs.getInt("MinLengthOfStay"));
+				f.setMaxLengthOfStay(rs.getInt("MaxLengthOfStay"));
+				list.add(f);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Flight> getDelayedFlights(Connection conn) {
+		String sql = "SELECT * FROM Flight F WHERE F.FlightNo IN (SELECT F1.FlightNo, COUNT(F1.AirlineID) AS num_flights, SUM(F1.AirlineID) AS num_onTime FROM Flight F1 GROUP BY F1.FlightNo HAVING num_flights = num_onTime);";
+		
+		List<Flight> list = new ArrayList<Flight>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Flight f = new Flight();
+				f.setFlightNo(rs.getInt("FlightNo"));
+				f.setNoOfSeats(rs.getInt("NoOfSeats"));
+				f.setDaysOperating(rs.getString(rs.getString("DaysOperating")));
+				f.setMinLengthOfStay(rs.getInt("MinLengthOfStay"));
+				f.setMaxLengthOfStay(rs.getInt("MaxLengthOfStay"));
+				list.add(f);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static void recordReservation(Connection conn, Reservation r) {
+		try {
+			String sql = "INSERT INTO Reservation(ResrNo, ResrDate, BookingFee, TotalFare, RepSSN, AccountNo) VALUES (?, ?, ?, ?, ?, ?);";
+
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, r.getResrNo());
+			pstm.setDate(2, new Date(System.currentTimeMillis()));
+			pstm.setDouble(3, r.getBookingFee());
+			pstm.setDouble(4, r.getTotalFare());
+			pstm.setInt(5, r.getEmployee().getSsn());
+			pstm.setInt(6, r.getCustomer().getAccountNo());
+			pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	public static void addCustomer(Connection conn, Customer c) {
+		try {
+			String sql = "INSERT INTO Customer(Id, AccountNo, CreditCardNo, Email, CreationDate, Rating) VALUES (?, ?, ?, ?, ?, ?);";
+
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, c.get);
+			pstm.setDate(2, new Date(System.currentTimeMillis()));
+			pstm.setDouble(3, r.getBookingFee());
+			pstm.setDouble(4, r.getTotalFare());
+			pstm.setInt(5, r.getEmployee().getSsn());
+			pstm.setInt(6, r.getCustomer().getAccountNo());
+			pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}*/
+	
+	public static List<String> getMailingList(Connection conn) {
+		String sql = String.format("SELECT Email FROM CUSTOMER");
+		
+		List<String> list = new ArrayList<String>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getString("Email"));
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static List<Reservation> getReservationsForCustomer(Connection conn, int accountNo) {
+		String sql = String.format("SELECT * FROM Reservation R WHERE R.ResrNo IN (SELECT PR.ResrNo FROM ReservationPassenger PR, Customer C WHERE PR.AccountNo = %d) AND R.ResrDate = DATE(NOW());", accountNo);
+		
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Reservation r = new Reservation();
+				r.setBookingFee(rs.getDouble("BookingFee"));
+				r.setTotalFare(rs.getDouble("TotalFare"));
+				r.setResrDate(rs.getDate("ResrDate"));
+				r.setResrNo(rs.getInt("ResrNo"));
+				r.setEmployee(DBUtils.findEmployee(conn, rs.getInt("RepSSN")));
+				r.setCustomer(DBUtils.findCustomer(conn, rs.getInt("AccountNo")));
+				list.add(r);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return list;
+	}
+	
+	public static double getCustomersBid(Connection conn, int accountNo, String airlineId, int flightNo, String classType, Date date) {
+		String sql = String.format("SELECT A.NYOP FROM Auctions A WHERE A.AccountNo = :AccountNo AND A.AirlineID = :AirlineID AND A.FlightNo = :FlightNo AND A.Class = :Class AND A.Date = :Date ORDER BY Date DESC LIMIT 1;", accountNo);
+		
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				Reservation r = new Reservation();
+				r.setBookingFee(rs.getDouble("BookingFee"));
+				r.setTotalFare(rs.getDouble("TotalFare"));
+				r.setResrDate(rs.getDate("ResrDate"));
+				r.setResrNo(rs.getInt("ResrNo"));
+				r.setEmployee(DBUtils.findEmployee(conn, rs.getInt("RepSSN")));
+				r.setCustomer(DBUtils.findCustomer(conn, rs.getInt("AccountNo")));
+				list.add(r);
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return 0.0;
+	}
+	
+	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
+		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = %s AND FlightNo = %d;", airlineId, flightNo);
+		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = %s AND FlightNo = %d;", airlineId, flightNo);
+		
+		FlightData fd = new FlightData();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			PreparedStatement pstm2 = conn.prepareStatement(sql2);
+			ResultSet rs = pstm.executeQuery();
+			ResultSet rs2 = pstm2.executeQuery();
+			while (rs.next()) {
+				fd.setDepartAirport(rs.getString("DepAirportID"));
+				fd.setArrivalAirport(rs.getString("ArrAirportID"));
+				fd.setDepartDate(rs.getDate("DepTime"));
+				fd.setArrivalDate(rs.getDate("ArrTime"));
+				fd.setFare(rs2.getDouble("Fare"));
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return fd;
+	}
 }
