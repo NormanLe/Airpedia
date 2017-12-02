@@ -865,31 +865,44 @@ public class DBUtils {
 		}
 		return list;
 	}
-
-	public static double getCustomersBid(Connection conn, int accountNo, String airlineId, int flightNo,
-			String classType, Date date) {
-		String sql = String.format(
-				"SELECT A.NYOP FROM Auctions A WHERE A.AccountNo = :AccountNo AND A.AirlineID = :AirlineID AND A.FlightNo = :FlightNo AND A.Class = :Class AND A.Date = :Date ORDER BY Date DESC LIMIT 1;",
-				accountNo);
-
-		List<Reservation> list = new ArrayList<Reservation>();
+	
+	public static double getCustomersBid(Connection conn, int accountNo, String airlineId, int flightNo, String classType, Date date) {
+		String sql = String.format("SELECT A.NYOP FROM Auctions A WHERE A.AccountNo = %d AND A.AirlineID = '%s' AND A.FlightNo = %d AND A.Class = '%s' AND A.Date = %t ORDER BY Date DESC LIMIT 1;", accountNo, airlineId, flightNo, classType, date);
+		
+		double nyop = 0;
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			while (rs.next()) {
-				Reservation r = new Reservation();
-				r.setBookingFee(rs.getDouble("BookingFee"));
-				r.setTotalFare(rs.getDouble("TotalFare"));
-				r.setResrDate(rs.getDate("ResrDate"));
-				r.setResrNo(rs.getInt("ResrNo"));
-				r.setEmployee(DBUtils.findEmployee(conn, rs.getInt("RepSSN")));
-				r.setCustomer(DBUtils.findCustomer(conn, rs.getInt("AccountNo")));
-				list.add(r);
+				nyop = rs.getInt("NYOP");
 			}
 		} catch (Exception e) {
 			System.out.println("SQL Error.");
 		}
-		return 0.0;
+		return nyop;
+	}
+	//fix
+	public static Auction getBidHistory(Connection conn, int accountNo, String airlineId, int flightNo, String classType) {
+		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
+		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
+		
+		FlightData fd = new FlightData();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			PreparedStatement pstm2 = conn.prepareStatement(sql2);
+			ResultSet rs = pstm.executeQuery();
+			ResultSet rs2 = pstm2.executeQuery();
+			while (rs.next()) {
+				fd.setDepartAirport(rs.getString("DepAirportID"));
+				fd.setArrivalAirport(rs.getString("ArrAirportID"));
+				fd.setDepartDate(rs.getTimestamp("DepTime"));
+				fd.setArrivalDate(rs.getTimestamp("ArrTime"));
+				fd.setFare(rs2.getDouble("Fare"));
+			}
+		} catch (Exception e) {
+			System.out.println("SQL Error.");
+		}
+		return null;
 	}
 
 	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
@@ -903,15 +916,32 @@ public class DBUtils {
 			
 			if (rs.next()) {
 				fd.setDepartAirport(rs.getString("DepAirportID"));
+				ResultSet ap1 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getDepartAirport())).executeQuery();
+				if (ap1.next()) {
+					fd.setDepAirlineId(ap1.getString("Id"));
+					fd.setDepAirportName(ap1.getString("Name"));
+					fd.setDepCity(ap1.getString("City"));
+					fd.setDepCountry(ap1.getString("Country"));
+				}
 				fd.setArrivalAirport(rs.getString("ArrAirportID"));
-				fd.setDepartDate(rs.getDate("DepTime"));
-				fd.setArrivalDate(rs.getDate("ArrTime"));
+				ResultSet ap2 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getArrivalAirport())).executeQuery();
+				if (ap2.next()) {
+					fd.setArrAirlineId(ap2.getString("Id"));
+					fd.setArrAirportName(ap2.getString("Name"));
+					fd.setArrCity(ap2.getString("City"));
+					fd.setArrCountry(ap2.getString("Country"));
+				}
+				fd.setDepartDate(rs.getTimestamp("DepTime"));
+				fd.setArrivalDate(rs.getTimestamp("ArrTime"));
+				fd.setLegNo(rs.getInt("LegNo"));
+				fd.setFlightNo(rs.getInt("FlightNo"));
 			}
 			
 			PreparedStatement pstm2 = conn.prepareStatement(sql2);
 			ResultSet rs2 = pstm2.executeQuery();
 			if (rs2.next()) {
 				fd.setFare(rs2.getDouble("Fare"));
+				fd.setClassType(rs2.getString("Class"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

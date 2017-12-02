@@ -1,14 +1,37 @@
 package classes;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class FlightData {
 	private String departAirport;
 	private String arrivalAirport;
-	private Date departDate;
-	private Date arrivalDate;
+	private Timestamp departDate;
+	private Timestamp arrivalDate;
+	private String arrAirlineId;
+	private String depAirlineId;
+	private int flightNo;
+	private int legNo;
+	private String classType;
+	private String arrCity;
+	private String arrAirportName;
+	private String arrCountry;
+	private String depCity;
+	private String depAirportName;
+	private String depCountry;
 	private double fare;
 	
+	public String getArrAirlineId() {
+		return arrAirlineId;
+	}
+	public void setArrAirlineId(String arrAirlineId) {
+		this.arrAirlineId = arrAirlineId;
+	}
+	public String getDepAirlineId() {
+		return depAirlineId;
+	}
+	public void setDepAirlineId(String depAirlineId) {
+		this.depAirlineId = depAirlineId;
+	}
 	public String getDepartAirport() {
 		return departAirport;
 	}
@@ -21,17 +44,71 @@ public class FlightData {
 	public void setArrivalAirport(String arrivalAirport) {
 		this.arrivalAirport = arrivalAirport;
 	}
-	public Date getDepartDate() {
+	public Timestamp getDepartDate() {
 		return departDate;
 	}
-	public void setDepartDate(Date departDate) {
+	public void setDepartDate(Timestamp departDate) {
 		this.departDate = departDate;
 	}
-	public Date getArrivalDate() {
+	public Timestamp getArrivalDate() {
 		return arrivalDate;
 	}
-	public void setArrivalDate(Date arrivalDate) {
+	public void setArrivalDate(Timestamp arrivalDate) {
 		this.arrivalDate = arrivalDate;
+	}
+	public int getFlightNo() {
+		return flightNo;
+	}
+	public void setFlightNo(int flightNo) {
+		this.flightNo = flightNo;
+	}
+	public int getLegNo() {
+		return legNo;
+	}
+	public void setLegNo(int legNo) {
+		this.legNo = legNo;
+	}
+	public String getClassType() {
+		return classType;
+	}
+	public void setClassType(String classType) {
+		this.classType = classType;
+	}
+	public String getArrCity() {
+		return arrCity;
+	}
+	public void setArrCity(String arrCity) {
+		this.arrCity = arrCity;
+	}
+	public String getArrAirportName() {
+		return arrAirportName;
+	}
+	public void setArrAirportName(String arrAirportName) {
+		this.arrAirportName = arrAirportName;
+	}
+	public String getArrCountry() {
+		return arrCountry;
+	}
+	public void setArrCountry(String arrCountry) {
+		this.arrCountry = arrCountry;
+	}
+	public String getDepCity() {
+		return depCity;
+	}
+	public void setDepCity(String depCity) {
+		this.depCity = depCity;
+	}
+	public String getDepAirportName() {
+		return depAirportName;
+	}
+	public void setDepAirportName(String depAirportName) {
+		this.depAirportName = depAirportName;
+	}
+	public String getDepCountry() {
+		return depCountry;
+	}
+	public void setDepCountry(String depCountry) {
+		this.depCountry = depCountry;
 	}
 	public double getFare() {
 		return fare;
