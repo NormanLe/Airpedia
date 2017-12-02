@@ -3,8 +3,6 @@ package servlet;
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,8 +48,8 @@ public class HomeServlet extends HttpServlet {
         String tripTo = (String) request.getParameter("tripTo");
         String tripClass = (String) request.getParameter("class");
         int numPeople = 0;
-        
-        String departDate = (String) request.getParameter("departTime");
+
+        String departDate = (String) request.getParameter("departDate");
         String returnDate = (String) request.getParameter("returnDate");
 
         

@@ -30,14 +30,14 @@
             </tr>
             
             <tr>
-                <td> Departing Date <br> <input type="text" name="departDate" placeholder="mm-dd-yyyy"> </td>
-                <td> Returning Date <br> <input type="text" name="returnDate" placeholder="mm-dd-yyyy" id="returningDate"> </td> 
+                <td> Departing Date <br> <input type="text" name="departDate" placeholder="yyyy-mm-dd"> </td>
+                <td> Returning Date <br> <input type="text" name="returnDate" placeholder="yyyy-mm-dd" id="returningDate"> </td> 
             </tr>
             
             <tr>
                 <td> Number of People <br> <input type="number" name="numPeople" value="1"> </td>
 				<td>Class <br> 
-					<select>
+					<select name="class">
 						<option value="economy">Economy</option>
 						<option value="business">Business</option>
 						<option value="firstClass">First Class</option>
