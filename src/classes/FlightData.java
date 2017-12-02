@@ -19,7 +19,7 @@ public class FlightData {
 	private String depAirportName;
 	private String depCountry;
 	private double fare;
-	
+
 	public String getArrAirlineId() {
 		return arrAirlineId;
 	}

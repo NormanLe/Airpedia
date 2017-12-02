@@ -931,6 +931,7 @@ public class DBUtils {
 					fd.setArrCity(ap2.getString("City"));
 					fd.setArrCountry(ap2.getString("Country"));
 				}
+
 				fd.setDepartDate(rs.getTimestamp("DepTime"));
 				fd.setArrivalDate(rs.getTimestamp("ArrTime"));
 				fd.setLegNo(rs.getInt("LegNo"));

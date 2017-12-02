@@ -72,8 +72,7 @@ public class HomeServlet extends HttpServlet {
 		}
 		
 		if (list == null || list.isEmpty()){
-//			doGet(request, response);
-			RequestDispatcher dispatcher //
+			RequestDispatcher dispatcher
 			= this.getServletContext().getRequestDispatcher("/WEB-INF/views/error.jsp");
 			
 			dispatcher.forward(request, response);

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
  pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <!DOCTYPE html>
 <html>
  <head>
@@ -20,9 +21,16 @@
 
     <div class="flightsData">
     	<c:forEach items="${flightList}" var="flight">
-    		<h2> ${flight.departAirport} to ${flight.arrivalAirport} </h2>
-			$${flight.fare} <br>
-			${flight.departDate} to ${flight.arrivalDate}
+    		<h2> ${flight.depCity} to ${flight.arrCity} </h2>
+    		${flight.departAirport} to ${flight.arrivalAirport} $${flight.fare} <br>
+			
+			<fmt:formatDate value="${flight.departDate}" pattern="yyyy-MM-dd" />
+			to 
+			<fmt:formatDate value="${flight.arrivalDate}" pattern="yyyy-MM-dd" />
+			<br>
+			<fmt:formatDate value="${flight.departDate}" pattern="HH:mm:ss" />
+			to
+			<fmt:formatDate value="${flight.arrivalDate}" pattern="HH:mm:ss" />
 			<div class="chooseFlight"> <a href="">Choose Flight</a></div>
     	</c:forEach>
     

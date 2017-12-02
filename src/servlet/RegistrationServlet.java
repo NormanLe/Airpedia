@@ -33,7 +33,7 @@ public class RegistrationServlet extends HttpServlet {
 			
 		Connection conn = MyUtils.getStoredConnection(request);
 		
-		RequestDispatcher dispatcher //
+		RequestDispatcher dispatcher 
 		= this.getServletContext().getRequestDispatcher("/WEB-INF/views/registration.jsp");
 
 		dispatcher.forward(request, response);
