@@ -250,25 +250,19 @@ public class DBUtils {
 		return list;
 	}
 
-	public static List<Flight> queryFlight(Connection conn) {
+	public static List<FlightData> queryFlight(Connection conn) {
 		String sql = "Select * from Flight ";
-
-		List<Flight> list = new ArrayList<Flight>();
+		System.out.println("what about here");
+		List<FlightData> list = new ArrayList<>();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-
+			System.out.println("DOES IT GO HERE");
 			while (rs.next()) {
 				String airlineId = rs.getString("AirlineID");
 				int flightNo = rs.getInt("FlightNo");
-				int numSeats = rs.getInt("NoOfSeats");
-				String daysOperating = rs.getString("DaysOperating");
-				int minStay = rs.getInt("MinLengthOfStay");
-				int maxStay = rs.getInt("MaxLengthOfStay");
-
-				Airline airline = findAirline(conn, airlineId);
-				Flight flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
-				list.add(flight);
+				list.add(getFlightDataFromAirlineFlight(conn, airlineId, flightNo));
+				System.out.println("list now is " + list);
 			}
 		} catch (Exception e) {
 			System.out.println("Something went wrong in querying resrvations");
@@ -276,7 +270,7 @@ public class DBUtils {
 		return list;
 	}
 
-	public static List<Flight> queryFlights(Connection conn, String tripType, String tripFrom, String tripTo,
+	public static List<FlightData> queryFlights(Connection conn, String tripType, String tripFrom, String tripTo,
 			String departDate, String returnDate, String tripClass, int numPeople) throws SQLException {
 		// String sql = "Select * " +
 		// "From Flight Fl " +
@@ -367,7 +361,7 @@ public class DBUtils {
 			 pstm.setString(++numArgs, temp);
 		 }
 
-		List<Flight> list = new ArrayList<Flight>();
+		List<FlightData> list = new ArrayList<>();
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
 			String airlineId = rs.getString("AirlineID");
@@ -377,20 +371,21 @@ public class DBUtils {
 			int minStay = rs.getInt("MinLengthOfStay");
 			int maxStay = rs.getInt("MaxLengthOfStay");
 			Airline airline = findAirline(conn, airlineId);
-			Flight flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+			FlightData flight =getFlightDataFromAirlineFlight(conn, airlineId, flightNo);
+			//new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
 			list.add(flight);
 		}
 		return list;
 	}
 
-	public static Flight bestSeller(Connection conn) throws SQLException {
+	public static FlightData bestSeller(Connection conn) throws SQLException {
 		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" + " FROM Flight F, Includes I"
 				+ " WHERE F.FlightNo = I.FlightNo" + " AND F.AirlineId = I.AirlineId" + " GROUP BY I.ResrNo"
 				+ " ORDER BY NumFlights DESC LIMIT 1";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
-		Flight flight = null;
+		FlightData flight = null;
 		if (rs.next()) {
 			String resrNo = rs.getString("ResrNo");
 			System.out.println(resrNo);
@@ -403,38 +398,26 @@ public class DBUtils {
 			if (r.next()) {
 				String airlineId = r.getString("AirlineID");
 				int flightNo = r.getInt("FlightNo");
-				int numSeats = r.getInt("NoOfSeats");
-				String daysOperating = r.getString("DaysOperating");
-				int minStay = r.getInt("MinLengthOfStay");
-				int maxStay = r.getInt("MaxLengthOfStay");
-				Airline airline = findAirline(conn, airlineId);
-				flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+				flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo);
 			}
 
 		}
 		return flight;
 	}
 
-	public static List<Flight> personalizedFlights(Connection conn, int accountNo) throws SQLException {
+	public static List<FlightData> personalizedFlights(Connection conn, int accountNo) throws SQLException {
 		String sql = "SELECT * FROM FLIGHT F" + " WHERE F.FlightNo NOT IN" + " (SELECT I.FlightNo"
 				+ " FROM Makes M, Includes I" + " WHERE M.AccountNo = " + accountNo + " AND I.ResrNo = M.ResrNo)";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
-		ArrayList<Flight> flights = new ArrayList<>();
+		ArrayList<FlightData> flights = new ArrayList<>();
 
 		while (rs.next()) {
-			String airlineId = rs.getString("AirlineID");
+			String airlineId = rs.getString("AirlineId");
 			int flightNo = rs.getInt("FlightNo");
-			int numSeats = rs.getInt("NoOfSeats");
-			String daysOperating = rs.getString("DaysOperating");
-			int minStay = rs.getInt("MinLengthOfStay");
-			int maxStay = rs.getInt("MaxLengthOfStay");
-			Airline airline = findAirline(conn, airlineId);
-			Flight flight = new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
-			flights.add(flight);
+			flights.add(getFlightDataFromAirlineFlight(conn, airlineId, flightNo));
 		}
-
 		return flights;
 	}
 
@@ -935,4 +918,6 @@ public class DBUtils {
 		}
 		return fd;
 	}
+	
+	
 }

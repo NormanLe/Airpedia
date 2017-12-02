@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import classes.Flight;
+import classes.*;
 import utils.*;
 
 @WebServlet(urlPatterns = { "/home" })
@@ -58,7 +58,7 @@ public class HomeServlet extends HttpServlet {
         } catch (Exception e) {
         }
 
-		List<Flight> list = null;
+		List<FlightData> list = null;
 		String errorString = null;
 		try {
 			list = DBUtils.queryFlights(

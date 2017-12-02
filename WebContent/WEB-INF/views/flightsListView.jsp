@@ -16,31 +16,17 @@
     <h1>Flights List</h1>
  
     <p style="color: red;">${errorString}</p>
- 
-    <table class="tableStyle">
-       <tr>
-          <th>Airline Name</th>
-          <th>Flight #</th>
-          <th>Seats Remaining</th>
-          <th>Days Operating</th>
-          <th>Min length of stay</th>
-          <th>Max length of stay</th>
-          <th>Reserve</th>
-       </tr>
-       <c:forEach items="${flightList}" var="flight" >
-          <tr>
-             <td>${flight.airline.name}</td>
-             <td>${flight.flightNo}</td>
-             <td>${flight.noOfSeats}</td>
-             <td>${flight.daysOperating}</td>
-             <td>${flight.minLengthOfStay}</td>
-             <td>${flight.maxLengthOfStay}</td>
-             <td>
-                <a href="createReservation?code=${flight.flightNo}">Make a reservation</a>
-             </td>
-          </tr>
-       </c:forEach>
-    </table>
+        
+
+    <div class="flightsData">
+    	<c:forEach items="${flightList}" var="flight">
+    		<h2> ${flight.departAirport} to ${flight.arrivalAirport} </h2>
+			$${flight.fare} <br>
+			${flight.departDate} to ${flight.arrivalDate}
+			<div class="chooseFlight"> <a href="">Choose Flight</a></div>
+    	</c:forEach>
+    
+    </div>
  
  </body>
 </html>

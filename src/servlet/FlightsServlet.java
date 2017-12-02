@@ -31,9 +31,10 @@ public class FlightsServlet extends HttpServlet {
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
-		List<Flight> list = DBUtils.queryFlight(conn);
+//		List<FlightData> list = DBUtils.queryFlight(conn);
 		request.setAttribute("errorString", errorString);
-		request.setAttribute("flightList", list);
+//		request.setAttribute("flightList", list);
+//		System.out.println("huh" + list);
 		RequestDispatcher dispatcher //
 		= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
 

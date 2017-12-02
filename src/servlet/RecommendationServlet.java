@@ -44,25 +44,18 @@ public class RecommendationServlet extends HttpServlet {
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
-		Flight tempBestSeller = null;
 		FlightData bestSeller = null;
-		List <Flight> personalizedFlights = null;
-		List <FlightData> formattedFlights = new ArrayList<>();
+		List <FlightData> personalizedFlights = null;
 		try {
-			tempBestSeller = DBUtils.bestSeller(conn);
-			bestSeller= DBUtils.getFlightDataFromAirlineFlight(conn, tempBestSeller.getAirline().getId(), tempBestSeller.getFlightNo());
-
+			bestSeller= DBUtils.bestSeller(conn);
 			personalizedFlights = DBUtils.personalizedFlights(conn, loginedCustomer.getAccountNo());
-			for (int i = 0; i < personalizedFlights.size(); i++) {
-				formattedFlights.add(DBUtils.getFlightDataFromAirlineFlight(conn, personalizedFlights.get(i).getAirline().getId(),personalizedFlights.get(i).getFlightNo()));
-				System.out.print("formatted flight is " + formattedFlights.get(i));
-			}
+		
 		} catch (SQLException e) {
 			System.out.println("No best seller");
 		}
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("bestSeller", bestSeller);
-		request.setAttribute("personalizedFlights", formattedFlights);
+		request.setAttribute("personalizedFlights", personalizedFlights);
 		
 		
 			
