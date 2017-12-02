@@ -14,6 +14,45 @@ import classes.*;
 public class DBUtils {
 	private Connection con;
 
+	public static Person findPersonById(Connection conn, int id) {
+		String sql = "Select * from Person where id = " + id;
+		Person person = null;
+		try {
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		
+			if (rs.next()) {
+			String firstName = rs.getString("FirstName");
+			String lastName = rs.getString("LastName");
+			String address = rs.getString("Address");
+			String city = rs.getString("City");
+			String state = rs.getString("State");
+			String zipCode = rs.getString("ZipCode");
+			
+			person = new Person();
+			person.setId(id);
+			person.setFirstName(firstName);
+			person.setLastName(lastName);
+			person.setAddress(address);
+			person.setCity(city);
+			person.setState(state);
+			person.setZipCode(zipCode);
+			}
+		} catch (Exception e) {
+			System.out.println("error with finding person by id");
+		}
+		return person;
+	}
+	
+	public static Person findPersonBySSN(Connection conn, int SSN) {
+		try {
+			return findPersonById(conn, findEmployee(conn, SSN).getId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static Customer findCustomer(Connection conn, String email, String password) throws SQLException {
 
 		String sql = "Select * from Customer c" + " where c.email = ? and c.password = ?";
@@ -24,6 +63,7 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			int id = rs.getInt("Id");
 			int number = rs.getInt("AccountNo");
 			String creditcardNo = rs.getString("CreditCardNo");
 			double phone = rs.getDouble("Phone");
@@ -31,6 +71,7 @@ public class DBUtils {
 			int rating = rs.getInt("Rating");
 
 			Customer customer = new Customer();
+			customer.setId(id);
 			customer.setAccountNo(number);
 			customer.setEmail(email);
 			customer.setPassword(password);
@@ -53,6 +94,7 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			int id = rs.getInt("Id");
 			String password = rs.getString("Password");
 			int number = rs.getInt("AccountNo");
 			String creditcardNo = rs.getString("CreditCardNo");
@@ -61,6 +103,7 @@ public class DBUtils {
 			int rating = rs.getInt("Rating");
 
 			Customer customer = new Customer();
+			customer.setId(id);
 			customer.setAccountNo(number);
 			customer.setEmail(email);
 			customer.setPassword(password);
@@ -83,6 +126,7 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			int id = rs.getInt("Id");
 			String email = rs.getString("Email");
 			String password = rs.getString("Password");
 			String creditcardNo = rs.getString("CreditCardNo");
@@ -91,6 +135,7 @@ public class DBUtils {
 			int rating = rs.getInt("Rating");
 
 			Customer customer = new Customer();
+			customer.setId(id);
 			customer.setAccountNo(accountNo);
 			customer.setEmail(email);
 			customer.setPassword(password);

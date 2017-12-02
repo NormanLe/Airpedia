@@ -19,25 +19,27 @@
     <p style="color: red;">${errorString}</p>
  
  	<a href="${pageContext.request.contextPath}">Create Reservation</a>
+    <c:if test="${not empty reservationList}">
     <table class="tableStyle">
+       
        <tr>
           <th>ResrNo</th>
           <th>Date</th>
           <th>Fee</th>
           <th>Fare</th>
           <th>AccountNo</th>
-          <th>RepSSN</th>
           <th>Edit</th>
           <th>Delete</th>
        </tr>
-       <c:forEach items="${reservationList}" var="reservation" >
+       
+
+       <c:forEach items="${reservationList}" var="reservation">
           <tr>
              <td>${reservation.resrNo}</td>
              <td>${reservation.resrDate}</td>
              <td>${reservation.bookingFee}</td>
              <td>${reservation.totalFare}</td>
              <td>${reservation.customer.accountNo}</td>
-             <td>${reservation.employee.ssn}</td>
              <td>
                 <a href="editReservation?code=${reservation.resrNo}">Edit</a>
              </td>
@@ -47,7 +49,11 @@
           </tr>
        </c:forEach>
     </table>
- 
+	</c:if>
+	
+    <c:if test="${empty reservationList}">
+    	<br> You have made no reservations.
+    </c:if>
    
  
  </body>

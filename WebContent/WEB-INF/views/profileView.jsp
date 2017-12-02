@@ -14,7 +14,7 @@
  	<!-- should differentiate between employee, manager, and customer -->
     <jsp:include page="_menu.jsp"></jsp:include>
  	<p style="color: red;">${errorString}</p>
-    <h3>Hello: ${customer.email}</h3>
+    <h3>Hello, ${person.firstName} ${person.lastName}! </h3>
  	
     Account Number: ${customer.accountNo} <br>
     Email: ${customer.email} <br>
