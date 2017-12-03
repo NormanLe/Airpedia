@@ -32,8 +32,8 @@
 			to
 			<fmt:formatDate value="${flight.arrivalDate}" pattern="HH:mm:ss" />
 			<div class="chooseFlight"> <a href="${pageContext.request.contextPath}/makeReservation
-			?airline=${flight.airlineId}?flight=${flight.flightNo}?depart=${flight.departAirport}
-			?arrive=${flight.arrivalAirport}">Choose Flight</a></div>
+			?airline=${flight.airlineId}&flight=${flight.flightNo}&depart=${flight.departAirport}
+			&arrive=${flight.arrivalAirport}">Choose Flight</a></div>
     	</c:forEach>
     
     </div>

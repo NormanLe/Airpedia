@@ -26,16 +26,26 @@ public class MakeReservationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		String s = request.getQueryString();
-		String arrive = request.getParameter("arrive");
-//		System.out.println(arrive);
-//		System.out.println(s);
+//		String s = request.getQueryString();
+		String airline = request.getParameter("airline");
+		String flight = request.getParameter("flight");
+		String departAirport = request.getParameter("depart");
+		String arriveAirport = request.getParameter("arrive");
+		
+		// find stopNo of the departId and arriveAiportId -> can be stop 1 and stop 4 meaning all stops
+		// between 1 and 4. Total fare = f.Fare * 4, currentDate, random reservation number
+		
+		// int [] stops = DBUtils.getStopDifference(departAirport, arriveAirport);
+		// double fare = (stops[1] - stops[0] + 1) * findFare(airline, flight);
+		
+		// pass in all args and fare
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
 		request.setAttribute("errorString", errorString);
 		
-		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/homeView.jsp");
+		// jsp should have options to select for meal and seat
+		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/selectReservation.jsp");
 		dispatcher.forward(request, response);
 
 	}
@@ -44,10 +54,14 @@ public class MakeReservationServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		
-//			request.setAttribute("errorString", errorString);
-//			request.setAttribute("flightList", list);
-	        response.sendRedirect(request.getContextPath() + "/checkout");
+		// get meal and seat #
+		int numSeats = Integer.parseInt(request.getParameter("numSeats"));
+		String seat = request.getParameter("seatNum");
+		// fill in rest of info that's stored
+		Reservation reservation = new Reservation();
+//		request.setAttribute("newReservation", reservation);
+		// user goes to checkout and makes reservation if they "successfully" pay
+		response.sendRedirect(request.getContextPath() + "/checkout");
 		
  
 	}
