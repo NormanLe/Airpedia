@@ -58,8 +58,12 @@ a:hover {
 	margin: 0 auto;
 }
 
-#home input[type="text"], select {
+#home input[type="text"], #home input[type="number"] {
 	width: 130px;
+}
+
+#home select {
+	width: 136px;
 }
 
 .flightsData {
