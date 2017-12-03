@@ -32,6 +32,7 @@ public class FlightsServlet extends HttpServlet {
 
 		String errorString = null;
 		request.setAttribute("errorString", errorString);
+		
 		RequestDispatcher dispatcher //
 		= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
 

@@ -29,7 +29,7 @@
 			<fmt:formatDate value="${bestSeller.departDate}" pattern="HH:mm:ss" />
 			to
 			<fmt:formatDate value="${bestSeller.arrivalDate}" pattern="HH:mm:ss" />
-			<div class="chooseFlight"> <a href="">Choose Flight</a></div>
+			<div class="chooseFlight"> <a href="${pageContext.request.contextPath}/makeReservation">Choose Flight</a></div>
 	</div>
            
     <h1> Personalized Flight Suggestions </h1>       
@@ -45,7 +45,7 @@
 			<fmt:formatDate value="${flight.departDate}" pattern="HH:mm:ss" />
 			to
 			<fmt:formatDate value="${flight.arrivalDate}" pattern="HH:mm:ss" />
-			<div class="chooseFlight"> <a href="">Choose Flight</a></div>
+			<div class="chooseFlight"> <a href="${pageContext.request.contextPath}/makeReservation">Choose Flight</a></div>
     	</c:forEach>
     
     </div>

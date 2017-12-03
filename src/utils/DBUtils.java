@@ -924,9 +924,9 @@ public class DBUtils {
 			
 			if (rs.next()) {
 				fd.setDepartAirport(rs.getString("DepAirportID"));
+				fd.setAirlineId(rs.getString("AirlineID"));
 				ResultSet ap1 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getDepartAirport())).executeQuery();
 				if (ap1.next()) {
-					fd.setDepAirlineId(ap1.getString("Id"));
 					fd.setDepAirportName(ap1.getString("Name"));
 					fd.setDepCity(ap1.getString("City"));
 					fd.setDepCountry(ap1.getString("Country"));
@@ -934,7 +934,6 @@ public class DBUtils {
 				fd.setArrivalAirport(rs.getString("ArrAirportID"));
 				ResultSet ap2 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getArrivalAirport())).executeQuery();
 				if (ap2.next()) {
-					fd.setArrAirlineId(ap2.getString("Id"));
 					fd.setArrAirportName(ap2.getString("Name"));
 					fd.setArrCity(ap2.getString("City"));
 					fd.setArrCountry(ap2.getString("Country"));
@@ -957,6 +956,5 @@ public class DBUtils {
 		}
 		return fd;
 	}
-	
 	
 }
