@@ -162,10 +162,18 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			int id = rs.getInt("Id");
 			int number = rs.getInt("SSN");
+			int hourlyRate = rs.getInt("hourlyRate");
+			Date startDate = rs.getDate("StartDate");
+			boolean isManager = rs.getBoolean("isManager");
+			
 			Employee employee = new Employee();
+			employee.setId(id);
 			employee.setSsn(number);
-
+			employee.setHourlyRate(hourlyRate);
+			employee.setStartDate(startDate);
+			employee.setManager(isManager);
 			return employee;
 		}
 		return null;

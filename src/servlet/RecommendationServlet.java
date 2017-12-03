@@ -57,8 +57,6 @@ public class RecommendationServlet extends HttpServlet {
 		request.setAttribute("bestSeller", bestSeller);
 		request.setAttribute("personalizedFlights", personalizedFlights);
 		
-		
-			
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/recommendationsView.jsp");
 		dispatcher.forward(request, response);
 

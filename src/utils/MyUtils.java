@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Customer;
+import classes.Employee;
 
 public class MyUtils {
 
@@ -30,15 +31,29 @@ public class MyUtils {
 		session.setAttribute("loginedCustomer", customer);
 	}
 
+	public static void storeLoginedEmployee(HttpSession session, Employee employee) {
+		session.setAttribute("loginedEmployee", employee);
+	}
+	
 	public static Customer getLoginedCustomer(HttpSession session) {
 		Customer loginedCustomer = (Customer) session.getAttribute("loginedCustomer");
 		return loginedCustomer;
+	}
+	
+	public static Employee getLoginedEmployee(HttpSession session) {
+		Employee loginedEmployee = (Employee) session.getAttribute("loginedEmployee");
+		return loginedEmployee;
 	}
 
 	public static void storeUserCookie(HttpServletResponse response, Customer customer) {
 		Cookie cookieEmail = new Cookie(ATT_NAME_EMAIL, customer.getEmail());
 		cookieEmail.setMaxAge(24 * 60 * 60);
 		response.addCookie(cookieEmail);
+	}
+	
+	public static void storeEmployeeCookie(HttpServletResponse response, String username) {
+		Cookie cookieUser = new Cookie(ATT_NAME_EMAIL, username);
+		response.addCookie(cookieUser);
 	}
 
 	public static String getUserNameInCookie(HttpServletRequest request) {
