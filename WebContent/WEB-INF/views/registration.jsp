@@ -18,10 +18,9 @@
       <form method="POST" action="${pageContext.request.contextPath}/registration">
         <table>
             <tr>
-                <td colspan="3">
+                <td colspan="3" align="center">
                     <input type="radio" name="userType" value="customer" checked onclick=changeForm()> Customer
                     <input type="radio" name="userType" value="employee" onclick=changeForm()> Employee 
-                    <input type="radio" name="userType" value="manager" onclick=changeForm()> Manager
                 </td>
             </tr>
             

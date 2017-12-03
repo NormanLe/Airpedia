@@ -73,8 +73,6 @@ public class JDBCFilter implements Filter {
 
 		if (this.needJDBC(req)) {
 
-			System.out.println("Open Connection for: " + req.getServletPath());
-
 			Connection conn = null;
 			try {
 				conn = MySQLConnUtils.getMySQLConnection();
