@@ -18,12 +18,19 @@
       <form method="POST" action="${pageContext.request.contextPath}/login">
          <table>
             <tr>
-               <td>Email</td>
-               <td><input type="text" name="email" value= "${customer.email}" /> </td>
+                <td colspan="3">
+                    <input type="radio" name="userType" value="customer" checked onclick=changeForm()> Customer
+                    <input type="radio" name="userType" value="employee" onclick=changeForm()> Employee 
+                    <input type="radio" name="userType" value="manager" onclick=changeForm()> Manager
+                </td>
+            </tr>
+            <tr>
+               <td>Username</td>
+               <td><input type="text" name="email"/> </td>
             </tr>
             <tr>
                <td>Password</td>
-               <td><input type="password" name="password" value= "${customer.password}" /> </td>
+               <td><input type="password" name="password"/> </td>
             </tr>
             <tr>
                <td colspan ="2" align="center">

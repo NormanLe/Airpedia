@@ -7,8 +7,6 @@ public class FlightData {
 	private String arrivalAirport;
 	private Timestamp departDate;
 	private Timestamp arrivalDate;
-	private String arrAirlineId;
-	private String depAirlineId;
 	private int flightNo;
 	private int legNo;
 	private String classType;
@@ -19,19 +17,7 @@ public class FlightData {
 	private String depAirportName;
 	private String depCountry;
 	private double fare;
-	
-	public String getArrAirlineId() {
-		return arrAirlineId;
-	}
-	public void setArrAirlineId(String arrAirlineId) {
-		this.arrAirlineId = arrAirlineId;
-	}
-	public String getDepAirlineId() {
-		return depAirlineId;
-	}
-	public void setDepAirlineId(String depAirlineId) {
-		this.depAirlineId = depAirlineId;
-	}
+
 	public String getDepartAirport() {
 		return departAirport;
 	}
