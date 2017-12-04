@@ -2,6 +2,7 @@
  pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
+
 <!DOCTYPE html>
 <html>
  <head>
@@ -31,7 +32,7 @@
 			<fmt:formatDate value="${bestSeller.arrivalDate}" pattern="HH:mm:ss" />
 			<div class="chooseFlight"> <a href="${pageContext.request.contextPath}/makeReservation">Choose Flight</a></div>
 	</div>
-           
+    <c:if test="${!empty personalizedFlights}">
     <h1> Personalized Flight Suggestions </h1>       
     <div class="flightsData">
     	<c:forEach items="${personalizedFlights}" var="flight">
@@ -47,7 +48,7 @@
 			<fmt:formatDate value="${flight.arrivalDate}" pattern="HH:mm:ss" />
 			<div class="chooseFlight"> <a href="${pageContext.request.contextPath}/makeReservation">Choose Flight</a></div>
     	</c:forEach>
-    
     </div>
+    </c:if>
  </body>
 </html>

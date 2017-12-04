@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Customer;
+import classes.Employee;
 import classes.Flight;
 import classes.FlightData;
 import utils.*;
@@ -32,8 +33,8 @@ public class RecommendationServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		 
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
-       
-        if (loginedCustomer == null) {
+        Employee loginedEmployee = MyUtils.getLoginedEmployee(session);
+        if (loginedCustomer == null && loginedEmployee == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -48,7 +49,8 @@ public class RecommendationServlet extends HttpServlet {
 		List <FlightData> personalizedFlights = null;
 		try {
 			bestSeller= DBUtils.bestSeller(conn);
-			personalizedFlights = DBUtils.personalizedFlights(conn, loginedCustomer.getAccountNo());
+			if (loginedCustomer != null)
+				personalizedFlights = DBUtils.personalizedFlights(conn, loginedCustomer.getAccountNo());
 		
 		} catch (SQLException e) {
 			System.out.println("No best seller");
