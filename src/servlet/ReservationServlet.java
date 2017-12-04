@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Customer;
+import classes.Employee;
 import classes.Person;
 import classes.Reservation;
 import utils.DBUtils;
@@ -33,19 +34,33 @@ public class ReservationServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		 
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
-       
-        if (loginedCustomer == null) {
+        Employee logedinEmployee = MyUtils.getLoginedEmployee(session);
+        if (loginedCustomer == null && logedinEmployee == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        
       
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
 		List<Reservation> list = null;
-		list = DBUtils.queryReservationByCustomer(conn, loginedCustomer.getAccountNo());
 		
+		String h1text = "";
+        if (loginedCustomer != null)  {
+        	list = DBUtils.queryReservationByCustomer(conn, loginedCustomer.getAccountNo());
+        	h1text = "Your reservations";
+        }
+		if (logedinEmployee != null) {
+			if (logedinEmployee.isManager())
+				list = DBUtils.queryReservation(conn);
+			else 
+				list = DBUtils.queryReservationByRep(conn, logedinEmployee.getSsn());
+			h1text = "Reservations that you manage";
+		}
+			
 		request.setAttribute("errorString", errorString);
+		request.setAttribute("h1text", h1text);
 		request.setAttribute("reservationList", list);
 
 		RequestDispatcher dispatcher = request.getServletContext()

@@ -23,7 +23,6 @@
  	<c:if test="${!empty customer}">
     	Account Number: ${customer.accountNo} <br>
     	Email: ${customer.email} <br>
-		Password: ${customer.password} <br>
 		<c:set var="origNum" value="${customer.phone}" />
 		<c:set var="newNum" value="${fn:replace(origNum, '.', '')}" />
 		<c:set var="newNum" value="${fn:replace(newNum, 'E', '')}" />
@@ -33,6 +32,7 @@
 	</c:if>
 	
 	<c:if test="${!empty employee}">
+		${manager}<br>
 		Started Working: ${employee.startDate} <br>
 		Hourly Rate: $${employee.hourlyRate} <br>
 	</c:if>

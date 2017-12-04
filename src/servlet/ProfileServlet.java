@@ -47,6 +47,11 @@ public class ProfileServlet extends HttpServlet {
 		if (logedinEmployee != null) {
 			p = DBUtils.findPersonBySSN(conn, logedinEmployee.getSsn());
 			request.setAttribute("employee", logedinEmployee);
+			if (logedinEmployee.isManager()) 
+				request.setAttribute("manager", "Manager");
+			else 
+					request.setAttribute("manager", "Employee");
+			
 			
 		}
 		

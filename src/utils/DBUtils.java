@@ -258,6 +258,33 @@ public class DBUtils {
 		return list;
 	}
 
+	public static List<Reservation> queryReservationByRep(Connection conn, int repssn) {
+		String sql = "Select * from Reservation where repssn = " + repssn;
+		List<Reservation> list = new ArrayList<Reservation>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+
+			while (rs.next()) {
+				int resrNo = rs.getInt("ResrNo");
+				java.sql.Date sqlDate = rs.getDate("ResrDate");
+				Date date = new Date(sqlDate.getTime());
+
+				double fee = rs.getDouble("BookingFee");
+				double fare = rs.getDouble("TotalFare");
+				int repSSN = rs.getInt("RepSSN");
+				int accountNo = rs.getInt("accountNo");
+
+				Customer customer = findCustomer(conn, accountNo);
+				Employee employee = findEmployee(conn, repSSN);
+				Reservation reservation = new Reservation(resrNo, date, fee, fare, customer, employee);
+				list.add(reservation);
+			}
+		} catch (Exception e) {
+			System.out.println("Something went wrong in querying reservations by rep");
+		}
+		return list;
+	}
 	public static List<FlightData> queryFlight(Connection conn) {
 		String sql = "Select * from Flight ";
 		System.out.println("what about here");
