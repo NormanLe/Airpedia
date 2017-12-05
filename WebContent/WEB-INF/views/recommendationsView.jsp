@@ -30,7 +30,7 @@
 			<fmt:formatDate value="${bestSeller.departDate}" pattern="HH:mm:ss" />
 			to
 			<fmt:formatDate value="${bestSeller.arrivalDate}" pattern="HH:mm:ss" />
-			<div class="chooseFlight"> <a href="${pageContext.request.contextPath}/makeReservation
+			<div class="customButton"> <a href="${pageContext.request.contextPath}/makeReservation
 			?airline=${flight.airlineId}&flight=${flight.flightNo}&depart=${flight.departAirport}
 			&arrive=${flight.arrivalAirport}">Choose Flight</a></div>
 	</div>
@@ -48,7 +48,7 @@
 			<fmt:formatDate value="${flight.departDate}" pattern="HH:mm:ss" />
 			to
 			<fmt:formatDate value="${flight.arrivalDate}" pattern="HH:mm:ss" />
-			<div class="chooseFlight"> <a href="${pageContext.request.contextPath}/makeReservation
+			<div class="customButton"> <a href="${pageContext.request.contextPath}/makeReservation
 			?airline=${flight.airlineId}&flight=${flight.flightNo}&depart=${flight.departAirport}
 			&arrive=${flight.arrivalAirport}">Choose Flight</a></div>
     	</c:forEach>

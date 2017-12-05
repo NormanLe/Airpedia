@@ -55,7 +55,7 @@
                 <td> <input type="text"> </td>
             </tr>
             <tr>
-                <td colspan=2 align="center"> <input type="submit" value="Register">  
+                <td colspan=2 align="center"> <input class="customButton" type="submit" value="Register">  
                 </td>
             </tr>
         </table>

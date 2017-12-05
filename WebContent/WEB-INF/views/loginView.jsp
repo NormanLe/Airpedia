@@ -33,8 +33,8 @@
             </tr>
             <tr>
                <td colspan ="2" align="center">
-                  <input type="submit" value= "Submit" />
-				  <br> <a href="${pageContext.request.contextPath}/registration"> Register </a>
+                  <input type="submit" class="customButton" value= "Submit" />
+                  <div class="customButton"> <a href="${pageContext.request.contextPath}/registration"> Register </a> </div>
                </td>
             </tr>
          </table>

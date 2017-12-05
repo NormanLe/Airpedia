@@ -46,7 +46,7 @@
 			</tr>
             
             <tr>
-                <td colspan=2 align="center"> <input type="submit" value="Search For Flights"></td>
+                <td colspan=2 align="center"> <input class="customButton" type="submit" value="Search For Flights"></td>
             </tr>
         </table>
 		<p>

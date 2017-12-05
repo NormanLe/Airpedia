@@ -38,6 +38,7 @@
 		<option value="sushi">Sushi</option>
 	</select>
 	<br>
+	<div class="customButton">Checkout</div>
 	
 
 </body>
