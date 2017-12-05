@@ -22,6 +22,7 @@
     <div class="flightsData">
     	<h2> ${bestSeller.depCity} to ${bestSeller.arrCity} </h2>
     		${bestSeller.departAirport} to ${bestSeller.arrivalAirport} $${bestSeller.fare} <br>
+    		Airline ${bestSeller.airlineId}, Flight #${bestSeller.flightNo} <br>
 			
 			<fmt:formatDate value="${bestSeller.departDate}" pattern="yyyy-MM-dd" />
 			to 
@@ -32,8 +33,8 @@
 			<fmt:formatDate value="${bestSeller.arrivalDate}" pattern="HH:mm:ss" />
 			<br>
 			<div class="customButton"> <a href="${pageContext.request.contextPath}/makeReservation
-			?airline=${flight.airlineId}&flight=${flight.flightNo}&depart=${flight.departAirport}
-			&arrive=${flight.arrivalAirport}">Choose Flight</a></div>
+			?airline=${bestSeller.airlineId}&flight=${bestSeller.flightNo}&depart=${bestSeller.departAirport}
+			&arrive=${bestSeller.arrivalAirport}">Choose Flight</a></div>
 	</div>
     <c:if test="${!empty personalizedFlights}">
     <h1> Personalized Flight Suggestions </h1>       
@@ -41,7 +42,7 @@
     	<c:forEach items="${personalizedFlights}" var="flight">
     		<h2> ${flight.depCity} to ${flight.arrCity} </h2>
     		${flight.departAirport} to ${flight.arrivalAirport} $${flight.fare} <br>
-			
+			Airline ${flight.airlineId}, Flight #${flight.flightNo} <br>
 			<fmt:formatDate value="${flight.departDate}" pattern="yyyy-MM-dd" />
 			to 
 			<fmt:formatDate value="${flight.arrivalDate}" pattern="yyyy-MM-dd" />

@@ -23,7 +23,7 @@
     	<c:forEach items="${flightList}" var="flight">
     		<h2> ${flight.depCity} to ${flight.arrCity} </h2>
     		${flight.departAirport} to ${flight.arrivalAirport} $${flight.fare} <br>
-			
+			Airline ${flight.airlineId}, Flight #${flight.flightNo} <br>
 			<fmt:formatDate value="${flight.departDate}" pattern="yyyy-MM-dd" />
 			to 
 			<fmt:formatDate value="${flight.arrivalDate}" pattern="yyyy-MM-dd" />
