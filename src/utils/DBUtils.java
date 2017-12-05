@@ -412,6 +412,26 @@ public class DBUtils {
 		}
 		return list;
 	}
+	
+	public static String generateSeatNumber (Connection conn, String airlineId, int flightNo) {
+		String sql = "select NoOfSeats from Flight where airlineId = '" + airlineId + "' and flightNo = " + flightNo;
+		
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			int numSeats = 0;
+			char [] randomChar = { 'A', 'B', 'C', 'D', 'E', 'F'};
+			if (rs.next()) {
+				numSeats = rs.getInt("NoOfSeats");
+				return "" + numSeats + randomChar[(int) (Math.random() * randomChar.length)];
+				
+			} 
+		} catch (SQLException e) {
+			System.out.println("cannot generate seatnumber");
+		}
+		
+		return "";
+	}
 
 	public static FlightData bestSeller(Connection conn) throws SQLException {
 		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" + " FROM Flight F, Includes I"

@@ -26,7 +26,12 @@ public class MakeReservationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-//		String s = request.getQueryString();
+		String queryString = request.getQueryString();
+		if (queryString == null) {
+			response.sendRedirect(request.getContextPath());
+			return;
+		}
+		
 		String airline = request.getParameter("airline");
 		String flight = request.getParameter("flight");
 		String departAirport = request.getParameter("depart");
@@ -42,12 +47,24 @@ public class MakeReservationServlet extends HttpServlet {
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
+
 		request.setAttribute("errorString", errorString);
+		request.setAttribute("airline", airline);
+		request.setAttribute("flight", flight);
+		request.setAttribute("departAirport", departAirport);
+		request.setAttribute("arriveAirport", arriveAirport);
+		if (flight != null) {
+			String seatNum = DBUtils.generateSeatNumber(conn, airline, Integer.parseInt(flight));
+			request.setAttribute("seatNum", seatNum);
+		}
+		
+
 		
 		// jsp should have options to select for meal and seat
-		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/selectReservation.jsp");
+		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/makeReservation.jsp");
 		dispatcher.forward(request, response);
-
+		
+		
 	}
 
 	@Override
