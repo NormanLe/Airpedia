@@ -654,6 +654,21 @@ public class DBUtils {
 		return list;
 	}
 
+	public static double getFareByAirlineFlight(Connection conn, String airlineId, int flightNo) {
+		String sql = "select fare from fare where AirlineId = '" + airlineId + "' and flightNo = " + flightNo;
+		double fare = 0;
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			if (rs.next()) {
+				fare = rs.getDouble("fare");
+			}
+		} catch (Exception e) {
+			System.out.println("Could not get fare by airlineId and flightNo");
+		}
+		return fare;
+		
+	}
 	public static List<Reservation> getRevenueByFlight(Connection conn, int flightNo) {
 		String sql = String.format(
 				"SELECT R.ResrNo, R.BookingFee FROM Reservation R WHERE R.ResrNo IN (SELECT I.ResrNo FROM Includes I, Leg L WHERE L.FlightNo = %d AND L.FlightNo = I.FlightNo)",

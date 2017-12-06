@@ -31,20 +31,9 @@
             
             <tr>
                 <td> Departing Date <br> <input type="text" name="departDate" placeholder="yyyy-mm-dd"> </td>
-                <td> Returning Date <br> <input type="text" name="returnDate" placeholder="yyyy-mm-dd" id="returningDate"> </td> 
+                <td id="returningDateText"> Returning Date <br> <input type="text" name="returnDate" placeholder="yyyy-mm-dd" id="returningDate"> </td> 
             </tr>
-            
-            <tr>
-                <td> Number of People <br> <input type="number" name="numPeople" value="1"> </td>
-				<td>Class <br> 
-					<select name="class">
-						<option value="economy">Economy</option>
-						<option value="business">Business</option>
-						<option value="firstClass">First Class</option>
-					</select>
-				</td>
-			</tr>
-            
+             
             <tr>
                 <td colspan=2 align="center"> <input class="customButton" type="submit" value="Search For Flights"></td>
             </tr>
@@ -56,11 +45,14 @@
 		function toggleOneWay() {
 			var tripTypes = document.getElementsByName("tripType");
 			var returningDate = document.getElementById("returningDate");
-			if (tripTypes[0].checked)
-				returningDate.disabled = false;
-			else {
-				returningDate.disabled = true;
-				returningDate.value = "";
+			var returningDateText = document.getElementById("returningDateText");
+			
+			if (tripTypes[0].checked) {
+				returningDateText.style.display = "block";
+				returningDate.style.display = "block";
+			} else {
+				returningDateText.style.display = "none";
+				returningDate.style.display = "none";
 			}
 		}
 	</script>
