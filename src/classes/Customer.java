@@ -3,7 +3,7 @@ package classes;
 import java.sql.Date;
 
 public class Customer {
-	Person person;
+	private Person person;
 	private int id;
 	private int accountNo;
 	private String creditcardNo;
@@ -14,9 +14,17 @@ public class Customer {
 	private String password;
 	
 	public Customer() {
-		
+		person = new Person();
 	}
 
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+	
 	public int getId() {
 		return id;
 	}

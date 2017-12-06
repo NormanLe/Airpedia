@@ -3,7 +3,7 @@ package classes;
 import java.sql.Date;
 
 public class Employee {
-	Person person;
+	private Person person;
 	private int id;
 	private int ssn;
 	private boolean isManager;
@@ -11,7 +11,15 @@ public class Employee {
 	private double hourlyRate;
 	
 	public Employee() {
-		
+		person = new Person();
+	}
+	
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 	
 	public int getId() {

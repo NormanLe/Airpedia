@@ -440,17 +440,15 @@ public class DBUtils {
 
 	// TODO: Change these in future
 
-	private static void addEmployee(Connection conn, Employee employee) {
-		// try {
-		// Statement stmt = conn.createStatement();
-		// stmt.executeUpdate(String.format(
-		// "UPDATE Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES
-		// (%d, %d, %b, %t, %f",
-		// employee.getSsn(), employee.getemployee.getStartDate(),
-		// isManager, startDate, hourlyRate, newRate));
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// }
+	public static void addEmployee(Connection conn, Employee employee) {
+		 try {
+			 Statement stmt1 = conn.createStatement();
+			 stmt1.executeUpdate(String.format("INSERT INTO Person(Id, FirstName, LastName, Address, City, State, ZipCode) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s');", employee.getPerson().getId(), employee.getPerson().getFirstName(), employee.getPerson().getLastName(), employee.getPerson().getAddress(), employee.getPerson().getCity(), employee.getPerson().getState(), employee.getPerson().getZipCode()));
+			 Statement stmt2 = conn.createStatement();
+			 stmt2.executeUpdate(String.format("INSERT INTO Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES(%d, %d, %b, '%s', %f);", employee.getId(), employee.getSsn(), employee.isManager(), employee.getStartDate().toString(), employee.getHourlyRate()));
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+		 }
 	}
 
 	// fix
@@ -826,21 +824,16 @@ public class DBUtils {
 		}
 	}
 
-	/*
-	 * public static void addCustomer(Connection conn, Customer c) { try {
-	 * String sql =
-	 * "INSERT INTO Customer(Id, AccountNo, CreditCardNo, Email, CreationDate, Rating) VALUES (?, ?, ?, ?, ?, ?);"
-	 * ;
-	 * 
-	 * PreparedStatement pstm = conn.prepareStatement(sql); pstm.setInt(1,
-	 * c.get); pstm.setDate(2, new Date(System.currentTimeMillis()));
-	 * pstm.setDouble(3, r.getBookingFee()); pstm.setDouble(4,
-	 * r.getTotalFare()); pstm.setInt(5, r.getEmployee().getSsn());
-	 * pstm.setInt(6, r.getCustomer().getAccountNo()); pstm.executeUpdate(); }
-	 * catch (SQLException e) { e.printStackTrace(); }
-	 * 
-	 * }
-	 */
+	public static void addCustomer(Connection conn, Customer customer) {
+		 try {
+			 Statement stmt1 = conn.createStatement();
+			 stmt1.executeUpdate(String.format("INSERT INTO Person(Id, FirstName, LastName, Address, City, State, ZipCode) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s');", customer.getPerson().getId(), customer.getPerson().getFirstName(), customer.getPerson().getLastName(), customer.getPerson().getAddress(), customer.getPerson().getCity(), customer.getPerson().getState(), customer.getPerson().getZipCode()));
+			 Statement stmt2 = conn.createStatement();
+			 stmt2.executeUpdate(String.format("INSERT INTO Customer(Id, AccountNo, CreditCardNo, Email, Password, Phone, CreationDate, Rating) VALUES (%d, %d, '%s', '%s', '%s', %f, '%s', %d);", customer.getId(), customer.getAccountNo(), customer.getCreditcardNo(), customer.getEmail(), customer.getPassword(), customer.getPhone(), customer.getCreationDate().toString(), customer.getRating()));
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+		 }
+	}
 
 	public static List<String> getMailingList(Connection conn) {
 		String sql = String.format("SELECT Email FROM CUSTOMER");

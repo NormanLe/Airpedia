@@ -27,8 +27,12 @@
             
             <!--  Customer is going to need an id and accountNo generated automatically, and rating updated later -->
             <tr>
-                <td> Name </td>
-                <td> <input type="text" name="name"> </td>
+                <td> First Name </td>
+                <td> <input type="text" name="firstname"> </td>
+            </tr>
+            <tr>
+                <td> Last Name </td>
+                <td> <input type="text" name="lastname"> </td>
             </tr>
             <tr class="customer"> 
                 <td> Email </td>
@@ -49,11 +53,27 @@
             <!-- Employee -->
             <tr class="employee">
                 <td> SSN </td>
-                <td> <input type="text"> </td>
+                <td> <input type="text" name="ssn"> </td>
             </tr>
             <tr class="employee">
                 <td>Hourly Rate</td>
-                <td> <input type="text"> </td>
+                <td> <input type="text" name="hourlyrate"> </td>
+            </tr>
+            <tr>
+                <td> Address </td>
+                <td> <input type="text" name="address"> </td>
+            </tr>
+            <tr>
+                <td> City </td>
+                <td> <input type="text" name="city"> </td>
+            </tr>
+            <tr>
+                <td> State </td>
+                <td> <input type="text" name="State"> </td>
+            </tr>
+            <tr>
+                <td> Zip Code </td>
+                <td> <input type="text" name="zipcode"> </td>
             </tr>
             <tr>
                 <td colspan=2 align="center"> <input type="submit" value="Register">  
@@ -87,8 +107,7 @@
                 for (var i = 0; i < current.length; i++) {
                     current[i].style.display = "";
                 }
-            }
-            
+            }  
         </script>
       </form>
       
