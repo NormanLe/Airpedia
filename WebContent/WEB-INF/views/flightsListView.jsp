@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
  pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <!DOCTYPE html>
 <html>
  <head>
@@ -16,31 +17,27 @@
     <h1>Flights List</h1>
  
     <p style="color: red;">${errorString}</p>
- 
-    <table class="tableStyle">
-       <tr>
-          <th>Airline Name</th>
-          <th>Flight #</th>
-          <th>Seats Remaining</th>
-          <th>Days Operating</th>
-          <th>Min length of stay</th>
-          <th>Max length of stay</th>
-          <th>Reserve</th>
-       </tr>
-       <c:forEach items="${flightList}" var="flight" >
-          <tr>
-             <td>${flight.airline.name}</td>
-             <td>${flight.flightNo}</td>
-             <td>${flight.noOfSeats}</td>
-             <td>${flight.daysOperating}</td>
-             <td>${flight.minLengthOfStay}</td>
-             <td>${flight.maxLengthOfStay}</td>
-             <td>
-                <a href="createReservation?code=${flight.flightNo}">Make a reservation</a>
-             </td>
-          </tr>
-       </c:forEach>
-    </table>
+        
+
+    <div class="flightsData">
+    	<c:forEach items="${flightList}" var="flight">
+    		<h2> ${flight.depCity} to ${flight.arrCity} </h2>
+    		${flight.departAirport} to ${flight.arrivalAirport} $${flight.fare} <br>
+			Airline ${flight.airlineId}, Flight #${flight.flightNo} <br>
+			<fmt:formatDate value="${flight.departDate}" pattern="yyyy-MM-dd" />
+			to 
+			<fmt:formatDate value="${flight.arrivalDate}" pattern="yyyy-MM-dd" />
+			<br>
+			<fmt:formatDate value="${flight.departDate}" pattern="HH:mm:ss" />
+			to
+			<fmt:formatDate value="${flight.arrivalDate}" pattern="HH:mm:ss" /> 
+			<br>
+			<div class="customButton"> <a href="${pageContext.request.contextPath}/makeReservation
+			?airline=${flight.airlineId}&flight=${flight.flightNo}&depart=${flight.departAirport}
+			&arrive=${flight.arrivalAirport}">Choose Flight</a></div>
+    	</c:forEach>
+    
+    </div>
  
  </body>
 </html>

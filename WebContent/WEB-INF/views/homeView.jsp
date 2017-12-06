@@ -46,7 +46,8 @@
 			</tr>
             
             <tr>
-                <td colspan=2 align="center"> <input type="submit" value="Search For Flights"></td>
+                <td colspan=2 align="center"> <input class="customButton" type="submit" value="Search For Flights"></td>
+            </tr>
         </table>
 		<p>
 		<div> Unsure what to search for? Click <a href="${pageContext.request.contextPath}/recommendations">here</a> for recommendations! </div>

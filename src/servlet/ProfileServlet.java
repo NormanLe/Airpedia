@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
  
 import classes.Customer;
+import classes.Employee;
 import classes.Person;
 import utils.DBUtils;
 import utils.MyUtils;
@@ -31,17 +32,30 @@ public class ProfileServlet extends HttpServlet {
         HttpSession session = request.getSession();
  
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
-       
-        if (loginedCustomer == null) {
+        Employee logedinEmployee = MyUtils.getLoginedEmployee(session);
+        if (loginedCustomer == null && logedinEmployee == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
         Connection conn = MyUtils.getStoredConnection(request);
-        Person p = DBUtils.findPersonById(conn, loginedCustomer.getId());
-        request.setAttribute("customer", loginedCustomer);
-        request.setAttribute("person", p);
-        
+        Person p = null;
+		if (loginedCustomer != null) {
+			p = DBUtils.findPersonById(conn, loginedCustomer.getId());
+			request.setAttribute("customer", loginedCustomer);
+		} 
+		if (logedinEmployee != null) {
+			p = DBUtils.findPersonBySSN(conn, logedinEmployee.getSsn());
+			request.setAttribute("employee", logedinEmployee);
+			if (logedinEmployee.isManager()) 
+				request.setAttribute("manager", "Manager");
+			else 
+					request.setAttribute("manager", "Employee");
+			
+			
+		}
+		
+		request.setAttribute("person", p);
         RequestDispatcher dispatcher
                 = this.getServletContext().getRequestDispatcher("/WEB-INF/views/profileView.jsp");
         dispatcher.forward(request, response);

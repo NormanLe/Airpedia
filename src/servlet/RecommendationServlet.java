@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Customer;
+import classes.Employee;
 import classes.Flight;
 import classes.FlightData;
 import utils.*;
@@ -32,8 +33,8 @@ public class RecommendationServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		 
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
-       
-        if (loginedCustomer == null) {
+        Employee loginedEmployee = MyUtils.getLoginedEmployee(session);
+        if (loginedCustomer == null && loginedEmployee == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -44,28 +45,20 @@ public class RecommendationServlet extends HttpServlet {
 		Connection conn = MyUtils.getStoredConnection(request);
 
 		String errorString = null;
-		Flight tempBestSeller = null;
 		FlightData bestSeller = null;
-		List <Flight> personalizedFlights = null;
-		List <FlightData> formattedFlights = new ArrayList<>();
+		List <FlightData> personalizedFlights = null;
 		try {
-			tempBestSeller = DBUtils.bestSeller(conn);
-			bestSeller= DBUtils.getFlightDataFromAirlineFlight(conn, tempBestSeller.getAirline().getId(), tempBestSeller.getFlightNo());
-
-			personalizedFlights = DBUtils.personalizedFlights(conn, loginedCustomer.getAccountNo());
-			for (int i = 0; i < personalizedFlights.size(); i++) {
-				formattedFlights.add(DBUtils.getFlightDataFromAirlineFlight(conn, personalizedFlights.get(i).getAirline().getId(),personalizedFlights.get(i).getFlightNo()));
-				System.out.print("formatted flight is " + formattedFlights.get(i));
-			}
+			bestSeller= DBUtils.bestSeller(conn);
+			if (loginedCustomer != null)
+				personalizedFlights = DBUtils.personalizedFlights(conn, loginedCustomer.getAccountNo());
+		
 		} catch (SQLException e) {
 			System.out.println("No best seller");
 		}
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("bestSeller", bestSeller);
-		request.setAttribute("personalizedFlights", formattedFlights);
+		request.setAttribute("personalizedFlights", personalizedFlights);
 		
-		
-			
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/recommendationsView.jsp");
 		dispatcher.forward(request, response);
 

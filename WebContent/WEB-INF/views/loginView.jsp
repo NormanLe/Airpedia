@@ -17,25 +17,24 @@
  
       <form method="POST" action="${pageContext.request.contextPath}/login">
          <table>
-            <tr>
-                <td colspan="3">
+         	<tr>
+                <td colspan="3" align="center">
                     <input type="radio" name="userType" value="customer" checked onclick=changeForm()> Customer
-                    <input type="radio" name="userType" value="employee" onclick=changeForm()> Employee 
-                    <input type="radio" name="userType" value="manager" onclick=changeForm()> Manager
+                	<input type="radio" name="userType" value="employee" onclick=changeForm()> Employee 
                 </td>
             </tr>
             <tr>
                <td>Username</td>
-               <td><input type="text" name="email"/> </td>
+               <td><input type="text" name="username"/> </td>
             </tr>
             <tr>
                <td>Password</td>
-               <td><input type="password" name="password"/> </td>
+               <td><input type="password" name="password" /> </td>
             </tr>
             <tr>
                <td colspan ="2" align="center">
-                  <input type="submit" value= "Submit" />
-				  <br> <a href="${pageContext.request.contextPath}/registration"> Register </a>
+                  <input type="submit" class="customButton" value= "Submit" />
+                  <div class="customButton"> <a href="${pageContext.request.contextPath}/registration"> Register </a> </div>
                </td>
             </tr>
          </table>

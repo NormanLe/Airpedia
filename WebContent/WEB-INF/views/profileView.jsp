@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
  pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 <!DOCTYPE html>
 <html>
  <head>
@@ -14,20 +17,26 @@
  	<!-- should differentiate between employee, manager, and customer -->
     <jsp:include page="_menu.jsp"></jsp:include>
  	<p style="color: red;">${errorString}</p>
-    <h3>Hello, ${person.firstName} ${person.lastName}! </h3>
- 	
-    Account Number: ${customer.accountNo} <br>
-    Email: ${customer.email} <br>
-	Password: ${customer.password} <br>
+    <h1>Hello, ${person.firstName} ${person.lastName}! </h1>
+    
+    
+ 	<c:if test="${!empty customer}">
+    	Account Number: ${customer.accountNo} <br>
+    	Email: ${customer.email} <br>
+		<c:set var="origNum" value="${customer.phone}" />
+		<c:set var="newNum" value="${fn:replace(origNum, '.', '')}" />
+		<c:set var="newNum" value="${fn:replace(newNum, 'E', '')}" />
+    	Phone Number : ${newNum} <br>
+		Date: ${customer.creationDate} <br>
+		Rating: ${customer.rating} <br>
+	</c:if>
 	
-	<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-	<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
-	<c:set var = "origNum" value = "${customer.phone}"/>
-    <c:set var = "newNum" value = "${fn:replace(origNum, '.', '')}" />
-    <c:set var = "newNum" value = "${fn:replace(newNum, 'E', '')}" />
-    Phone Number : ${newNum} <br>
+	<c:if test="${!empty employee}">
+		${manager}<br>
+		Started Working: ${employee.startDate} <br>
+		Hourly Rate: $${employee.hourlyRate} <br>
+	</c:if>
 	
-	Date: ${customer.creationDate} <br>
-	Rating: ${customer.rating} <br>
+	
  </body>
 </html>

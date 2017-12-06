@@ -4,8 +4,9 @@ body {
 	font-family: 'Open Sans';
 	margin: 0 auto;
 	text-align: center;
-	color: #2E2E2E;
+	color: #3E4148;
 }
+
 
 h1 {
 	text-align: center;
@@ -21,32 +22,30 @@ table {
 	padding: 4px;
 }
 
-.tableStyle th {
-	background-color: #D59EA7;
+.tableStyle th, .customButton {
+	background-color: #914851;
 	color: #FFF;
 }
+
 a {
-	color: #6EA5C5;
+	color: #536676;
 	text-decoration: none;
+}
+
+
+.navigation a {
+	color: #FFF;
+	text-decoration: none;
+	padding:5px;
 }
 
 a:hover {
 	transition: 500ms ease-in-out;
-	color: #808080;
-}
-.navigation a {
-	color: #FFF;
-	text-decoration: none;
-}
-
-.navigation a:hover {
-	transition: 500ms ease-in-out;
-	text-decoration: underline;
+	opacity: 0.8;
 }
 
 .navigation {
-	text-align: center;
-	background-color: #79A5C3;
+	background-color: #536676;
 	padding: 5px;
 	width: 100%;
 	height: 40px;	
@@ -58,8 +57,12 @@ a:hover {
 	margin: 0 auto;
 }
 
-#home input[type="text"], select {
+#home input[type="text"], #home input[type="number"] {
 	width: 130px;
+}
+
+#home select {
+	width: 136px;
 }
 
 .flightsData {
@@ -69,18 +72,30 @@ a:hover {
 
 .flightsData h2 {
 	margin-bottom: 6px;
-	color: #E099A5;
+	color: #914851;
 }
 
-.chooseFlight {
-	background-color: #E099A5;
-	width: 110px;
-	padding: 5px;
+.customButton {
+	font-size: 15px;
+	border: none;
+	display: inline-block;
+	padding: 7px;
 	color: #FFF;
 	margin: 0 auto;
 	margin-top: 6px;
+	border-radius: 5px;
 }
 
-.chooseFlight a {
+.customButton a {
 	color: #FFF;
+}
+
+.customButton:hover {
+	background-color: #536676;
+	transition: 450ms ease-out;
+}
+
+.customButton a:hover {
+	opacity:1;
+}
 }

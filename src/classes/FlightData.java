@@ -17,6 +17,7 @@ public class FlightData {
 	private String depAirportName;
 	private String depCountry;
 	private double fare;
+	private String airlineId;
 
 	public String getDepartAirport() {
 		return departAirport;
@@ -101,5 +102,11 @@ public class FlightData {
 	}
 	public void setFare(double fare) {
 		this.fare = fare;
+	}
+	public String getAirlineId() {
+		return airlineId;
+	}
+	public void setAirlineId(String airlineId) {
+		this.airlineId = airlineId;
 	}
 }

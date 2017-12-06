@@ -14,7 +14,7 @@
  
     <jsp:include page="_menu.jsp"></jsp:include>
  
-    <h1>My Reservations</h1>
+    <h1>${h1text}</h1>
  
     <p style="color: red;">${errorString}</p>
  
