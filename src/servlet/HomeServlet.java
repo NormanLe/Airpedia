@@ -88,7 +88,7 @@ public class HomeServlet extends HttpServlet {
 		else{
 			request.setAttribute("errorString", errorString);
 			request.setAttribute("flightList", list);
-			RequestDispatcher dispatcher //
+			RequestDispatcher dispatcher 
 			= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
 			
 			dispatcher.forward(request, response);

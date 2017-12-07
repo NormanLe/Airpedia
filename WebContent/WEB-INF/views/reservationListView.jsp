@@ -20,7 +20,17 @@
  
  	<a href="${pageContext.request.contextPath}">Create Reservation</a>
     <c:if test="${not empty reservationList}">
+    
+   	<!--  
+   	<form method="post" action="/reservationList">
+       	Filter by FlightNo <input type="text"> <br> 
+       	AirlineId <input type="text"> <br>
+       	Current Reservations Only <input type="checkbox"> <br>
+       	Customer Name <input type="text">
+    </form> 
+    -->
     <table class="tableStyle">
+       
        
        <tr>
           <th>ResrNo</th>
@@ -32,13 +42,13 @@
           <th>Delete</th>
        </tr>
        
-
+	
        <c:forEach items="${reservationList}" var="reservation">
           <tr>
              <td>${reservation.resrNo}</td>
              <td>${reservation.resrDate}</td>
-             <td>${reservation.bookingFee}</td>
-             <td>${reservation.totalFare}</td>
+             <td>$${reservation.bookingFee}</td>
+             <td>$${reservation.totalFare}</td>
              <td>${reservation.customer.accountNo}</td>
              <td>
                 <a href="editReservation?code=${reservation.resrNo}">Edit</a>

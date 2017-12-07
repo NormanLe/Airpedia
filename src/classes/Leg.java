@@ -4,11 +4,13 @@ import java.sql.Date;
 
 public class Leg {
 	Flight flight;
-	Airport airport;
+	Airline airline;
 	private int legNo;
 	private Date arrTime;
 	private Date depTime;
 	private boolean onTime; 
+	private String depAirportId;
+	private String arrAirportId;
 	
 	public Leg() {
 		
@@ -44,5 +46,37 @@ public class Leg {
 
 	public void setOnTime(boolean onTime) {
 		this.onTime = onTime;
+	}
+
+	public Flight getFlight() {
+		return flight;
+	}
+
+	public void setFlight(Flight flight) {
+		this.flight = flight;
+	}
+
+	public Airline getAirline() {
+		return airline;
+	}
+
+	public void setAirline(Airline airline) {
+		this.airline = airline;
+	}
+
+	public String getDepAirportId() {
+		return depAirportId;
+	}
+
+	public void setDepAirportId(String depAirportId) {
+		this.depAirportId = depAirportId;
+	}
+
+	public String getArrAirportId() {
+		return arrAirportId;
+	}
+
+	public void setArrAirportId(String arrAirportId) {
+		this.arrAirportId = arrAirportId;
 	}
 }

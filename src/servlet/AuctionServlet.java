@@ -19,6 +19,9 @@ import classes.Customer;
 import classes.Employee;
 import classes.Flight;
 import classes.FlightData;
+import classes.Includes;
+import classes.Leg;
+import classes.Makes;
 import classes.Person;
 import classes.Reservation;
 import utils.DBUtils;
@@ -60,7 +63,10 @@ public class AuctionServlet extends HttpServlet {
 		List<Flight> flights = null;
 		flights = DBUtils.getAllFlights(conn);
 		for (int i = 0; i < flights.size(); i++) {
-			auctionFlights.add(DBUtils.getFlightDataFromAirlineFlight(conn, flights.get(i).getAirline().getId(), flights.get(i).getFlightNo()));
+			List<Leg> legs = DBUtils.getLegsForFlight(conn, flights.get(i).getAirline().getId(), flights.get(i).getFlightNo());
+			for (Leg l : legs) {
+				auctionFlights.add(DBUtils.getFlightDataFromAirlineFlight(conn, l.getAirline().getId(), l.getFlight().getFlightNo(), DBUtils.findCityFromAirport(conn, l.getDepAirportId()), DBUtils.findCityFromAirport(conn, l.getArrAirportId())));
+			}
 		}
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("auctionFlights", auctionFlights);
@@ -91,13 +97,31 @@ public class AuctionServlet extends HttpServlet {
 	    		String[] data = flights[i].split(",");
 	    		double hiddenFare = Double.parseDouble(data[4]);
 	    		if (bid >= hiddenFare) {
+	    			Includes inc = new Includes();
+	    			inc.setFlightClass("Economy");
+	    			//${flight.airlineId},${flight.flightNo},${flight.departAirport},${flight.arrivalAirport},${flight.hiddenFare}
+	    			FlightData fd = DBUtils.getFlightDataFromAirlineFlight(conn, data[0], Integer.parseInt(data[1]), DBUtils.findCityFromAirport(conn, data[2]), DBUtils.findCityFromAirport(conn, data[3]));
+	    			System.out.println(data[0]);
+	    			System.out.println(Integer.parseInt(data[1]));
+	    			System.out.println(data[2]);
+	    			System.out.println(data[3]);
+	    			inc.setDate(new Date(fd.getDepartDate().getTime()));
+	    			inc.setFlightClass("Economy");
+	    			inc.setLegNo(fd.getDepartLegNo());
+	    			inc.setMeal("Sushi");
+	    			inc.setSeatNo(DBUtils.generateSeatNumber(conn, data[0], Integer.parseInt(data[1])));
+	    			inc.setFromStopNo(fd.getDepartLegNo());
+	    			
 	    			Reservation r = new Reservation();
 	    			r.setBookingFee(bid * .1);
 	    			r.setTotalFare(bid * 1.1);
 	    			r.setResrNo((int)(Math.random() * 2000000000));
 	    			r.setEmployee(new Employee());
 	    			r.setCustomer(MyUtils.getLoginedCustomer(session));
-	    			DBUtils.addReservation(conn, r);
+	    			Makes m = new Makes();
+	    			m.setReservation(r);
+	    			m.setCustomer(MyUtils.getLoginedCustomer(session));
+	    			DBUtils.addReservation(conn, r, inc, m);
 	    			success = true;
 	    			errorString = "Bid successful. Reservation created.";
 	    		}

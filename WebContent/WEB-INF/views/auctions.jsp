@@ -35,7 +35,7 @@
 			<br></td>
 			<td><form method="post"><input type="text" name="bidAmount"/> 
 			<input type="hidden" name="data" value="${flight.airlineId},${flight.flightNo},${flight.departAirport},${flight.arrivalAirport},${flight.hiddenFare}"/>
-			<input type="submit" value="Make Bid"></form></td>
+			<input type="submit" class="customButton" value="Make Bid"></form></td>
 			
 		</tr>
 		
