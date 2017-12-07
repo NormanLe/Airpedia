@@ -9,6 +9,7 @@
  
      <!-- User store in session with attribute: loginedUser -->
      Hello <b>${loginedCustomer.email}</b>
+     huhuhuhuh ${loginedUser}
    <br/>
      Search <input name="search">
  

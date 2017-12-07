@@ -9,7 +9,6 @@
         </style>
     </head>
   <body id="home">
- 
      <jsp:include page="_menu.jsp"></jsp:include>
       
       <h1>Plan Your Next Trip</h1>
