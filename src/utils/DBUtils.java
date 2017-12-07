@@ -665,36 +665,40 @@ public class DBUtils {
 	}
 
 	// [accountNo, totalRevenue]
-	public static int[] getCustomerMostRevenue(Connection conn) {
-		String sql = "SELECT summed.AccountNo, MAX(SumRevenue) FROM (SELECT C.AccountNo, SUM(R.BookingFee) AS SumRevenue FROM Reservation R, Customer C, Makes M WHERE M.ResrNo = R.ResrNo AND M.AccountNo = C.AccountNo GROUP BY  C.AccountNo) summed GROUP BY summed.AccountNo ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
+	public static String[] getCustomerMostRevenue(Connection conn) {
+		String sql = "SELECT summed.Id, MAX(SumRevenue) FROM (SELECT C.Id, SUM(R.BookingFee) "
+				+ "AS SumRevenue FROM Reservation R, Customer C, Makes M WHERE M.ResrNo = R.ResrNo AND "
+				+ "M.Id = C.Id GROUP BY  C.Id) summed GROUP BY summed.Id ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
 
-		int[] arr = new int[2];
+		String [] arr = new String[2];
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			while (rs.next()) {
-				arr[0] = rs.getInt("AccountNo");
-				arr[1] = rs.getInt("SumRevenue");
+			if (rs.next()) {
+				Person p = findPersonById(conn, rs.getInt("Id"));
+				arr[0] = p.getFirstName() + " " + p.getLastName();
+				arr[1] = "$" + rs.getInt("MAX(SumRevenue)");
 			}
 		} catch (Exception e) {
-			System.out.println("SQL Error.");
+			e.printStackTrace();
 		}
 		return arr;
 	}
 
-	public static int[] getRepMostRevenue(Connection conn) {
+	public static String[] getRepMostRevenue(Connection conn) {
 		String sql = "SELECT summed.RepSSN, MAX(SumRevenue) FROM (SELECT RepSSN, SUM(BookingFee) AS SumRevenue FROM Reservation GROUP BY RepSSN) summed GROUP BY summed.RepSSN ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
 
-		int[] arr = new int[2];
+		String [] arr = new String[2];
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			while (rs.next()) {
-				arr[0] = rs.getInt("RepSSN");
-				arr[1] = rs.getInt("SumRevenue");
+			if (rs.next()) {
+				Person p = findPersonBySSN(conn, rs.getInt("RepSSN"));
+				arr[0] = p.getFirstName() + " " + p.getLastName();
+				arr[1] = "$" + rs.getInt("MAX(SumRevenue)");
 			}
 		} catch (Exception e) {
-			System.out.println("SQL Error.");
+			e.printStackTrace();
 		}
 		return arr;
 	}

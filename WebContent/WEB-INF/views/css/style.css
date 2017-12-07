@@ -24,11 +24,13 @@ table {
 .tableStyle td,  .tableStyle th{
 	border:1px solid #CCCCCC;
 	padding: 4px;
+	text-align: center;
 }
 
 .tableStyle th, .customButton {
 	background-color: #914851;
 	color: #FFF;
+	text-align: center;
 }
 
 a {
