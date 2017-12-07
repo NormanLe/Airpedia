@@ -43,6 +43,8 @@ public class ManagerReportServlet extends HttpServlet {
 
 		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
 		String [] repRevenue = DBUtils.getRepMostRevenue(conn);
+		
+
 		request.setAttribute("customerRevenue", customerRevenue);
 		request.setAttribute("repRevenue", repRevenue);
 		
@@ -55,6 +57,29 @@ public class ManagerReportServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		Connection conn = MyUtils.getStoredConnection(request);
+
+		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
+		String [] repRevenue = DBUtils.getRepMostRevenue(conn);
+		request.setAttribute("customerRevenue", customerRevenue);
+		request.setAttribute("repRevenue", repRevenue);
+		
+		String mmyyyy = (String) request.getParameter("monthyear");
+		if (mmyyyy != "") {
+			List<String[]> salesReportByMonth = DBUtils.generateSalesReportByMonth(conn, mmyyyy);
+			request.setAttribute("salesReportByMonth", salesReportByMonth);
+		}
+		List<String [] > summaryListing = null;
+		if (request.getParameter("airlineflight") != "") {
+			summaryListing = DBUtils.getSummaryListing(conn, request.getParameter("airlineflight"), "flight");
+		} else if ( request.getParameter("destinationCity") != "") {
+			summaryListing = DBUtils.getSummaryListing(conn, request.getParameter("destinationCity"), "city");
+		} else if (request.getParameter("customer") != "") {
+			summaryListing = DBUtils.getSummaryListing(conn, request.getParameter("customer"), "customer");
+		}
+		request.setAttribute("summaryListing", summaryListing);
+		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/ManagerReport.jsp");
+		dispatcher.forward(request, response);
 		
 		}
 

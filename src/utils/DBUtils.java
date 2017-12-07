@@ -935,6 +935,73 @@ public class DBUtils {
 		return null;
 	}
 
+	public static List<String []> generateSalesReportByMonth (Connection conn, String date) {
+		String [] mmyyyy = date.split("/");
+		String sql = "SELECT C.AccountNo, R.BookingFee, R.ResrDate "
+				+ " FROM Customer C, Reservation R, Makes M "
+				+ " WHERE MONTH(R.ResrDate) = " + mmyyyy[0] 
+				+ " AND YEAR(R.ResrDate) = " + mmyyyy[1]
+				+ " AND M.ResrNo = R.ResrNo AND M.AccountNo = C.AccountNo";
+		
+		List<String[]> list = new ArrayList<>();
+		
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				String [] arr = new String[3];
+				arr[0] = "" + rs.getInt("AccountNo");
+				arr[1] = "" + rs.getDouble("BookingFee");
+				arr[2] = "" + rs.getDate("ResrDate");
+				list.add(arr);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public static List<String []> getSummaryListing (Connection conn, String query, String queryType) {
+		String sql = "";
+		if (queryType.equals("flight")) {
+			String [] airlineFlight = query.split("-");
+			sql = "select r.* from reservation r where r.resrno in "
+					+ " (select i.resrno from includes i, leg l where l.flightno = " + airlineFlight[1] 
+					+ " and i.airlineid = '" + airlineFlight[0] + "' and l.airlineid = i.airlineid"
+					+ " and l.flightno = i.flightno)";
+
+		} else if (queryType.equals("city")) {
+			sql = "SELECT DISTINCT I.ResrNo, R.*"
+				+ " FROM Includes I, Leg L, Airport A, Reservation R WHERE L.ArrAirportID = A.Id" 
+				+ "	AND A.City = '" + query + "' AND R.ResrNo = I.ResrNo"
+				+ " AND L.AirlineId = I.AirlineId AND L.FlightNo = I.FlightNo";
+		} else if (queryType.equals("customer")) {
+			sql = "SELECT R.* from Reservation R"
+				+ " WHERE R.ResrNo IN (SELECT M.ResrNo FROM Makes M"
+				+ " WHERE M.AccountNo = " + Integer.parseInt(query) + ");";
+		}
+		
+		List<String[]> list = new ArrayList<>();
+		
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				String [] arr = new String[3];
+				arr[0] = "" + rs.getInt("ResrNo");
+				arr[1] = "" + rs.getDouble("BookingFee");
+				arr[2] = "" + rs.getDate("ResrDate");
+				list.add(arr);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	
+	
+	
 	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo, String depCity, String arrCity) {
 		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
 		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId,
