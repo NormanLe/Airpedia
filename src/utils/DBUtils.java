@@ -307,23 +307,6 @@ public class DBUtils {
 
 	public static List<FlightData> queryFlights(Connection conn, String tripType, String tripFrom, String tripTo,
 			String departDate, String returnDate, String tripClass, int numPeople) throws SQLException {
-		// String sql = "Select * " +
-		// "From Flight Fl " +
-		// "Where Fl.AirlineID IN " +
-		// "(SELECT L.AirlineID " +
-		// "From Leg L " +
-		// "Where L.AirlineID IN " +
-		// "(SELECT F.AirlineID " +
-		// "From Fare F, Airport A1, Airport A2 " +
-		// "Where F.AirlineID = L.AirlineID " +
-		// "AND A1.City = ? " +
-		// "AND A2.City = ? " +
-		// "AND F.FareType = ? " +
-		// "AND F.Class = ? " +
-		// "AND Fl.NoOfSeats > ? " +
-		// "AND L.DepAirportID = A1.Id " +
-		// "AND L.ArrAirportID = A2.Id " +
-		// "))";
 
 		String sql = "Select * " + 
 				"From Flight Fl " + 
@@ -368,11 +351,6 @@ public class DBUtils {
 		 }
 		sql += ")";
 		int numArgs = 1;
-		// Guaranteed strings are: fareType (roundway/one trip), class
-		// (business/economy/first), numPeople
-		// Empty strings are: tripFrom, tripTo, departDate, returnDate
-		// prepare statements at the end, maybe add the strings to a list and
-		// append em all at the end
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
 		pstm.setString(1, tripType);
@@ -401,18 +379,42 @@ public class DBUtils {
 		while (rs.next()) {
 			String airlineId = rs.getString("AirlineID");
 			int flightNo = rs.getInt("FlightNo");
-			int numSeats = rs.getInt("NoOfSeats");
-			String daysOperating = rs.getString("DaysOperating");
-			int minStay = rs.getInt("MinLengthOfStay");
-			int maxStay = rs.getInt("MaxLengthOfStay");
-			Airline airline = findAirline(conn, airlineId);
-			FlightData flight =getFlightDataFromAirlineFlight(conn, airlineId, flightNo);
-			//new Flight(airline, flightNo, numSeats, daysOperating, minStay, maxStay);
+			FlightData flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo);
+			
+			flight.setDepartLegNo(findDepLegNo(conn, airlineId, flightNo, tripFrom));
+			flight.setArriveLegNo(findArrLegNo(conn, airlineId, flightNo, tripTo));
 			list.add(flight);
 		}
 		return list;
 	}
-	
+	public static int findDepLegNo(Connection conn, String airlineId, int flightNo, String city) throws SQLException{
+		String sql = "select L.LegNo from Leg L, Airport A "
+				+ "where L.DepAirportId = A.Id and L.airlineId = ? and L.flightNo = ? and A.city = ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, airlineId);
+		pstm.setInt(2, flightNo);
+		pstm.setString(3, city);
+		ResultSet rs = pstm.executeQuery();
+		if (rs.next()) {
+			int legNo = rs.getInt("LegNo");
+			return legNo;
+		}
+		return -1;
+	}
+	public static int findArrLegNo(Connection conn, String airlineId, int flightNo, String city) throws SQLException{
+		String sql = "select L.LegNo from Leg L, Airport A "
+				+ "where L.ArrAirportId = A.Id and L.airlineId = ? and L.flightNo = ? and A.city = ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, airlineId);
+		pstm.setInt(2, flightNo);
+		pstm.setString(3, city);
+		ResultSet rs = pstm.executeQuery();
+		if (rs.next()) {
+			int legNo = rs.getInt("LegNo");
+			return legNo;
+		}
+		return -1;
+	}
 	public static String generateSeatNumber (Connection conn, String airlineId, int flightNo) {
 		String sql = "select NoOfSeats from Flight where airlineId = '" + airlineId + "' and flightNo = " + flightNo;
 		
@@ -443,7 +445,6 @@ public class DBUtils {
 		FlightData flight = null;
 		if (rs.next()) {
 			String resrNo = rs.getString("ResrNo");
-			System.out.println(resrNo);
 
 			String newSql = "select * from includes i , flight f where f.flightno = i.flightno and f.airlineid = i.airlineid and i.resrno = "
 					+ resrNo + " LIMIT 1";
@@ -474,112 +475,6 @@ public class DBUtils {
 			flights.add(getFlightDataFromAirlineFlight(conn, airlineId, flightNo));
 		}
 		return flights;
-	}
-
-	// TODO: Change these in future
-
-	private static void addEmployee(Connection conn, Employee employee) {
-		// try {
-		// Statement stmt = conn.createStatement();
-		// stmt.executeUpdate(String.format(
-		// "UPDATE Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES
-		// (%d, %d, %b, %t, %f",
-		// employee.getSsn(), employee.getemployee.getStartDate(),
-		// isManager, startDate, hourlyRate, newRate));
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// }
-	}
-
-	// fix
-	private void updateEmployee(int id, int ssn, boolean isManager, Date startDate, double hourlyRate, double newRate) {
-		try {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(String.format(
-					"INSERT INTO Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES (%d, %d, %b, %t, %f", id,
-					ssn, isManager, startDate, hourlyRate, newRate));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// fix
-	private void deleteEmployee(int id, int ssn, boolean isManager, Date startDate, double hourlyRate, double newRate) {
-		try {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(String.format(
-					"DELETE Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES (%d, %d, %b, %t, %f", id, ssn,
-					isManager, startDate, hourlyRate, newRate));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private ResultSet getSalesReportForMonth(int month) {
-		try {
-			Statement stmt = con.createStatement();
-			return stmt.executeQuery(String.format(
-					"SELECT C.AccountNo, R.TotalFare, R.ResrDate FROM Customer C, Reservation R, Makes M WHERE MONTH(R.ResrDate) = %d AND M.ResrNo = R.ResrNo AND M.AccountNo = C.AccountNo;",
-					month));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private ResultSet listAllFlights() {
-		try {
-			Statement stmt = con.createStatement();
-			return stmt.executeQuery("SELECT * FROM Flight");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private ResultSet listReservationsByFlightNo(String s) {
-		try {
-			Statement stmt = con.createStatement();
-			return stmt.executeQuery(
-					"SELECT * FROM Reservation R WHERE R.ResrNo IN (SELECT I.ResrNo FROM Includes I WHERE I.FlightNo = "
-							+ s);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private ResultSet listReservationsById(String s) {
-		try {
-			Statement stmt = con.createStatement();
-			return stmt.executeQuery(
-					"SELECT * FROM Reservation R WHERE R.ResrNo IN (SELECT M.ResrNo FROM Makes M WHERE M.Id = " + s);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private ResultSet getRepMostRevenue() {
-		try {
-			Statement stmt = con.createStatement();
-			return stmt.executeQuery(
-					"SELECT summed.RepSSN, MAX(SumRevenue) FROM (SELECT RepSSN, SUM(BookingFee) AS SumRevenue FROM Reservation GROUP BY RepSSN) summed GROUP BY summed.RepSSN ORDER BY MAX(SumRevenue) DESC LIMIT 1;");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private ResultSet getCustomerMostRevenue() {
-		try {
-			Statement stmt = con.createStatement();
-			return stmt.executeQuery(
-					"SELECT summed.AccountNo, MAX(SumRevenue) FROM (SELECT C.AccountNo, SUM(R.BookingFee) AS SumRevenue FROM Reservation R, Customer C, Makes M WHERE M.ResrNo = R.ResrNo AND M.AccountNo = C.AccountNo GROUP BY  C.AccountNo) summed GROUP BY summed.AccountNo ORDER BY MAX(SumRevenue) DESC LIMIT 1;");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	public static List<Flight> getAllFlights(Connection conn) {
