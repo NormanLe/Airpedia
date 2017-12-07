@@ -765,13 +765,9 @@ public class DBUtils {
 	}
 
 	// [flightNo, numflights]
-<<<<<<< HEAD
-	public static Object[] getMostActiveFlight(Connection conn) {
-		String sql = "SELECT counted.AirlineID, counted.FlightNo, MAX(NumFlights)FROM (SELECT F.AirlineID, F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights);";
-=======
+
 	public static String[] getMostActiveFlight(Connection conn) {
 		String sql = "SELECT counted.AirlineID, counted.FlightNo, MAX(NumFlights)FROM (SELECT F.AirlineID, F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights) DESC LIMIT 1;";
->>>>>>> refs/remotes/origin/master
 
 		String[] arr = new String[3];
 		try {
