@@ -19,7 +19,7 @@
     <p style="color: red;">${errorString}</p>
         
 	You have chosen airline ${airline}, flight #${flight} <br>
-	Your seat will be ${seatNum}. <br>
+<%-- 	Your seat will be ${seatNum}. <br> --%>
 	You will depart from ${departAirport} and arrive at ${arriveAirport}. <p>
 	
 	<h3>Please make the following selections</h3>
