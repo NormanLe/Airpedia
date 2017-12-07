@@ -45,10 +45,13 @@ public class ManagerReportServlet extends HttpServlet {
        
 
 		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
-		String [] repRevenue = DBUtils.getRepMostRevenue(conn);
+		String [] repRevenue = null;
+		if (loginedEmployee != null && loginedEmployee.isManager())
+			repRevenue = DBUtils.getRepMostRevenue(conn);
 		
 		request.setAttribute("customerRevenue", customerRevenue);
-		request.setAttribute("repRevenue", repRevenue);
+		if (loginedEmployee != null && loginedEmployee.isManager())
+			request.setAttribute("repRevenue", repRevenue);
 		
 		
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/ManagerReport.jsp");
