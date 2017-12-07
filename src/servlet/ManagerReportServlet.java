@@ -45,14 +45,16 @@ public class ManagerReportServlet extends HttpServlet {
 
 		List<String []> customerRevenue = DBUtils.getCustomerMostRevenue(conn);
 		List<String []> repRevenue = new ArrayList<>();
-		String [] mostActiveFlight = DBUtils.getMostActiveFlight(conn);
+		
 		if (loginedEmployee != null && loginedEmployee.isManager())
 			repRevenue = DBUtils.getRepMostRevenue(conn);
-		request.setAttribute("mostActiveFlight", mostActiveFlight);
+		
 		request.setAttribute("customerRevenue", customerRevenue);
 		if (loginedEmployee != null && loginedEmployee.isManager())
 			request.setAttribute("repRevenue", repRevenue);
 		
+		List<String[]> mostActiveFlight = DBUtils.getMostActiveFlight(conn);
+		request.setAttribute("mostActiveFlight", mostActiveFlight);
 		
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/ManagerReport.jsp");
 		dispatcher.forward(request, response);
@@ -66,7 +68,9 @@ public class ManagerReportServlet extends HttpServlet {
 
 		List<String []> customerRevenue = DBUtils.getCustomerMostRevenue(conn);
 		List<String []> repRevenue = DBUtils.getRepMostRevenue(conn);
+		List<String[]> mostActiveFlight = DBUtils.getMostActiveFlight(conn);
 		
+		request.setAttribute("mostActiveFlight", mostActiveFlight);
 		request.setAttribute("customerRevenue", customerRevenue);
 		request.setAttribute("repRevenue", repRevenue);
 		

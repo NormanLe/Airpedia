@@ -766,22 +766,25 @@ public class DBUtils {
 
 	// [flightNo, numflights]
 
-	public static String[] getMostActiveFlight(Connection conn) {
-		String sql = "SELECT counted.AirlineID, counted.FlightNo, MAX(NumFlights)FROM (SELECT F.AirlineID, F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights) DESC LIMIT 1;";
+	public static List<String[]> getMostActiveFlight(Connection conn) {
+		String sql = "select AirlineId, FlightNo, count(*) as frequency from includes group by AirlineId, FlightNo order by count(*) desc limit 10;";
 
-		String[] arr = new String[3];
+		List<String[]> list = new ArrayList<>();
+		
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			if (rs.next()) {
-				arr[0] = rs.getString("AirlineID");
+			while (rs.next()) {
+				String[] arr = new String[3];
+				arr[0] = rs.getString("AirlineId");
 				arr[1] = rs.getString("FlightNo");
-				arr[2] = rs.getString("MAX(NumFlights)");
+				arr[2] = rs.getString("frequency");
+				list.add(arr);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return arr;
+		return list;
 	}
 
 	public static List<Customer> getCustomersOnFlight(Connection conn, int flightNo) {

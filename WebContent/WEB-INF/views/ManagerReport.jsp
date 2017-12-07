@@ -39,7 +39,6 @@
  	
  	<h3>The customer representatives who generated the most revenue are</h3>
  	
-<<<<<<< HEAD
  	<table class="tableStyle">
  		<tr> 
  			<th>Representative</th>
@@ -55,15 +54,29 @@
 		</c:forEach>
  		
  	</table>
-=======
- 	<h3>The customer representative who generated the most revenue is</h3>
- 	${repRevenue[0]} with a total of ${repRevenue[1]}. <p>
  	
- 	<h3>The most active flight is</h3>
- 	${mostActiveFlight[0]} Flight# ${mostActiveFlight[1]} with a total of ${mostActiveFlight[2]} flights. <p>
+ 	<h3>The most active flights are</h3>
  	
->>>>>>> refs/remotes/origin/master
+ 	<table class="tableStyle">
+ 		<tr> 
+ 			<th>Airline Id</th>
+ 			<th>Flight No</th>
+ 			<th>Frequency</th>
+ 		</tr>
+ 		
+ 		<c:forEach items="${mostActiveFlight}" var="flight">
+ 		<tr>
+			<td>${flight[0]}</td>
+			<td>${flight[1]}</td>
+			<td>${flight[2]}</td>
+		</tr>
+		</c:forEach>
+ 		
+ 	</table>
+ 	
+ 	
  	</c:if>
+ 	
  	
  	<h3>Sales report for a particular month</h3>
  	<c:if test="${!empty salesReportByMonth}">
