@@ -35,6 +35,7 @@ public class ManagerReportServlet extends HttpServlet {
 		 
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
         Employee loginedEmployee = MyUtils.getLoginedEmployee(session);
+        //a
         if (loginedEmployee == null && loginedCustomer == null) {
         	response.sendRedirect(request.getContextPath() + "/login");
             return;
