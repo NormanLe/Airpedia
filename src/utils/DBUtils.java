@@ -720,47 +720,53 @@ public class DBUtils {
 	}
 
 	// [accountNo, totalRevenue]
-	public static String[] getCustomerMostRevenue(Connection conn) {
+	public static List<String[]> getCustomerMostRevenue(Connection conn) {
 		String sql = "SELECT summed.Id, MAX(SumRevenue) FROM (SELECT C.Id, SUM(R.BookingFee) "
 				+ "AS SumRevenue FROM Reservation R, Customer C, Makes M WHERE M.ResrNo = R.ResrNo AND "
-				+ "M.Id = C.Id GROUP BY  C.Id) summed GROUP BY summed.Id ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
+				+ "M.Id = C.Id GROUP BY  C.Id) summed GROUP BY summed.Id ORDER BY MAX(SumRevenue) DESC Limit 10;";
 
-		String [] arr = new String[2];
+		List<String[]> list = new ArrayList<>();
+		
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
+				String [] arr = new String[2];
 				Person p = findPersonById(conn, rs.getInt("Id"));
 				arr[0] = p.getFirstName() + " " + p.getLastName();
 				arr[1] = "$" + rs.getInt("MAX(SumRevenue)");
+				list.add(arr);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return arr;
+		return list;
 	}
 
-	public static String[] getRepMostRevenue(Connection conn) {
-		String sql = "SELECT summed.RepSSN, MAX(SumRevenue) FROM (SELECT RepSSN, SUM(BookingFee) AS SumRevenue FROM Reservation WHERE RepSSN IS NOT NULL GROUP BY RepSSN) summed GROUP BY summed.RepSSN ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
+	public static List<String[]> getRepMostRevenue(Connection conn) {
+		String sql = "SELECT summed.RepSSN, MAX(SumRevenue) FROM (SELECT RepSSN, SUM(BookingFee) AS SumRevenue FROM Reservation WHERE RepSSN IS NOT NULL GROUP BY RepSSN) summed GROUP BY summed.RepSSN ORDER BY MAX(SumRevenue) DESC LIMIT 10;";
 
-		String [] arr = new String[2];
+		List<String[]> list = new ArrayList<>();
+		
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
+				String [] arr = new String[2];
 				Person p = findPersonBySSN(conn, rs.getInt("RepSSN"));
 				arr[0] = p.getFirstName() + " " + p.getLastName();
 				arr[1] = "$" + rs.getInt("MAX(SumRevenue)");
+				list.add(arr);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return arr;
+		return list;
 	}
 
 	// [flightNo, numflights]
 	public static Object[] getMostActiveFlight(Connection conn) {
-		String sql = "SELECT counted.AirlineID, counted.FlightNo, MAX(NumFlights)FROM (SELECT F.AirlineID, F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights) DESC LIMIT 1;";
+		String sql = "SELECT counted.AirlineID, counted.FlightNo, MAX(NumFlights)FROM (SELECT F.AirlineID, F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights);";
 
 		Object[] arr = new Object[2];
 		try {

@@ -20,11 +20,40 @@
  	
  	<c:if test="${empty NoPermission}">
  	<c:if test="${!empty customerRevenue}">
- 	<h3>The customer who generated the most revenue is</h3>
- 	${customerRevenue[0]} with a total of ${customerRevenue[1]}. <p>
+ 	<h3>The customers who generated the most revenue are</h3>
+ 	<table class="tableStyle">
+ 		<tr> 
+ 			<th>Person</th>
+ 			<th>Revenue</th>
+ 		</tr>
+ 		
+ 		<c:forEach items="${customerRevenue}" var="report">
+ 		<tr>
+			<td>${report[0]}</td>
+			
+			<td>${report[1]}</td>
+		</tr>
+		</c:forEach>
+ 		
+ 	</table>
  	
- 	<h3>The customer representative who generated the most revenue is</h3>
- 	${repRevenue[0]} with a total of ${repRevenue[1]}. <p>
+ 	<h3>The customer representatives who generated the most revenue are</h3>
+ 	
+ 	<table class="tableStyle">
+ 		<tr> 
+ 			<th>Representative</th>
+ 			<th>Revenue</th>
+ 		</tr>
+ 		
+ 		<c:forEach items="${repRevenue}" var="report">
+ 		<tr>
+			<td>${report[0]}</td>
+			
+			<td>${report[1]}</td>
+		</tr>
+		</c:forEach>
+ 		
+ 	</table>
  	</c:if>
  	
  	<h3>Sales report for a particular month</h3>

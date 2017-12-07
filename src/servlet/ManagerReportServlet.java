@@ -42,8 +42,8 @@ public class ManagerReportServlet extends HttpServlet {
     		request.setAttribute("NoPermission", "Sorry, you do not have permission to view this!");
         }
        
-		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
-		String [] repRevenue = null;
+		List<String []> customerRevenue = DBUtils.getCustomerMostRevenue(conn);
+		List<String []> repRevenue = new ArrayList<>();
 		if (loginedEmployee != null && loginedEmployee.isManager())
 			repRevenue = DBUtils.getRepMostRevenue(conn);
 		
@@ -62,8 +62,9 @@ public class ManagerReportServlet extends HttpServlet {
 			throws ServletException, IOException {
 		Connection conn = MyUtils.getStoredConnection(request);
 
-		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
-		String [] repRevenue = DBUtils.getRepMostRevenue(conn);
+		List<String []> customerRevenue = DBUtils.getCustomerMostRevenue(conn);
+		List<String []> repRevenue = DBUtils.getRepMostRevenue(conn);
+		
 		request.setAttribute("customerRevenue", customerRevenue);
 		request.setAttribute("repRevenue", repRevenue);
 		
