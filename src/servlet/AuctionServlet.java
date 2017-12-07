@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Airline;
+import classes.Auction;
 import classes.Customer;
 import classes.Employee;
 import classes.Flight;
@@ -109,20 +110,31 @@ public class AuctionServlet extends HttpServlet {
 	    			inc.setFlightClass("Economy");
 	    			//${flight.airlineId},${flight.flightNo},${flight.departAirport},${flight.arrivalAirport},${flight.hiddenFare}
 	    			FlightData fd = DBUtils.getFlightDataFromAirlineFlight(conn, data[0], Integer.parseInt(data[1]), DBUtils.findCityFromAirport(conn, data[2]), DBUtils.findCityFromAirport(conn, data[3]));
-	    			inc.setDate(new Date(fd.getDepartDate().getTime()));
+	    			inc.setDate(new Date(fd.getDepartDate().getTime()).toString());
 	    			inc.setReservation(r);
 	    			inc.setFlightClass("Economy");
 	    			inc.setLegNo(fd.getDepartLegNo());
+	    			inc.setFromStopNo(fd.getDepartLegNo());
 	    			inc.setMeal("Sushi");
 	    			inc.setSeatNo(DBUtils.generateSeatNumber(conn, data[0], Integer.parseInt(data[1])));
 	    			inc.setFromStopNo(fd.getDepartLegNo());
-	    			Leg l = DBUtils.getLegFromData(conn, data[0], Integer.parseInt(data[1]), data[2], data[3]);
+	    			inc.setAirlineId(data[0]);
+	    			inc.setFlightNo(Integer.parseInt(data[1]));
 	    			
 
 	    			Makes m = new Makes();
 	    			m.setReservation(r);
 	    			m.setCustomer(MyUtils.getLoginedCustomer(session));
 	    			DBUtils.addReservation(conn, r, inc, m);
+	    			
+	    			Auction a = new Auction();
+	    			a.setAccountNo(MyUtils.getLoginedCustomer(session).getAccountNo());
+	    			a.setAirlineId(data[0]);
+	    			a.setFlightNo(Integer.parseInt(data[1]));
+	    			a.setFlightClass("Eocnomy");
+	    			a.setNyop(bid);
+	    			DBUtils.addAuction(conn, a);
+	    			
 	    			success = true;
 	    			errorString = "Bid successful. Reservation created.";
 	    		}
