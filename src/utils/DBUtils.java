@@ -308,18 +308,24 @@ public class DBUtils {
 
 	public static List<FlightData> queryFlights(Connection conn, String tripType, String tripFrom, String tripTo,
 			String departDate, String returnDate) throws SQLException {
-
+		
 		String sql = "Select * " + "From Flight Fl " + "Where Fl.AirlineID IN " + "(SELECT L.AirlineID "
 				+ "From Leg L, Fare F, Airport A1, Airport A2 " + "Where F.AirlineID = L.AirlineID "
 				+ "AND F.FareType = ? ";
 
 		if (!tripFrom.isEmpty() || !tripTo.isEmpty()) {
 			if (!tripFrom.isEmpty()) {
-				sql += "AND A1.City = ? ";
+				if (tripFrom.length() > 3)
+					sql += "AND A1.City = ? ";
+				else if (tripFrom.length() == 3)
+					sql += "AND A1.Id = ? ";
 //				sql += "AND L.DepAirportID = A1.Id ";
 			}
 			if (!tripTo.isEmpty()) {
-				sql += "AND A2.City = ? ";
+				if (tripTo.length() > 3)
+					sql += "AND A2.City = ? ";
+				else if (tripTo.length() == 3)
+					sql += "AND A2.Id = ? ";
 //				sql += "AND L.ArrAirportID = A2.Id ";
 			}
 		}
@@ -367,17 +373,34 @@ public class DBUtils {
 			String temp = "%" + returnDate + "%";
 			pstm.setString(++numArgs, temp);
 		}
-
+		
 		List<FlightData> list = new ArrayList<>();
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
 			String airlineId = rs.getString("AirlineID");
 			int flightNo = rs.getInt("FlightNo");
-			if (tripFrom.isEmpty()){
-				
+			String sql2 = "SELECT L.DepAirportId, L.ArrAirportId FROM Leg L where L.FlightNo = ? AND L.AirlineId = ?";
+			
+			if (tripFrom.length() == 3){
+				tripFrom = findCityFromAirport(conn, tripFrom);
 			}
-			FlightData flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo, tripFrom, tripTo);
-			list.add(flight);
+			if (tripTo.length() == 3){
+				tripTo = findCityFromAirport(conn, tripTo);
+			}
+			if (tripFrom.isEmpty() || tripTo.isEmpty()){
+				PreparedStatement pstm2 = conn.prepareStatement(sql2);
+				pstm2.setInt(1, flightNo);
+				pstm2.setString(2, airlineId);
+				ResultSet rs2 = pstm2.executeQuery();
+				while(rs2.next()){
+					FlightData flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo, findCityFromAirport(conn, rs2.getString("DepAirportId")), findCityFromAirport(conn, rs2.getString("ArrAirportId")));
+					list.add(flight);
+				}
+			}
+			else{
+				FlightData flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo, tripFrom, tripTo);
+				list.add(flight);
+			}
 		}
 		return list;
 	}
