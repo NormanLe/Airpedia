@@ -759,20 +759,20 @@ public class DBUtils {
 	}
 
 	// [flightNo, numflights]
-	public static Object[] getMostActiveFlight(Connection conn) {
+	public static String[] getMostActiveFlight(Connection conn) {
 		String sql = "SELECT counted.AirlineID, counted.FlightNo, MAX(NumFlights)FROM (SELECT F.AirlineID, F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights) DESC LIMIT 1;";
 
-		Object[] arr = new Object[2];
+		String[] arr = new String[3];
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			if (rs.next()) {
 				arr[0] = rs.getString("AirlineID");
-				arr[1] = rs.getInt("FlightNo");
-				arr[2] = rs.getInt("NumFlights");
+				arr[1] = rs.getString("FlightNo");
+				arr[2] = rs.getString("MAX(NumFlights)");
 			}
 		} catch (Exception e) {
-			System.out.println("SQL Error.");
+			e.printStackTrace();
 		}
 		return arr;
 	}

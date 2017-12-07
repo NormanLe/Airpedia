@@ -25,6 +25,10 @@
  	
  	<h3>The customer representative who generated the most revenue is</h3>
  	${repRevenue[0]} with a total of ${repRevenue[1]}. <p>
+ 	
+ 	<h3>The most active flight is</h3>
+ 	${mostActiveFlight[0]} Flight# ${mostActiveFlight[1]} with a total of ${mostActiveFlight[2]} flights. <p>
+ 	
  	</c:if>
  	
  	<h3>Sales report for a particular month</h3>

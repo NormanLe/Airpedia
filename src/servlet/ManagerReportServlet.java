@@ -44,9 +44,10 @@ public class ManagerReportServlet extends HttpServlet {
        
 		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
 		String [] repRevenue = null;
+		String [] mostActiveFlight = DBUtils.getMostActiveFlight(conn);
 		if (loginedEmployee != null && loginedEmployee.isManager())
 			repRevenue = DBUtils.getRepMostRevenue(conn);
-		
+		request.setAttribute("mostActiveFlight", mostActiveFlight);
 		request.setAttribute("customerRevenue", customerRevenue);
 		if (loginedEmployee != null && loginedEmployee.isManager())
 			request.setAttribute("repRevenue", repRevenue);
