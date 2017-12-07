@@ -62,10 +62,10 @@ public class MakeReservationServlet extends HttpServlet {
 
 		// set more info to pass into checkout, like legno?
 		
-//		if (flight != null) {
-//			String seatNum = DBUtils.generateSeatNumbers(conn, airline, Integer.parseInt(flight));
-//			request.setAttribute("seatNum", seatNum);
-//		}
+		if (flight != null) {
+			String seatNum = DBUtils.generateSeatNumber(conn, airline, Integer.parseInt(flight));
+			request.setAttribute("seatNum", seatNum);
+		}
 		
 
 		

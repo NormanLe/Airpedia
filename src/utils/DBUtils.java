@@ -442,10 +442,9 @@ public class DBUtils {
 		}
 	}
 
-	public static List<String> generateSeatNumbers(Connection conn, String airlineId, int flightNo, int numPeople) {
+	public static String generateSeatNumber(Connection conn, String airlineId, int flightNo) {
 		String sql = "select NoOfSeats from Flight where airlineId = '" + airlineId + "' and flightNo = " + flightNo;
-		
-		List<String> seatNums = new ArrayList<>();
+	
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
@@ -453,19 +452,15 @@ public class DBUtils {
 			char[] randomChar = { 'A', 'B', 'C', 'D', 'E', 'F' };
 			if (rs.next()) {
 				numSeats = rs.getInt("NoOfSeats");
+				return "" + numSeats + randomChar[(int) (Math.random() * randomChar.length)];
 			}
 			
-			while (numPeople > 0) {
-				String currSeat = "" + numSeats + randomChar[(int) (Math.random() * randomChar.length)];
-				seatNums.add(currSeat);
-				numPeople --;
-				numSeats --;
-			}
+			
 		} catch (SQLException e) {
 			System.out.println("cannot generate seatnumber");
 		}
 
-		return seatNums;
+		return "";
 	}
 
 	public static String findCityFromAirport(Connection conn, String airlineId){

@@ -19,12 +19,10 @@
     <p style="color: red;">${errorString}</p>
         
 	You have chosen airline ${airline}, flight #${flight} <br>
-<%-- 	Your seat will be ${seatNum}. <br> --%>
+	Your seat will be <span id="seatNum">${seatNum}</span>. <br>
 	You will depart from ${departAirport} and arrive at ${arriveAirport}. <p>
 	
 	<h3>Please make the following selections</h3>
-	
-	Number of People <input type="number" name="numPeople" value="1" onchange="changePrice()"> <br>
 	
 	Trip Type: 
 	<input type="radio" name="tripType" checked value="roundtrip" onclick="changePrice()">Round Trip 
@@ -52,7 +50,6 @@
 	</form>
 	
 	<script>
-		var numPeople;
 		var className;
 		var food;
 		var tripName;
@@ -63,8 +60,6 @@
 			var fare = document.getElementById('originalFare').innerHTML;
 			
 			var fareSpan = document.getElementById('fare');
-			console.log(fareSpan);
-			numPeople = document.getElementsByName('numPeople')[0].value;
 			var tripType = document.getElementsByName('tripType')[0].checked ? 1 : 0.5;
 			tripName = document.getElementsByName('tripType')[0].checked ? "Round-Trip" : "One-Way";
 			
@@ -88,9 +83,10 @@
 				food = "Sushi";
 			}
 			
-			fareSpan.innerHTML = numPeople * tripType * classType * fare;
+			fareSpan.innerHTML = tripType * classType * fare;
 			var val = document.getElementById('originalCheckoutLink').href;
-			var append = "&fare=" + fareSpan.innerHTML + "&numPeople=" + numPeople + "&classType=" + className + "&food=" + food + "&tripType=" + tripName;
+			var seatNum = document.getElementById('seatNum').innerHTML;
+			var append = "&fare=" + fareSpan.innerHTML + "&seatNum=" + seatNum + "&classType=" + className + "&food=" + food + "&tripType=" + tripName;
 			document.getElementById('checkoutLink').href = val + append;
 			
 			console.log(document.getElementById('checkoutLink').href);
