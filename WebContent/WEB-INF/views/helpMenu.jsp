@@ -33,7 +33,19 @@
 	Your profile contains personal information about you and the reservations you are able to view 
 	is based on the people you help with. If you are a manager, you have access to all reservations.
 	In addition to that, managers have access to sales reports that others cannot view. 
-	</div>
+	
+	
+	<h2> Browsing Flights</h2>
+	If you are a customer looking for a flight, then you have the ability to list the depart airport/city 
+	and the arrival airport/city of your choosing. If you have the desire to include the departing and 
+	arriving date for given flights, that works as well. The flights returned are representative through two 
+	airports and the stops that it is included through. If it is a multi-legged flight, then the search 
+	can show you all stops between the departure and arrival airport that you can make a reservation for.
  	
+ 	<h2> Booking a Flight </h2>
+ 	The chosen flight you pick, you can pick first class, business or economy. You also have the option to 
+ 	pick your meal. Once you are satisified, you can checkout and finalize your reservation.
+ 	
+ 	</div>
 </body>
 </html>
