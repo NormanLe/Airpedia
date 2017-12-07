@@ -54,6 +54,11 @@ public class CheckoutServlet extends HttpServlet {
 		r.setEmployee(new Employee());
 		r.setCustomer(MyUtils.getLoginedCustomer(session));
 		
+		
+//		System.out.printf("helloCheckout \n airline: %s, flight: %s, departLegNo: %s, arriveLegNo: %s, seatNum: %s, fare: %s, food: %s, tripType: %s, classType: %s",
+//				airline, flight, departLegNo, arriveLegNo, seatNum, fare, food, tripType, classType);
+		
+		
 		Includes inc = new Includes();
 		inc.setFlightClass("Economy");
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("EST"));
@@ -71,14 +76,12 @@ public class CheckoutServlet extends HttpServlet {
 		inc.setFromStopNo(Integer.parseInt(departLegNo));
 		Leg l = new Leg();
 		l.setLegNo(Integer.parseInt(departLegNo));
-
+		inc.setFromStopNo(Integer.parseInt(departLegNo));
+		inc.setLeg(l);
 		Makes m = new Makes();
 		m.setReservation(r);
 		m.setCustomer(MyUtils.getLoginedCustomer(session));
 		DBUtils.addReservation(conn, r, inc, m);
-		
-		System.out.printf("helloCheckout \n airline: %s, flight: %s, departLegNo: %s, arriveLegNo: %s, seatNum: %s, fare: %s, food: %s, tripType: %s, classType: %s",
-				airline, flight, departLegNo, arriveLegNo, seatNum, fare, food, tripType, classType);
 		
 		
 		

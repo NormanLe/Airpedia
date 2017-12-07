@@ -1141,7 +1141,7 @@ public class DBUtils {
 			stmt1.executeUpdate(String.format("INSERT INTO Reservation(ResrNo, ResrDate, BookingFee, TotalFare, AccountNo) VALUES (%d, NOW(), %f, %f, %d);", r.getResrNo(), r.getBookingFee(), r.getTotalFare(), r.getCustomer().getAccountNo()));
 			Statement stmt2 = conn.createStatement();
 			stmt2.executeUpdate(String.format("INSERT INTO Includes(ResrNo, AirlineID, FlightNo, LegNo, FromStopNo, Date, SeatNo, Class, Meal) "
-					+ "VALUES (%d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s');", r.getResrNo(), i.getAirlineId(), i.getFlightNo(), i.getLeg(), i.getFromStopNo(), i.getDate(), i.getSeatNo(), i.getClass(), i.getMeal()));
+					+ "VALUES (%d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s');", r.getResrNo(), i.getAirlineId(), i.getFlightNo(), i.getLegNo(), i.getFromStopNo(), i.getDate(), i.getSeatNo(), i.getFlightClass(), i.getMeal()));
 			Statement stmt3 = conn.createStatement();
 			stmt3.executeUpdate(String.format("INSERT INTO Makes(ResrNo, Id, AccountNo) VALUES (%d, %d, %d);", m.getReservation().getResrNo(), m.getCustomer().getId(), m.getCustomer().getAccountNo()));
 		} catch (SQLException e) {
