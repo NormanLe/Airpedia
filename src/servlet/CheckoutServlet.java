@@ -45,10 +45,9 @@ public class CheckoutServlet extends HttpServlet {
       
         System.out.println("-------------------" + queryString);
         
-//		int numSeats = Integer.parseInt(request.getParameter("numPeople"));
-//		String seat = request.getParameter("seatNum");
+		String seatNum = request.getParameter("seatNum");
 		String airline = request.getParameter("airline");
-		String flight = request.getParameter("flight");
+		String flight = request.getParameter("flight");				
 		String fare = request.getParameter("fare");
 		String food = request.getParameter("food");
 		String tripType = request.getParameter("tripType");
@@ -56,9 +55,9 @@ public class CheckoutServlet extends HttpServlet {
 		String departLegNo = request.getParameter("depLegNo");
 		String arriveLegNo = request.getParameter("arrLegNo");
 		
-		System.out.printf("helloCheckout \n airline: %s, flight: %s, departLegNo: %s, arriveLegNo: %s, fare: %s, food: %s, tripType: %s, classType: %s",
-				airline, flight, departLegNo, arriveLegNo, fare, food, tripType, classType);
-//		request.setAttribute("numSeats", numSeats);
+		System.out.printf("helloCheckout \n airline: %s, flight: %s, departLegNo: %s, arriveLegNo: %s, seatNum: %s, fare: %s, food: %s, tripType: %s, classType: %s",
+				airline, flight, departLegNo, arriveLegNo, seatNum, fare, food, tripType, classType);
+		request.setAttribute("seatNum", seatNum);
         dispatcher.forward(request, response);
     }
  
