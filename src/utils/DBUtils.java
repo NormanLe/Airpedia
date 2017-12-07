@@ -1149,4 +1149,27 @@ public class DBUtils {
 		}
 	}
 
+	public static void deleteReservation(Connection conn, int code) {
+		try {
+			String query = "delete from Makes where ResrNo = ?";
+		    PreparedStatement preparedStmt = conn.prepareStatement(query);
+		    preparedStmt.setInt(1, code);
+		    preparedStmt.execute();
+			
+		    query = "delete from Includes where ResrNo = ?";
+		    preparedStmt = conn.prepareStatement(query);
+		    preparedStmt.setInt(1, code);
+		    preparedStmt.execute();
+		    
+		    query = "delete from Reservation where ResrNo = ?";
+		    preparedStmt = conn.prepareStatement(query);
+		    preparedStmt.setInt(1, code);
+		    preparedStmt.execute();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }
