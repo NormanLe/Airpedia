@@ -14,6 +14,11 @@
 	<jsp:include page="_menu.jsp"></jsp:include>
  	<h1> Manager Report </h1>
  	
+ 	<c:if test="${!empty NoPermission}">
+ 		${NoPermission}
+ 	</c:if>
+ 	
+ 	<c:if test="${empty NoPermission}">
  	<c:if test="${!empty customerRevenue}">
  	<h3>The customer who generated the most revenue is</h3>
  	${customerRevenue[0]} with a total of ${customerRevenue[1]}. <p>
@@ -94,5 +99,6 @@
  	
  	<input type="submit" class="customButton" value="Generate"></div>
  	</form>
+ 	</c:if>
 </body>
 </html>

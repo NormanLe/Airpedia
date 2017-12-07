@@ -31,20 +31,22 @@ public class ManagerReportServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		Connection conn = MyUtils.getStoredConnection(request);
 		 
         Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
         Employee loginedEmployee = MyUtils.getLoginedEmployee(session);
-        if (loginedCustomer == null && loginedEmployee == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+        if (loginedEmployee == null && loginedCustomer == null) {
+        	response.sendRedirect(request.getContextPath() + "/login");
             return;
+        } else if (loginedCustomer != null || (loginedEmployee != null && !loginedEmployee.isManager())) {
+    		request.setAttribute("NoPermission", "Sorry, you do not have permission to view this!");
         }
        
-		Connection conn = MyUtils.getStoredConnection(request);
+       
 
 		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
 		String [] repRevenue = DBUtils.getRepMostRevenue(conn);
 		
-
 		request.setAttribute("customerRevenue", customerRevenue);
 		request.setAttribute("repRevenue", repRevenue);
 		
