@@ -50,7 +50,7 @@ public class ProfileServlet extends HttpServlet {
 			if (logedinEmployee.isManager()) 
 				request.setAttribute("manager", "Manager");
 			else 
-					request.setAttribute("manager", "Employee");
+				request.setAttribute("manager", "Employee");
 			
 			
 		}
