@@ -493,8 +493,8 @@ public class DBUtils {
 				arr[1] = "" + rs.getInt("FlightNo");
 				arr[2] = "" + rs.getString("DepAirportID");
 				arr[3] = "" + rs.getString("ArrAirportID");
-				arr[4] = "" + rs.getDate("ArrTime");
-				arr[5] = "" + rs.getDate("DepTime");
+				arr[4] = "" + rs.getTimestamp("DepTime");
+				arr[5] = "" + rs.getTimestamp("ArrTime");
 				arr[6] = "" + rs.getString("SeatNo");
 				arr[7] = "" + rs.getString("class");
 				arr[8] = "" + rs.getString("Meal");
