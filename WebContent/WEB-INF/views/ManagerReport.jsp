@@ -39,6 +39,7 @@
  	
  	<h3>The customer representatives who generated the most revenue are</h3>
  	
+<<<<<<< HEAD
  	<table class="tableStyle">
  		<tr> 
  			<th>Representative</th>
@@ -54,6 +55,14 @@
 		</c:forEach>
  		
  	</table>
+=======
+ 	<h3>The customer representative who generated the most revenue is</h3>
+ 	${repRevenue[0]} with a total of ${repRevenue[1]}. <p>
+ 	
+ 	<h3>The most active flight is</h3>
+ 	${mostActiveFlight[0]} Flight# ${mostActiveFlight[1]} with a total of ${mostActiveFlight[2]} flights. <p>
+ 	
+>>>>>>> refs/remotes/origin/master
  	</c:if>
  	
  	<h3>Sales report for a particular month</h3>

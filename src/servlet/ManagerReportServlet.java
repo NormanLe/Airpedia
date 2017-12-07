@@ -42,11 +42,17 @@ public class ManagerReportServlet extends HttpServlet {
     		request.setAttribute("NoPermission", "Sorry, you do not have permission to view this!");
         }
        
+<<<<<<< HEAD
 		List<String []> customerRevenue = DBUtils.getCustomerMostRevenue(conn);
 		List<String []> repRevenue = new ArrayList<>();
+=======
+		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
+		String [] repRevenue = null;
+		String [] mostActiveFlight = DBUtils.getMostActiveFlight(conn);
+>>>>>>> refs/remotes/origin/master
 		if (loginedEmployee != null && loginedEmployee.isManager())
 			repRevenue = DBUtils.getRepMostRevenue(conn);
-		
+		request.setAttribute("mostActiveFlight", mostActiveFlight);
 		request.setAttribute("customerRevenue", customerRevenue);
 		if (loginedEmployee != null && loginedEmployee.isManager())
 			request.setAttribute("repRevenue", repRevenue);
