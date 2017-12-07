@@ -493,11 +493,13 @@ public class DBUtils {
 			ResultSet rs = pstm.executeQuery();
 			while (rs.next()) {
 				Flight f = new Flight();
+				f.setAirline(DBUtils.findAirline(conn, rs.getString(1)));
 				f.setFlightNo(rs.getInt(2));
 				f.setNoOfSeats(rs.getInt(3));
 				f.setDaysOperating(rs.getString(4));
 				f.setMinLengthOfStay(rs.getInt(5));
 				f.setMaxLengthOfStay(rs.getInt(6));
+				
 				list.add(f);
 			}
 		} catch (Exception e) {
@@ -910,7 +912,8 @@ public class DBUtils {
 		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
 		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId,
 				flightNo);
-
+		String sql3 = String.format("SELECT HiddenFare FROM Flight WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
+		
 		FlightData fd = new FlightData();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
@@ -953,10 +956,25 @@ public class DBUtils {
 				fd.setFare(rs2.getDouble("Fare"));
 				fd.setClassType(rs2.getString("Class"));
 			}
+			
+			PreparedStatement pstm3 = conn.prepareStatement(sql3);
+			ResultSet rs3 = pstm3.executeQuery();
+			if (rs3.next()) {
+				fd.setHiddenFare(rs3.getDouble("HiddenFare"));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return fd;
+	}
+	
+	public static void addReservation(Connection conn, Reservation r) {
+		try {
+			Statement stmt1 = conn.createStatement();
+			stmt1.executeUpdate(String.format("INSERT INTO Reservation(ResrNo, ResrDate, BookingFee, TotalFare, RepSSN, AccountNo) VALUES (%d, NOW(), %f, %f, %d, %d);", r.getResrNo(), r.getBookingFee(), r.getTotalFare(), r.getEmployee().getSsn(), r.getCustomer().getAccountNo()));	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

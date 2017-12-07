@@ -7,18 +7,20 @@ public class Flight {
 	private String daysOperating; 
 	private int minLengthOfStay;
 	private int maxLengthOfStay;
+	private double hiddenFare;
 	
 	public Flight(){
 		
 	}
 
-	public Flight(Airline airline, int flightNo, int numSeats, String daysOperating, int minStay, int maxStay) {
+	public Flight(Airline airline, int flightNo, int numSeats, String daysOperating, int minStay, int maxStay, double hiddenFare) {
 		this.airline = airline;
 		this.flightNo = flightNo;
 		this.noOfSeats = numSeats;
 		this.daysOperating = daysOperating;
 		this.minLengthOfStay = minStay;
 		this.maxLengthOfStay = maxStay;
+		this.hiddenFare = hiddenFare;
 	}
 
 	public Airline getAirline(){
@@ -67,6 +69,14 @@ public class Flight {
 
 	public void setMaxLengthOfStay(int maxLengthOfStay) {
 		this.maxLengthOfStay = maxLengthOfStay;
+	}
+
+	public double getHiddenFare() {
+		return hiddenFare;
+	}
+
+	public void setHiddenFare(double hiddenFare) {
+		this.hiddenFare = hiddenFare;
 	}
 
 	
