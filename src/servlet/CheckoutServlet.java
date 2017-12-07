@@ -26,20 +26,6 @@ public class CheckoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
- 
-        RequestDispatcher dispatcher = request.getServletContext()
-                .getRequestDispatcher("/WEB-INF/views/checkoutView.jsp");
-//        String queryString = request.getQueryString();
-//		
-//		String airline = request.getParameter("airline");
-//		String flight = request.getParameter("flight");
-//		String departAirport = request.getParameter("depart");
-//		String arriveAirport = request.getParameter("arrive");
-//		String numSeats = request.getParameter("numSeats");
-//		String seat = request.getParameter("seat");
-//		
-//		System.out.printf("hello \n airline: %s, flight: %s, depart: %s, arrive: %s, numSeats: %s, seat: %s",
-//				airline, flight, departAirport, arriveAirport, numSeats, seat);
 		
         String queryString = request.getQueryString();
       
@@ -58,7 +44,9 @@ public class CheckoutServlet extends HttpServlet {
 		
 		System.out.printf("helloCheckout \n airline: %s, flight: %s, departLegNo: %s, arriveLegNo: %s, fare: %s, food: %s, tripType: %s, classType: %s",
 				airline, flight, departLegNo, arriveLegNo, fare, food, tripType, classType);
-//		request.setAttribute("numSeats", numSeats);
+
+        RequestDispatcher dispatcher = request.getServletContext()
+                .getRequestDispatcher("/WEB-INF/views/checkoutView.jsp");
         dispatcher.forward(request, response);
     }
  
