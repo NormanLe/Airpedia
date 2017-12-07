@@ -8,7 +8,7 @@
    <a href="${pageContext.request.contextPath}/profile">Profile</a>
    
    <a href="${pageContext.request.contextPath}/reservationList">Reservations</a>
-
-   <a href="${pageContext.request.contextPath}/logout">Logout</a>
-
+   
+   <a href="${pageContext.request.contextPath}/login">Login</a> 
+    
 </div>  

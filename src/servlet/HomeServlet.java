@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import classes.*;
 import utils.*;
@@ -25,10 +26,17 @@ public class HomeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-
+	
 		Connection conn = MyUtils.getStoredConnection(request);
-
+		
+		HttpSession session = request.getSession();
+		Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
+        Employee loginedEmployee = MyUtils.getLoginedEmployee(session);
+        if (loginedCustomer == null && loginedEmployee == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
 		String errorString = null;
 		request.setAttribute("errorString", errorString);
 		
@@ -80,7 +88,6 @@ public class HomeServlet extends HttpServlet {
 		else{
 			request.setAttribute("errorString", errorString);
 			request.setAttribute("flightList", list);
-	//        response.sendRedirect(request.getContextPath() + "/flights");
 			RequestDispatcher dispatcher //
 			= this.getServletContext().getRequestDispatcher("/WEB-INF/views/flightsListView.jsp");
 			
