@@ -442,9 +442,10 @@ public class DBUtils {
 		}
 	}
 
-	public static String generateSeatNumber(Connection conn, String airlineId, int flightNo) {
+	public static List<String> generateSeatNumbers(Connection conn, String airlineId, int flightNo, int numPeople) {
 		String sql = "select NoOfSeats from Flight where airlineId = '" + airlineId + "' and flightNo = " + flightNo;
-
+		
+		List<String> seatNums = new ArrayList<>();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
@@ -452,15 +453,21 @@ public class DBUtils {
 			char[] randomChar = { 'A', 'B', 'C', 'D', 'E', 'F' };
 			if (rs.next()) {
 				numSeats = rs.getInt("NoOfSeats");
-				return "" + numSeats + randomChar[(int) (Math.random() * randomChar.length)];
-
+			}
+			
+			while (numPeople > 0) {
+				String currSeat = "" + numSeats + randomChar[(int) (Math.random() * randomChar.length)];
+				seatNums.add(currSeat);
+				numPeople --;
+				numSeats --;
 			}
 		} catch (SQLException e) {
 			System.out.println("cannot generate seatnumber");
 		}
 
-		return "";
+		return seatNums;
 	}
+
 	public static String findCityFromAirport(Connection conn, String airlineId){
 		String sql = "select * from Airport where Id = ?";
 
@@ -474,6 +481,34 @@ public class DBUtils {
 		} catch (SQLException e) {
 		}
 		return "";
+	}
+	
+	
+	public static List<String []> getItinerary (Connection conn, int resrNo) {
+		String sql = "select * from leg l inner join includes i where i.resrno =" + resrNo 
+				+ " and i.flightno = l.flightno and i.legno = l.legno and i.airlineid = l.airlineid;";
+		
+		List<String[]> list = new ArrayList<>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				String [] arr = new String [9];
+				arr[0] = "" + rs.getString("AirlineId");
+				arr[1] = "" + rs.getInt("FlightNo");
+				arr[2] = "" + rs.getString("DepAirportID");
+				arr[3] = "" + rs.getString("ArrAirportID");
+				arr[4] = "" + rs.getDate("ArrTime");
+				arr[5] = "" + rs.getDate("DepTime");
+				arr[6] = "" + rs.getString("SeatNo");
+				arr[7] = "" + rs.getString("class");
+				arr[8] = "" + rs.getString("Meal");
+				list.add(arr);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return list;
 	}
 	public static FlightData bestSeller(Connection conn) throws SQLException {
 //		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" + " FROM Flight F, Includes I"

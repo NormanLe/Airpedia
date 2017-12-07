@@ -56,10 +56,10 @@ public class MakeReservationServlet extends HttpServlet {
 		request.setAttribute("departAirport", departAirport);
 		request.setAttribute("arriveAirport", arriveAirport);
 		request.setAttribute("fare", fare);
-		if (flight != null) {
-			String seatNum = DBUtils.generateSeatNumber(conn, airline, Integer.parseInt(flight));
-			request.setAttribute("seatNum", seatNum);
-		}
+//		if (flight != null) {
+//			String seatNum = DBUtils.generateSeatNumbers(conn, airline, Integer.parseInt(flight));
+//			request.setAttribute("seatNum", seatNum);
+//		}
 		
 
 		
