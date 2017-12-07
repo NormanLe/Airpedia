@@ -54,23 +54,23 @@ public class HomeServlet extends HttpServlet {
         String tripType = (String) request.getParameter("tripType");
         String tripFrom = (String) request.getParameter("tripFrom");
         String tripTo = (String) request.getParameter("tripTo");
-        String tripClass = (String) request.getParameter("class");
-        int numPeople = 0;
+//        String tripClass = (String) request.getParameter("class");
+//        int numPeople = 0;
 
         String departDate = (String) request.getParameter("departDate");
         String returnDate = (String) request.getParameter("returnDate");
 
         
-        try {
-        	numPeople = Integer.parseInt(request.getParameter("numPeople"));
-        } catch (Exception e) {
-        }
+//        try {
+//        	numPeople = Integer.parseInt(request.getParameter("numPeople"));
+//        } catch (Exception e) {
+//        }
 
 		List<FlightData> list = null;
 		String errorString = null;
 		try {
 			list = DBUtils.queryFlights(
-					conn, tripType, tripFrom, tripTo, departDate, returnDate, tripClass, numPeople);
+					conn, tripType, tripFrom, tripTo, departDate, returnDate);
 			if (list == null) {
 				errorString = "Invalid input";
 			}

@@ -18,32 +18,32 @@ public class DBUtils {
 		String sql = "Select * from Person where id = " + id;
 		Person person = null;
 		try {
-		PreparedStatement pstm = conn.prepareStatement(sql);
-		ResultSet rs = pstm.executeQuery();
-		
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+
 			if (rs.next()) {
-			String firstName = rs.getString("FirstName");
-			String lastName = rs.getString("LastName");
-			String address = rs.getString("Address");
-			String city = rs.getString("City");
-			String state = rs.getString("State");
-			String zipCode = rs.getString("ZipCode");
-			
-			person = new Person();
-			person.setId(id);
-			person.setFirstName(firstName);
-			person.setLastName(lastName);
-			person.setAddress(address);
-			person.setCity(city);
-			person.setState(state);
-			person.setZipCode(zipCode);
+				String firstName = rs.getString("FirstName");
+				String lastName = rs.getString("LastName");
+				String address = rs.getString("Address");
+				String city = rs.getString("City");
+				String state = rs.getString("State");
+				String zipCode = rs.getString("ZipCode");
+
+				person = new Person();
+				person.setId(id);
+				person.setFirstName(firstName);
+				person.setLastName(lastName);
+				person.setAddress(address);
+				person.setCity(city);
+				person.setState(state);
+				person.setZipCode(zipCode);
 			}
 		} catch (Exception e) {
 			System.out.println("error with finding person by id");
 		}
 		return person;
 	}
-	
+
 	public static Person findPersonBySSN(Connection conn, int SSN) {
 		try {
 			return findPersonById(conn, findEmployee(conn, SSN).getId());
@@ -52,7 +52,7 @@ public class DBUtils {
 		}
 		return null;
 	}
-	
+
 	public static Customer findCustomer(Connection conn, String email, String password) throws SQLException {
 
 		String sql = "Select * from Customer c" + " where c.email = ? and c.password = ?";
@@ -167,7 +167,7 @@ public class DBUtils {
 			int hourlyRate = rs.getInt("hourlyRate");
 			Date startDate = rs.getDate("StartDate");
 			boolean isManager = rs.getBoolean("isManager");
-			
+
 			Employee employee = new Employee();
 			employee.setId(id);
 			employee.setSsn(number);
@@ -178,7 +178,7 @@ public class DBUtils {
 		}
 		return null;
 	}
-	
+
 	public static Airline findAirline(Connection conn, String airlineId) throws SQLException {
 		String sql = "Select * from Airline" + " where Id = ? ";
 
@@ -285,6 +285,7 @@ public class DBUtils {
 		}
 		return list;
 	}
+
 	public static List<FlightData> queryFlight(Connection conn) {
 		String sql = "Select * from Flight ";
 		System.out.println("what about here");
@@ -306,56 +307,49 @@ public class DBUtils {
 	}
 
 	public static List<FlightData> queryFlights(Connection conn, String tripType, String tripFrom, String tripTo,
-			String departDate, String returnDate, String tripClass, int numPeople) throws SQLException {
+			String departDate, String returnDate) throws SQLException {
 
-		String sql = "Select * " + 
-				"From Flight Fl " + 
-				"Where Fl.AirlineID IN " + 
-				"(SELECT L.AirlineID "+ 
-				"From Leg L, Fare F, Airport A1, Airport A2 " + 
-				"Where F.AirlineID = L.AirlineID "+ 
-				"AND F.FareType = ? " + 
-				"AND F.Class = ? " + 
-				"AND Fl.NoOfSeats >= ? ";
-		
+		String sql = "Select * " + "From Flight Fl " + "Where Fl.AirlineID IN " + "(SELECT L.AirlineID "
+				+ "From Leg L, Fare F, Airport A1, Airport A2 " + "Where F.AirlineID = L.AirlineID "
+				+ "AND F.FareType = ? ";
+
 		if (!tripFrom.isEmpty() || !tripTo.isEmpty()) {
 			if (!tripFrom.isEmpty()) {
 				sql += "AND A1.City = ? ";
-				sql += "AND L.DepAirportID = A1.Id ";
+//				sql += "AND L.DepAirportID = A1.Id ";
 			}
 			if (!tripTo.isEmpty()) {
 				sql += "AND A2.City = ? ";
-				sql += "AND L.ArrAirportID = A2.Id ";
+//				sql += "AND L.ArrAirportID = A2.Id ";
 			}
 		}
 
-		 String pattern =
-		 "^\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$";
-		 Pattern r = Pattern.compile(pattern);
-		 Matcher mDepart = null, mReturn = null;
-		
-		 if (departDate != null) {
-			 mDepart = r.matcher(departDate);
-			 if (mDepart.find()) {
-				 sql += "AND L.DepTime LIKE ? ";
-				 mDepart = r.matcher(departDate);
-			 }
-		 }
-		 if (returnDate != null) {
-			 mReturn = r.matcher(returnDate);
-			 if (mReturn.find()) {
-				 sql += "AND L.ArrTime LIKE ? ";
+		String pattern = "^\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$";
+		Pattern r = Pattern.compile(pattern);
+		Matcher mDepart = null, mReturn = null;
 
-				 mReturn = r.matcher(returnDate);
-			 }
-		 }
+		if (departDate != null) {
+			mDepart = r.matcher(departDate);
+			if (mDepart.find()) {
+				sql += "AND L.DepTime LIKE ? ";
+				mDepart = r.matcher(departDate);
+			}
+		}
+		if (returnDate != null) {
+			mReturn = r.matcher(returnDate);
+			if (mReturn.find()) {
+				sql += "AND L.ArrTime LIKE ? ";
+
+				mReturn = r.matcher(returnDate);
+			}
+		}
 		sql += ")";
 		int numArgs = 1;
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
 		pstm.setString(1, tripType);
-		pstm.setString(++numArgs, tripClass);
-		pstm.setInt(++numArgs, numPeople);
+//		pstm.setString(++numArgs, tripClass);
+//		pstm.setInt(++numArgs, numPeople);
 
 		if (!tripFrom.isEmpty()) {
 			pstm.setString(++numArgs, tripFrom);
@@ -364,15 +358,15 @@ public class DBUtils {
 		if (!tripTo.isEmpty()) {
 			pstm.setString(++numArgs, tripTo);
 		}
-		
-		 if (mDepart != null && mDepart.find()) {		
-			 String temp = "%" + departDate + "%";
-			 pstm.setString(++numArgs, temp);
-		 }
-		 if (mReturn != null && mReturn.find()) {
-			 String temp = "%" + returnDate + "%";
-			 pstm.setString(++numArgs, temp);
-		 }
+
+		if (mDepart != null && mDepart.find()) {
+			String temp = "%" + departDate + "%";
+			pstm.setString(++numArgs, temp);
+		}
+		if (mReturn != null && mReturn.find()) {
+			String temp = "%" + returnDate + "%";
+			pstm.setString(++numArgs, temp);
+		}
 
 		List<FlightData> list = new ArrayList<>();
 		ResultSet rs = pstm.executeQuery();
@@ -380,58 +374,70 @@ public class DBUtils {
 			String airlineId = rs.getString("AirlineID");
 			int flightNo = rs.getInt("FlightNo");
 			FlightData flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo);
-			
-			flight.setDepartLegNo(findDepLegNo(conn, airlineId, flightNo, tripFrom));
-			flight.setArriveLegNo(findArrLegNo(conn, airlineId, flightNo, tripTo));
+
+			setDepLegInfo(conn, airlineId, flightNo, tripFrom, flight);
+			setArrLegInfo(conn, airlineId, flightNo, tripTo, flight);
+			flight.setDepCity(tripFrom);
+			flight.setArrCity(tripTo);
 			list.add(flight);
 		}
 		return list;
 	}
-	public static int findDepLegNo(Connection conn, String airlineId, int flightNo, String city) throws SQLException{
-		String sql = "select L.LegNo from Leg L, Airport A "
-				+ "where L.DepAirportId = A.Id and L.airlineId = ? and L.flightNo = ? and A.city = ?";
-		PreparedStatement pstm = conn.prepareStatement(sql);
-		pstm.setString(1, airlineId);
-		pstm.setInt(2, flightNo);
-		pstm.setString(3, city);
-		ResultSet rs = pstm.executeQuery();
-		if (rs.next()) {
-			int legNo = rs.getInt("LegNo");
-			return legNo;
-		}
-		return -1;
-	}
-	public static int findArrLegNo(Connection conn, String airlineId, int flightNo, String city) throws SQLException{
-		String sql = "select L.LegNo from Leg L, Airport A "
-				+ "where L.ArrAirportId = A.Id and L.airlineId = ? and L.flightNo = ? and A.city = ?";
-		PreparedStatement pstm = conn.prepareStatement(sql);
-		pstm.setString(1, airlineId);
-		pstm.setInt(2, flightNo);
-		pstm.setString(3, city);
-		ResultSet rs = pstm.executeQuery();
-		if (rs.next()) {
-			int legNo = rs.getInt("LegNo");
-			return legNo;
-		}
-		return -1;
-	}
-	public static String generateSeatNumber (Connection conn, String airlineId, int flightNo) {
-		String sql = "select NoOfSeats from Flight where airlineId = '" + airlineId + "' and flightNo = " + flightNo;
+
+	public static void setDepLegInfo(Connection conn, String airlineId, int flightNo, String city, FlightData flight) throws SQLException {
+//		String sql = "select L.LegNo from Leg L, Airport A "
+//				+ "where L.DepAirportId = A.Id and L.airlineId = ? and L.flightNo = ? and A.city = ?";
 		
+		String sql = "select * from Leg L where L.DepAirportId in (select A.Id from Airport A "
+				+ "where L.airlineId = ? and L.flightNo = ? and A.city = ?)";
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, airlineId);
+		pstm.setInt(2, flightNo);
+		pstm.setString(3, city);
+		ResultSet rs = pstm.executeQuery();
+		if (rs.next()) {
+			flight.setDepartLegNo(rs.getInt("LegNo"));
+			flight.setDepartAirport(rs.getString("DepAirportID"));
+			flight.setDepartDate(rs.getTimestamp("DepTime"));
+		}
+	}
+
+	public static void setArrLegInfo(Connection conn, String airlineId, int flightNo, String city, FlightData flight) throws SQLException {
+//		String sql = "select L.LegNo from Leg L, Airport A "
+//				+ "where L.ArrAirportId = A.Id and L.airlineId = ? and L.flightNo = ? and A.city = ?";
+		String sql = "select * from Leg L where L.ArrAirportId in (select A.Id from Airport A "
+				+ "where L.airlineId = ? and L.flightNo = ? and A.city = ?)";
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, airlineId);
+		pstm.setInt(2, flightNo);
+		pstm.setString(3, city);
+		ResultSet rs = pstm.executeQuery();
+		if (rs.next()) {
+			flight.setArriveLegNo(rs.getInt("LegNo"));
+			flight.setArrivalAirport(rs.getString("ArrAirportID"));
+			flight.setArrivalDate(rs.getTimestamp("ArrTime"));
+		}
+	}
+
+	public static String generateSeatNumber(Connection conn, String airlineId, int flightNo) {
+		String sql = "select NoOfSeats from Flight where airlineId = '" + airlineId + "' and flightNo = " + flightNo;
+
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
 			int numSeats = 0;
-			char [] randomChar = { 'A', 'B', 'C', 'D', 'E', 'F'};
+			char[] randomChar = { 'A', 'B', 'C', 'D', 'E', 'F' };
 			if (rs.next()) {
 				numSeats = rs.getInt("NoOfSeats");
 				return "" + numSeats + randomChar[(int) (Math.random() * randomChar.length)];
-				
-			} 
+
+			}
 		} catch (SQLException e) {
 			System.out.println("cannot generate seatnumber");
 		}
-		
+
 		return "";
 	}
 
@@ -477,7 +483,6 @@ public class DBUtils {
 		return flights;
 	}
 
-	
 	public static List<Flight> getAllFlights(Connection conn) {
 		String sql = "SELECT * FROM Flight;";
 
@@ -565,8 +570,9 @@ public class DBUtils {
 			System.out.println("Could not get fare by airlineId and flightNo");
 		}
 		return fare;
-		
+
 	}
+
 	public static List<Reservation> getRevenueByFlight(Connection conn, int flightNo) {
 		String sql = String.format(
 				"SELECT R.ResrNo, R.BookingFee FROM Reservation R WHERE R.ResrNo IN (SELECT I.ResrNo FROM Includes I, Leg L WHERE L.FlightNo = %d AND L.FlightNo = I.FlightNo)",
@@ -779,15 +785,43 @@ public class DBUtils {
 		}
 	}
 
+	public static void addEmployee(Connection conn, Employee employee) {
+		try {
+			Statement stmt1 = conn.createStatement();
+			stmt1.executeUpdate(String.format(
+					"INSERT INTO Person(Id, FirstName, LastName, Address, City, State, ZipCode) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s');",
+					employee.getPerson().getId(), employee.getPerson().getFirstName(),
+					employee.getPerson().getLastName(), employee.getPerson().getAddress(),
+					employee.getPerson().getCity(), employee.getPerson().getState(),
+					employee.getPerson().getZipCode()));
+			Statement stmt2 = conn.createStatement();
+			stmt2.executeUpdate(String.format(
+					"INSERT INTO Employee(Id, SSN, IsManager, StartDate, HourlyRate) VALUES(%d, %d, %b, '%s', %f);",
+					employee.getId(), employee.getSsn(), employee.isManager(), employee.getStartDate().toString(),
+					employee.getHourlyRate()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void addCustomer(Connection conn, Customer customer) {
-		 try {
-			 Statement stmt1 = conn.createStatement();
-			 stmt1.executeUpdate(String.format("INSERT INTO Person(Id, FirstName, LastName, Address, City, State, ZipCode) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s');", customer.getPerson().getId(), customer.getPerson().getFirstName(), customer.getPerson().getLastName(), customer.getPerson().getAddress(), customer.getPerson().getCity(), customer.getPerson().getState(), customer.getPerson().getZipCode()));
-			 Statement stmt2 = conn.createStatement();
-			 stmt2.executeUpdate(String.format("INSERT INTO Customer(Id, AccountNo, CreditCardNo, Email, Password, Phone, CreationDate, Rating) VALUES (%d, %d, '%s', '%s', '%s', %f, '%s', %d);", customer.getId(), customer.getAccountNo(), customer.getCreditcardNo(), customer.getEmail(), customer.getPassword(), customer.getPhone(), customer.getCreationDate().toString(), customer.getRating()));
-		 } catch (SQLException e) {
-			 e.printStackTrace();
-		 }
+		try {
+			Statement stmt1 = conn.createStatement();
+			stmt1.executeUpdate(String.format(
+					"INSERT INTO Person(Id, FirstName, LastName, Address, City, State, ZipCode) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s');",
+					customer.getPerson().getId(), customer.getPerson().getFirstName(),
+					customer.getPerson().getLastName(), customer.getPerson().getAddress(),
+					customer.getPerson().getCity(), customer.getPerson().getState(),
+					customer.getPerson().getZipCode()));
+			Statement stmt2 = conn.createStatement();
+			stmt2.executeUpdate(String.format(
+					"INSERT INTO Customer(Id, AccountNo, CreditCardNo, Email, Password, Phone, CreationDate, Rating) VALUES (%d, %d, '%s', '%s', '%s', %f, '%s', %d);",
+					customer.getId(), customer.getAccountNo(), customer.getCreditcardNo(), customer.getEmail(),
+					customer.getPassword(), customer.getPhone(), customer.getCreationDate().toString(),
+					customer.getRating()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static List<String> getMailingList(Connection conn) {
@@ -830,10 +864,13 @@ public class DBUtils {
 		}
 		return list;
 	}
-	
-	public static double getCustomersBid(Connection conn, int accountNo, String airlineId, int flightNo, String classType, Date date) {
-		String sql = String.format("SELECT A.NYOP FROM Auctions A WHERE A.AccountNo = %d AND A.AirlineID = '%s' AND A.FlightNo = %d AND A.Class = '%s' AND A.Date = %t ORDER BY Date DESC LIMIT 1;", accountNo, airlineId, flightNo, classType, date);
-		
+
+	public static double getCustomersBid(Connection conn, int accountNo, String airlineId, int flightNo,
+			String classType, Date date) {
+		String sql = String.format(
+				"SELECT A.NYOP FROM Auctions A WHERE A.AccountNo = %d AND A.AirlineID = '%s' AND A.FlightNo = %d AND A.Class = '%s' AND A.Date = %t ORDER BY Date DESC LIMIT 1;",
+				accountNo, airlineId, flightNo, classType, date);
+
 		double nyop = 0;
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
@@ -846,11 +883,14 @@ public class DBUtils {
 		}
 		return nyop;
 	}
-	//fix
-	public static Auction getBidHistory(Connection conn, int accountNo, String airlineId, int flightNo, String classType) {
+
+	// fix
+	public static Auction getBidHistory(Connection conn, int accountNo, String airlineId, int flightNo,
+			String classType) {
 		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
-		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
-		
+		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId,
+				flightNo);
+
 		FlightData fd = new FlightData();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
@@ -872,25 +912,32 @@ public class DBUtils {
 
 	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
 		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
-		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
-		
+		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId,
+				flightNo);
+
 		FlightData fd = new FlightData();
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			
+
 			if (rs.next()) {
-				fd.setDepartAirport(rs.getString("DepAirportID"));
+//				fd.setDepartAirport(rs.getString("DepAirportID"));
+				
 				fd.setAirlineId(rs.getString("AirlineID"));
-				ResultSet ap1 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getDepartAirport())).executeQuery();
+				ResultSet ap1 = conn
+						.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getDepartAirport()))
+						.executeQuery();
 				if (ap1.next()) {
 					fd.setArrivalAirport(ap1.getString("Id"));
 					fd.setDepAirportName(ap1.getString("Name"));
 					fd.setDepCity(ap1.getString("City"));
 					fd.setDepCountry(ap1.getString("Country"));
 				}
-				fd.setArrivalAirport(rs.getString("ArrAirportID"));
-				ResultSet ap2 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getArrivalAirport())).executeQuery();
+//				fd.setArrivalAirport(rs.getString("ArrAirportID"));
+				ResultSet ap2 = conn
+						.prepareStatement(
+								String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getArrivalAirport()))
+						.executeQuery();
 				if (ap2.next()) {
 					fd.setDepartAirport(ap2.getString("Id"));
 					fd.setArrAirportName(ap2.getString("Name"));
@@ -898,12 +945,12 @@ public class DBUtils {
 					fd.setArrCountry(ap2.getString("Country"));
 				}
 
-				fd.setDepartDate(rs.getTimestamp("DepTime"));
-				fd.setArrivalDate(rs.getTimestamp("ArrTime"));
-				fd.setLegNo(rs.getInt("LegNo"));
+//				fd.setDepartDate(rs.getTimestamp("DepTime"));
+//				fd.setArrivalDate(rs.getTimestamp("ArrTime"));
+//				fd.setLegNo(rs.getInt("LegNo"));
 				fd.setFlightNo(rs.getInt("FlightNo"));
 			}
-			
+
 			PreparedStatement pstm2 = conn.prepareStatement(sql2);
 			ResultSet rs2 = pstm2.executeQuery();
 			if (rs2.next()) {
@@ -915,5 +962,5 @@ public class DBUtils {
 		}
 		return fd;
 	}
-	
+
 }

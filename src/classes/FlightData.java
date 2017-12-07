@@ -8,7 +8,6 @@ public class FlightData {
 	private Timestamp departDate;
 	private Timestamp arrivalDate;
 	private int flightNo;
-	private int legNo;
 	private String classType;
 	private String arrCity;
 	private String arrAirportName;
@@ -50,12 +49,6 @@ public class FlightData {
 	}
 	public void setFlightNo(int flightNo) {
 		this.flightNo = flightNo;
-	}
-	public int getLegNo() {
-		return legNo;
-	}
-	public void setLegNo(int legNo) {
-		this.legNo = legNo;
 	}
 	public String getClassType() {
 		return classType;
