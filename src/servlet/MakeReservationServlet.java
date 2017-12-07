@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import classes.*;
 import utils.*;
@@ -50,6 +51,18 @@ public class MakeReservationServlet extends HttpServlet {
 		double fare = DBUtils.getFareByAirlineFlight(conn, airline, Integer.parseInt(flight));
 		
 		String errorString = null;
+		
+		HttpSession session = request.getSession();
+		 
+        Customer loginedCustomer = MyUtils.getLoginedCustomer(session);
+        Employee loginedEmployee = MyUtils.getLoginedEmployee(session);
+        if (loginedCustomer == null && loginedEmployee == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
+        request.setAttribute("customer", loginedCustomer);
+        request.setAttribute("employee", loginedEmployee);
 
 		request.setAttribute("errorString", errorString);
 		request.setAttribute("airline", airline);

@@ -17,15 +17,15 @@
     <h1>Make Reservation</h1>
  
     <p style="color: red;">${errorString}</p>
-        
-	You have chosen airline ${airline}, flight #${flight} <br>
+    <c:if test="${!empty customer}">Your account number is <span id="existingAccountNo">${customer.accountNo}</span>.<br></c:if>
+	You have chosen airline ${airline}, flight #${flight}. <br>
 	Your seat will be <span id="seatNum">${seatNum}</span>. <br>
 	You will depart from ${departAirport} and arrive at ${arriveAirport}. <p>
 	
 	<h3>Please make the following selections</h3>
-	
+	<c:if test="${empty customer}">Account Number <input type="text" id="accountNo" onchange="changePrice()"> <br></c:if>
 	Trip Type: 
-	<input type="radio" name="tripType" checked value="roundtrip" onclick="changePrice()">Round Trip 
+	<input type="radio" name="tripType" checked value="roundtrip" onchange="changePrice()">Round Trip 
 	<input type="radio" name="tripType" value="oneway" onchange="changePrice()"> One Way <br>
 	
 	Class
@@ -34,9 +34,9 @@
 	<input type="radio" name="classType" value="first" onchange="changePrice()"> First <br>
 	
 	Meal
-	<input type="radio" name="food" checked value="fishchips"> Fish and Chips
-	<input type="radio" name="food" value="chips"> Chips
-	<input type="radio" name="food" value="sushi"> Sushi
+	<input type="radio" name="food" checked value="fishchips" onchange="changePrice()"> Fish and Chips
+	<input type="radio" name="food" value="chips" onchange="changePrice()"> Chips
+	<input type="radio" name="food" value="sushi" onchange="changePrice()"> Sushi
 	
 	<h3>Your total is $<span id="fare" name="${fare}">${fare}</span></h3>
 	<span id="originalFare" style="display: none">${fare}</span>
@@ -85,11 +85,18 @@
 			
 			fareSpan.innerHTML = tripType * classType * fare;
 			var val = document.getElementById('originalCheckoutLink').href;
+			var accountNo = null;
+		
+			if (document.getElementById('accountNo') != null)
+				accountNo = document.getElementById('accountNo').value;
+			else
+				accountNo = document.getElementById('existingAccountNo').innerHTML;
+
 			var seatNum = document.getElementById('seatNum').innerHTML;
 			var append = "&fare=" + fareSpan.innerHTML + "&seatNum=" + seatNum + "&classType=" + className + "&food=" + food + "&tripType=" + tripName;
+			append += "&accountNo=" + accountNo;
 			document.getElementById('checkoutLink').href = val + append;
 			
-			console.log(document.getElementById('checkoutLink').href);
 		}
 		
 		
