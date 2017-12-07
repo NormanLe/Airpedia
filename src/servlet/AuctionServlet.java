@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classes.Airline;
+import classes.Auction;
 import classes.Customer;
 import classes.Employee;
 import classes.Flight;
@@ -125,6 +126,15 @@ public class AuctionServlet extends HttpServlet {
 	    			m.setReservation(r);
 	    			m.setCustomer(MyUtils.getLoginedCustomer(session));
 	    			DBUtils.addReservation(conn, r, inc, m);
+	    			
+	    			Auction a = new Auction();
+	    			a.setAccountNo(MyUtils.getLoginedCustomer(session).getAccountNo());
+	    			a.setAirlineId(data[0]);
+	    			a.setFlightNo(Integer.parseInt(data[1]));
+	    			a.setFlightClass("Eocnomy");
+	    			a.setNyop(bid);
+	    			DBUtils.addAuction(conn, a);
+	    			
 	    			success = true;
 	    			errorString = "Bid successful. Reservation created.";
 	    		}
