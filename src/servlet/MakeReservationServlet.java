@@ -37,6 +37,7 @@ public class MakeReservationServlet extends HttpServlet {
 		String departAirport = request.getParameter("depart");
 		String arriveAirport = request.getParameter("arrive");
 		
+		
 		// find stopNo of the departId and arriveAiportId -> can be stop 1 and stop 4 meaning all stops
 		// between 1 and 4. Total fare = f.Fare * 4, currentDate, random reservation number
 		
@@ -45,7 +46,8 @@ public class MakeReservationServlet extends HttpServlet {
 		
 		// pass in all args and fare
 		Connection conn = MyUtils.getStoredConnection(request);
-
+		double fare = DBUtils.getFareByAirlineFlight(conn, airline, Integer.parseInt(flight));
+		
 		String errorString = null;
 
 		request.setAttribute("errorString", errorString);
@@ -53,6 +55,7 @@ public class MakeReservationServlet extends HttpServlet {
 		request.setAttribute("flight", flight);
 		request.setAttribute("departAirport", departAirport);
 		request.setAttribute("arriveAirport", arriveAirport);
+		request.setAttribute("fare", fare);
 		if (flight != null) {
 			String seatNum = DBUtils.generateSeatNumber(conn, airline, Integer.parseInt(flight));
 			request.setAttribute("seatNum", seatNum);

@@ -178,7 +178,7 @@ public class DBUtils {
 		}
 		return null;
 	}
-
+	
 	public static Airline findAirline(Connection conn, String airlineId) throws SQLException {
 		String sql = "Select * from Airline" + " where Id = ? ";
 
@@ -477,6 +477,7 @@ public class DBUtils {
 		return flights;
 	}
 
+	
 	public static List<Flight> getAllFlights(Connection conn) {
 		String sql = "SELECT * FROM Flight;";
 
@@ -551,6 +552,21 @@ public class DBUtils {
 		return list;
 	}
 
+	public static double getFareByAirlineFlight(Connection conn, String airlineId, int flightNo) {
+		String sql = "select fare from fare where AirlineId = '" + airlineId + "' and flightNo = " + flightNo;
+		double fare = 0;
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			if (rs.next()) {
+				fare = rs.getDouble("fare");
+			}
+		} catch (Exception e) {
+			System.out.println("Could not get fare by airlineId and flightNo");
+		}
+		return fare;
+		
+	}
 	public static List<Reservation> getRevenueByFlight(Connection conn, int flightNo) {
 		String sql = String.format(
 				"SELECT R.ResrNo, R.BookingFee FROM Reservation R WHERE R.ResrNo IN (SELECT I.ResrNo FROM Includes I, Leg L WHERE L.FlightNo = %d AND L.FlightNo = I.FlightNo)",
@@ -759,21 +775,16 @@ public class DBUtils {
 		}
 	}
 
-	/*
-	 * public static void addCustomer(Connection conn, Customer c) { try {
-	 * String sql =
-	 * "INSERT INTO Customer(Id, AccountNo, CreditCardNo, Email, CreationDate, Rating) VALUES (?, ?, ?, ?, ?, ?);"
-	 * ;
-	 * 
-	 * PreparedStatement pstm = conn.prepareStatement(sql); pstm.setInt(1,
-	 * c.get); pstm.setDate(2, new Date(System.currentTimeMillis()));
-	 * pstm.setDouble(3, r.getBookingFee()); pstm.setDouble(4,
-	 * r.getTotalFare()); pstm.setInt(5, r.getEmployee().getSsn());
-	 * pstm.setInt(6, r.getCustomer().getAccountNo()); pstm.executeUpdate(); }
-	 * catch (SQLException e) { e.printStackTrace(); }
-	 * 
-	 * }
-	 */
+	public static void addCustomer(Connection conn, Customer customer) {
+		 try {
+			 Statement stmt1 = conn.createStatement();
+			 stmt1.executeUpdate(String.format("INSERT INTO Person(Id, FirstName, LastName, Address, City, State, ZipCode) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s');", customer.getPerson().getId(), customer.getPerson().getFirstName(), customer.getPerson().getLastName(), customer.getPerson().getAddress(), customer.getPerson().getCity(), customer.getPerson().getState(), customer.getPerson().getZipCode()));
+			 Statement stmt2 = conn.createStatement();
+			 stmt2.executeUpdate(String.format("INSERT INTO Customer(Id, AccountNo, CreditCardNo, Email, Password, Phone, CreationDate, Rating) VALUES (%d, %d, '%s', '%s', '%s', %f, '%s', %d);", customer.getId(), customer.getAccountNo(), customer.getCreditcardNo(), customer.getEmail(), customer.getPassword(), customer.getPhone(), customer.getCreationDate().toString(), customer.getRating()));
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+		 }
+	}
 
 	public static List<String> getMailingList(Connection conn) {
 		String sql = String.format("SELECT Email FROM CUSTOMER");
@@ -869,6 +880,7 @@ public class DBUtils {
 				fd.setAirlineId(rs.getString("AirlineID"));
 				ResultSet ap1 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getDepartAirport())).executeQuery();
 				if (ap1.next()) {
+					fd.setArrivalAirport(ap1.getString("Id"));
 					fd.setDepAirportName(ap1.getString("Name"));
 					fd.setDepCity(ap1.getString("City"));
 					fd.setDepCountry(ap1.getString("Country"));
@@ -876,6 +888,7 @@ public class DBUtils {
 				fd.setArrivalAirport(rs.getString("ArrAirportID"));
 				ResultSet ap2 = conn.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getArrivalAirport())).executeQuery();
 				if (ap2.next()) {
+					fd.setDepartAirport(ap2.getString("Id"));
 					fd.setArrAirportName(ap2.getString("Name"));
 					fd.setArrCity(ap2.getString("City"));
 					fd.setArrCountry(ap2.getString("Country"));
