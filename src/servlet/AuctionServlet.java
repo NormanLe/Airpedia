@@ -109,14 +109,16 @@ public class AuctionServlet extends HttpServlet {
 	    			inc.setFlightClass("Economy");
 	    			//${flight.airlineId},${flight.flightNo},${flight.departAirport},${flight.arrivalAirport},${flight.hiddenFare}
 	    			FlightData fd = DBUtils.getFlightDataFromAirlineFlight(conn, data[0], Integer.parseInt(data[1]), DBUtils.findCityFromAirport(conn, data[2]), DBUtils.findCityFromAirport(conn, data[3]));
-	    			inc.setDate(new Date(fd.getDepartDate().getTime()));
+	    			inc.setDate(new Date(fd.getDepartDate().getTime()).toString());
 	    			inc.setReservation(r);
 	    			inc.setFlightClass("Economy");
 	    			inc.setLegNo(fd.getDepartLegNo());
+	    			inc.setFromStopNo(fd.getDepartLegNo());
 	    			inc.setMeal("Sushi");
 	    			inc.setSeatNo(DBUtils.generateSeatNumber(conn, data[0], Integer.parseInt(data[1])));
 	    			inc.setFromStopNo(fd.getDepartLegNo());
-	    			Leg l = DBUtils.getLegFromData(conn, data[0], Integer.parseInt(data[1]), data[2], data[3]);
+	    			inc.setAirlineId(data[0]);
+	    			inc.setFlightNo(Integer.parseInt(data[1]));
 	    			
 
 	    			Makes m = new Makes();

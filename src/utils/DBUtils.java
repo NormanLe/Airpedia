@@ -493,8 +493,8 @@ public class DBUtils {
 				arr[1] = "" + rs.getInt("FlightNo");
 				arr[2] = "" + rs.getString("DepAirportID");
 				arr[3] = "" + rs.getString("ArrAirportID");
-				arr[4] = "" + rs.getDate("ArrTime");
-				arr[5] = "" + rs.getDate("DepTime");
+				arr[4] = "" + rs.getTimestamp("DepTime");
+				arr[5] = "" + rs.getTimestamp("ArrTime");
 				arr[6] = "" + rs.getString("SeatNo");
 				arr[7] = "" + rs.getString("class");
 				arr[8] = "" + rs.getString("Meal");
@@ -1148,23 +1148,5 @@ public class DBUtils {
 			e.printStackTrace();
 		}
 	}
-	
-	public static Leg getLegFromData(Connection conn, String airlineId, int flightNo, String depAirport, String arrAirport) {
-		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d AND DepAirportID = '%s' AND ArrAirportID = '%s';", airlineId, flightNo, depAirport, arrAirport);
-		try {
-			PreparedStatement pstm = conn.prepareStatement(sql);
-			ResultSet rs = pstm.executeQuery();
-			Leg l = new Leg();
-			if (rs.next()) {
-				Airline a = new Airline();
-				a.setId("AirlineId");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 
 }

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,24 +17,15 @@
 	<h1>View Iterinerary for Reservation #${resrNo}</h1>
  	
  		Your AirlineId is ${list[0][0]}, Flight #${list[0][1]}. <br> 
- 	
- 		<%-- 	<th> AirlineId </th>
- 			<th> FlightNo </th>
- 			<th> Departing Airport </th>
- 			<th> Arriving Airport </th>
- 			<th> Arrival Time </th>
- 			<th> Departing Time </th>
- 			<th> Seat Number </th>
- 			<th> Class </th>
- 			<th> Meal </th>
- 		</tr>
- 		 --%>
+ 	 	<div class="flightsData">
  		<c:forEach items="${list}" var="detail">
  			
- 			${detail[2]}  ${detail[5]} -> ${detail[3]} at ${detail[4]}. <br>
- 			Seat number ${detail[6]}, ${detail[7]} class, with ${detail[8]} as your meal. <p>
+ 			<h2>${detail[2]} -> ${detail[3]}</h2> 
+ 			
+ 			${detail[4]} to ${detail[5]} <br>
+ 			Seat number ${detail[6]} <br> ${detail[7]} class <br> Meal is ${detail[8]}  <br>
  		</c:forEach>
- 	</table>
+ 		</div>
 
  	
 </body>
