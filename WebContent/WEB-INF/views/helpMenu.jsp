@@ -16,6 +16,11 @@
 	<jsp:include page="_menu.jsp"></jsp:include>
 	<h1> Help Menu </h1>
 	<div style="width: 60%;margin: 0 auto">
+	
+	<h2> Programmer's guide <a href="https://docs.google.com/document/d/1pD3wcJVcnnze8jBs30vMZfv-M5n-iRX0upcQesxCxlA/edit" target="_blank"> here </a>
+	</h2>
+	<p>
+	
 	You can search for flights on the front page (or if you click Airpedia at the time).
 	
 	<h2> Customers </h2>
