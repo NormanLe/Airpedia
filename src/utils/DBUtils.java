@@ -286,25 +286,25 @@ public class DBUtils {
 		return list;
 	}
 
-	public static List<FlightData> queryFlight(Connection conn) {
-		String sql = "Select * from Flight ";
-		System.out.println("what about here");
-		List<FlightData> list = new ArrayList<>();
-		try {
-			PreparedStatement pstm = conn.prepareStatement(sql);
-			ResultSet rs = pstm.executeQuery();
-			System.out.println("DOES IT GO HERE");
-			while (rs.next()) {
-				String airlineId = rs.getString("AirlineID");
-				int flightNo = rs.getInt("FlightNo");
-				list.add(getFlightDataFromAirlineFlight(conn, airlineId, flightNo));
-				System.out.println("list now is " + list);
-			}
-		} catch (Exception e) {
-			System.out.println("Something went wrong in querying resrvations");
-		}
-		return list;
-	}
+//	public static List<FlightData> queryFlight(Connection conn) {
+//		String sql = "Select * from Flight ";
+//		System.out.println("what about here");
+//		List<FlightData> list = new ArrayList<>();
+//		try {
+//			PreparedStatement pstm = conn.prepareStatement(sql);
+//			ResultSet rs = pstm.executeQuery();
+//			System.out.println("DOES IT GO HERE");
+//			while (rs.next()) {
+//				String airlineId = rs.getString("AirlineID");
+//				int flightNo = rs.getInt("FlightNo");
+//				list.add(getFlightDataFromAirlineFlight(conn, airlineId, flightNo));
+//				System.out.println("list now is " + list);
+//			}
+//		} catch (Exception e) {
+//			System.out.println("Something went wrong in querying resrvations");
+//		}
+//		return list;
+//	}
 
 	public static List<FlightData> queryFlights(Connection conn, String tripType, String tripFrom, String tripTo,
 			String departDate, String returnDate) throws SQLException {
@@ -373,12 +373,10 @@ public class DBUtils {
 		while (rs.next()) {
 			String airlineId = rs.getString("AirlineID");
 			int flightNo = rs.getInt("FlightNo");
-			FlightData flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo);
-
-			setDepLegInfo(conn, airlineId, flightNo, tripFrom, flight);
-			setArrLegInfo(conn, airlineId, flightNo, tripTo, flight);
-			flight.setDepCity(tripFrom);
-			flight.setArrCity(tripTo);
+			if (tripFrom.isEmpty()){
+				
+			}
+			FlightData flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo, tripFrom, tripTo);
 			list.add(flight);
 		}
 		return list;
@@ -440,36 +438,63 @@ public class DBUtils {
 
 		return "";
 	}
+	public static String findCityFromAirport(Connection conn, String airlineId){
+		String sql = "select * from Airport where Id = ?";
 
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setString(1, airlineId);
+			ResultSet rs = pstm.executeQuery();
+			if (rs.next()) {
+				return rs.getString("City");
+			}
+		} catch (SQLException e) {
+		}
+		return "";
+	}
 	public static FlightData bestSeller(Connection conn) throws SQLException {
-		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" + " FROM Flight F, Includes I"
-				+ " WHERE F.FlightNo = I.FlightNo" + " AND F.AirlineId = I.AirlineId" + " GROUP BY I.ResrNo"
+//		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" + " FROM Flight F, Includes I"
+//				+ " WHERE F.FlightNo = I.FlightNo" + " AND F.AirlineId = I.AirlineId" + " GROUP BY I.ResrNo"
+//				+ " ORDER BY NumFlights DESC LIMIT 1";
+		
+		String sql = "SELECT I.AirlineId, I.FlightNo, I.LegNo, COUNT(I.LegNo) AS NumFlights" + " FROM Flight F, Includes I"
+				+ " WHERE F.FlightNo = I.FlightNo" + " AND F.AirlineId = I.AirlineId" + " GROUP BY I.AirlineId, I.FlightNo, I.LegNo"
 				+ " ORDER BY NumFlights DESC LIMIT 1";
+
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		FlightData flight = null;
 		if (rs.next()) {
-			String resrNo = rs.getString("ResrNo");
-
-			String newSql = "select * from includes i , flight f where f.flightno = i.flightno and f.airlineid = i.airlineid and i.resrno = "
-					+ resrNo + " LIMIT 1";
+//			String resrNo = rs.getString("ResrNo");
+			String airlineId = rs.getString("AirlineID");
+			int flightNo = rs.getInt("FlightNo");
+			int legNo = rs.getInt("LegNo");
+//			String newSql = "select * from includes i , flight f where f.flightno = i.flightno and f.airlineid = i.airlineid and i.resrno = "
+//					+ resrNo + " LIMIT 1";
+			
+			String newSql = "select * from Leg L where L.airlineId = ? and L.FlightNo = ? and L.LegNo = ?";
 			PreparedStatement p = conn.prepareStatement(newSql);
+			p.setString(1, airlineId);
+			p.setInt(2, flightNo);
+			p.setInt(3, legNo);
 			ResultSet r = p.executeQuery();
-
+			
 			if (r.next()) {
-				String airlineId = r.getString("AirlineID");
-				int flightNo = r.getInt("FlightNo");
-				flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo);
+//				String airlineId = r.getString("AirlineID");
+//				int flightNo = r.getInt("FlightNo");
+				flight = getFlightDataFromAirlineFlight(conn, airlineId, flightNo, findCityFromAirport(conn, r.getString("DepAirportId")), findCityFromAirport(conn, r.getString("ArrAirportId")));
 			}
 
 		}
 		return flight;
 	}
-
+	
 	public static List<FlightData> personalizedFlights(Connection conn, int accountNo) throws SQLException {
-		String sql = "SELECT * FROM FLIGHT F" + " WHERE F.FlightNo NOT IN" + " (SELECT I.FlightNo"
-				+ " FROM Makes M, Includes I" + " WHERE M.AccountNo = " + accountNo + " AND I.ResrNo = M.ResrNo)";
+//		String sql = "SELECT * FROM FLIGHT F" + " WHERE F.FlightNo NOT IN" + " (SELECT I.FlightNo"
+//				+ " FROM Makes M, Includes I" + " WHERE M.AccountNo = " + accountNo + " AND I.ResrNo = M.ResrNo)";
+		String sql = "SELECT L.AirlineId, L.FlightNo, L.DepAirportId, L.ArrAirportId FROM Leg L, Flight F where L.FlightNo = F.FlightNo AND F.AirlineId = L.AirlineId AND F.FlightNo NOT IN" + " (SELECT I.FlightNo"
+				+ " FROM Makes M, Includes I" + " WHERE M.AccountNo = " + accountNo + " AND I.ResrNo = M.ResrNo) LIMIT 5";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
@@ -478,7 +503,7 @@ public class DBUtils {
 		while (rs.next()) {
 			String airlineId = rs.getString("AirlineId");
 			int flightNo = rs.getInt("FlightNo");
-			flights.add(getFlightDataFromAirlineFlight(conn, airlineId, flightNo));
+			flights.add(getFlightDataFromAirlineFlight(conn, airlineId, flightNo, findCityFromAirport(conn, rs.getString("DepAirportId")), findCityFromAirport(conn, rs.getString("ArrAirportId"))));
 		}
 		return flights;
 	}
@@ -906,7 +931,7 @@ public class DBUtils {
 		return null;
 	}
 
-	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo) {
+	public static FlightData getFlightDataFromAirlineFlight(Connection conn, String airlineId, int flightNo, String depCity, String arrCity) {
 		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId, flightNo);
 		String sql2 = String.format("SELECT * FROM Fare WHERE AirlineID = '%s' AND FlightNo = %d;", airlineId,
 				flightNo);
@@ -915,16 +940,16 @@ public class DBUtils {
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-
+			
 			if (rs.next()) {
-//				fd.setDepartAirport(rs.getString("DepAirportID"));
-				
+				setDepLegInfo(conn, airlineId, flightNo, depCity, fd);
+				setArrLegInfo(conn, airlineId, flightNo, arrCity, fd);
 				fd.setAirlineId(rs.getString("AirlineID"));
 				ResultSet ap1 = conn
 						.prepareStatement(String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getDepartAirport()))
 						.executeQuery();
 				if (ap1.next()) {
-					fd.setArrivalAirport(ap1.getString("Id"));
+//					fd.setArrivalAirport(ap1.getString("Id"));
 					fd.setDepAirportName(ap1.getString("Name"));
 					fd.setDepCity(ap1.getString("City"));
 					fd.setDepCountry(ap1.getString("Country"));
@@ -935,15 +960,12 @@ public class DBUtils {
 								String.format("SELECT * FROM Airport WHERE Id = '%s'", fd.getArrivalAirport()))
 						.executeQuery();
 				if (ap2.next()) {
-					fd.setDepartAirport(ap2.getString("Id"));
+//					fd.setDepartAirport(ap2.getString("Id"));
 					fd.setArrAirportName(ap2.getString("Name"));
 					fd.setArrCity(ap2.getString("City"));
 					fd.setArrCountry(ap2.getString("Country"));
 				}
 
-//				fd.setDepartDate(rs.getTimestamp("DepTime"));
-//				fd.setArrivalDate(rs.getTimestamp("ArrTime"));
-//				fd.setLegNo(rs.getInt("LegNo"));
 				fd.setFlightNo(rs.getInt("FlightNo"));
 			}
 
