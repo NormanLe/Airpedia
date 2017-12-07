@@ -90,7 +90,6 @@ public class RegistrationServlet extends HttpServlet {
 			customer.setPassword(password);
 			customer.setPhone(Double.parseDouble(phone));
 			customer.setCreditcardNo(creditCard);
-			
 			customer.setCreationDate(new Date(System.currentTimeMillis()));
 		} else {
 			firstName = request.getParameter("firstname");
@@ -143,14 +142,8 @@ public class RegistrationServlet extends HttpServlet {
 		
 		// If error, forward to /WEB-INF/views/login.jsp
 		if (hasError) {
-			// Store information in request attribute, before forward.
 			request.setAttribute("errorString", errorString);
-			request.setAttribute("customer", customer);
-
-			// Forward to /WEB-INF/views/login.jsp
-			RequestDispatcher dispatcher //
-					= this.getServletContext().getRequestDispatcher("/WEB-INF/views/registration.jsp");
-
+			RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/registration.jsp");
 			dispatcher.forward(request, response);
 		}
 		// If no error

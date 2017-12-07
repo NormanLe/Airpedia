@@ -8,7 +8,9 @@
    <a href="${pageContext.request.contextPath}/profile">Profile</a>
    
    <a href="${pageContext.request.contextPath}/reservationList">Reservations</a>
-
+   
+   <a href="${pageContext.request.contextPath}/auctions"> Auctions</a>
+   
    <a href="${pageContext.request.contextPath}/ManagerReport"> Manager Report</a>
    
    <a href="${pageContext.request.contextPath}/logout">Logout</a>
