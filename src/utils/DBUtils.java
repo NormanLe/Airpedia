@@ -1148,6 +1148,15 @@ public class DBUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void addAuction(Connection conn, Auction a) {
+		try {
+			Statement stmt1 = conn.createStatement();
+			stmt1.executeUpdate(String.format("INSERT INTO Auctions(AccountNo, AirlineID, FlightNo, Class, Date, NYOP) VALUES (%d, '%s', %d, '%s', NOW(), %f);", a.getAccountNo(), a.getAirlineId(), a.getFlightNo(), a.getFlightClass(), a.getNyop()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void deleteReservation(Connection conn, int code) {
 		try {
