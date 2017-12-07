@@ -741,7 +741,7 @@ public class DBUtils {
 	}
 
 	public static String[] getRepMostRevenue(Connection conn) {
-		String sql = "SELECT summed.RepSSN, MAX(SumRevenue) FROM (SELECT RepSSN, SUM(BookingFee) AS SumRevenue FROM Reservation GROUP BY RepSSN) summed GROUP BY summed.RepSSN ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
+		String sql = "SELECT summed.RepSSN, MAX(SumRevenue) FROM (SELECT RepSSN, SUM(BookingFee) AS SumRevenue FROM Reservation WHERE RepSSN IS NOT NULL GROUP BY RepSSN) summed GROUP BY summed.RepSSN ORDER BY MAX(SumRevenue) DESC LIMIT 1;";
 
 		String [] arr = new String[2];
 		try {
@@ -759,16 +759,17 @@ public class DBUtils {
 	}
 
 	// [flightNo, numflights]
-	public static int[] getMostActiveFlight(Connection conn) {
-		String sql = "SELECT counted.FlightNo, MAX(NumFlights)FROM (SELECT F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights) DESC LIMIT 1;";
+	public static Object[] getMostActiveFlight(Connection conn) {
+		String sql = "SELECT counted.AirlineID, counted.FlightNo, MAX(NumFlights)FROM (SELECT F.AirlineID, F.FlightNo, COUNT(F.FlightNo) AS NumFlights FROM Flight F GROUP BY  F.FlightNo) counted GROUP BY counted.FlightNo ORDER BY MAX(NumFlights) DESC LIMIT 1;";
 
-		int[] arr = new int[2];
+		Object[] arr = new Object[2];
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
-			while (rs.next()) {
-				arr[0] = rs.getInt("FlightNo");
-				arr[1] = rs.getInt("NumFlights");
+			if (rs.next()) {
+				arr[0] = rs.getString("AirlineID");
+				arr[1] = rs.getInt("FlightNo");
+				arr[2] = rs.getInt("NumFlights");
 			}
 		} catch (Exception e) {
 			System.out.println("SQL Error.");

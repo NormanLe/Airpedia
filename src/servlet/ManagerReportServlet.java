@@ -42,8 +42,6 @@ public class ManagerReportServlet extends HttpServlet {
     		request.setAttribute("NoPermission", "Sorry, you do not have permission to view this!");
         }
        
-       
-
 		String [] customerRevenue = DBUtils.getCustomerMostRevenue(conn);
 		String [] repRevenue = null;
 		if (loginedEmployee != null && loginedEmployee.isManager())
