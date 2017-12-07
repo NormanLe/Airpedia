@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import classes.Airline;
 import classes.Customer;
 import classes.Employee;
 import classes.Flight;
@@ -97,27 +98,27 @@ public class AuctionServlet extends HttpServlet {
 	    		String[] data = flights[i].split(",");
 	    		double hiddenFare = Double.parseDouble(data[4]);
 	    		if (bid >= hiddenFare) {
-	    			Includes inc = new Includes();
-	    			inc.setFlightClass("Economy");
-	    			//${flight.airlineId},${flight.flightNo},${flight.departAirport},${flight.arrivalAirport},${flight.hiddenFare}
-	    			FlightData fd = DBUtils.getFlightDataFromAirlineFlight(conn, data[0], Integer.parseInt(data[1]), DBUtils.findCityFromAirport(conn, data[2]), DBUtils.findCityFromAirport(conn, data[3]));
-	    			System.out.println(data[0]);
-	    			System.out.println(Integer.parseInt(data[1]));
-	    			System.out.println(data[2]);
-	    			System.out.println(data[3]);
-	    			inc.setDate(new Date(fd.getDepartDate().getTime()));
-	    			inc.setFlightClass("Economy");
-	    			inc.setLegNo(fd.getDepartLegNo());
-	    			inc.setMeal("Sushi");
-	    			inc.setSeatNo(DBUtils.generateSeatNumber(conn, data[0], Integer.parseInt(data[1])));
-	    			inc.setFromStopNo(fd.getDepartLegNo());
-	    			
 	    			Reservation r = new Reservation();
 	    			r.setBookingFee(bid * .1);
 	    			r.setTotalFare(bid * 1.1);
 	    			r.setResrNo((int)(Math.random() * 2000000000));
 	    			r.setEmployee(new Employee());
 	    			r.setCustomer(MyUtils.getLoginedCustomer(session));
+	    			
+	    			Includes inc = new Includes();
+	    			inc.setFlightClass("Economy");
+	    			//${flight.airlineId},${flight.flightNo},${flight.departAirport},${flight.arrivalAirport},${flight.hiddenFare}
+	    			FlightData fd = DBUtils.getFlightDataFromAirlineFlight(conn, data[0], Integer.parseInt(data[1]), DBUtils.findCityFromAirport(conn, data[2]), DBUtils.findCityFromAirport(conn, data[3]));
+	    			inc.setDate(new Date(fd.getDepartDate().getTime()));
+	    			inc.setReservation(r);
+	    			inc.setFlightClass("Economy");
+	    			inc.setLegNo(fd.getDepartLegNo());
+	    			inc.setMeal("Sushi");
+	    			inc.setSeatNo(DBUtils.generateSeatNumber(conn, data[0], Integer.parseInt(data[1])));
+	    			inc.setFromStopNo(fd.getDepartLegNo());
+	    			Leg l = DBUtils.getLegFromData(conn, data[0], Integer.parseInt(data[1]), data[2], data[3]);
+	    			
+
 	    			Makes m = new Makes();
 	    			m.setReservation(r);
 	    			m.setCustomer(MyUtils.getLoginedCustomer(session));

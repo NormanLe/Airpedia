@@ -36,7 +36,8 @@ public class MakeReservationServlet extends HttpServlet {
 		String flight = request.getParameter("flight");
 		String departAirport = request.getParameter("depart");
 		String arriveAirport = request.getParameter("arrive");
-		
+		String departLegNo = request.getParameter("depLegNo");
+		String arriveLegNo = request.getParameter("arrLegNo");
 		
 		// find stopNo of the departId and arriveAiportId -> can be stop 1 and stop 4 meaning all stops
 		// between 1 and 4. Total fare = f.Fare * 4, currentDate, random reservation number
@@ -55,7 +56,12 @@ public class MakeReservationServlet extends HttpServlet {
 		request.setAttribute("flight", flight);
 		request.setAttribute("departAirport", departAirport);
 		request.setAttribute("arriveAirport", arriveAirport);
+		request.setAttribute("depLegNo", departLegNo);
+		request.setAttribute("arrLegNo", arriveLegNo);
 		request.setAttribute("fare", fare);
+
+		// set more info to pass into checkout, like legno?
+		
 		if (flight != null) {
 			String seatNum = DBUtils.generateSeatNumber(conn, airline, Integer.parseInt(flight));
 			request.setAttribute("seatNum", seatNum);
@@ -74,15 +80,11 @@ public class MakeReservationServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		// get meal and seat #
-		int numSeats = Integer.parseInt(request.getParameter("numSeats"));
-		String seat = request.getParameter("seatNum");
-		// fill in rest of info that's stored
-		Reservation reservation = new Reservation();
-//		request.setAttribute("newReservation", reservation);
-		// user goes to checkout and makes reservation if they "successfully" pay
-		response.sendRedirect(request.getContextPath() + "/checkout");
 		
+//		request.setAttribute("seat", seat);
+		
+//		response.sendRedirect(request.getContextPath() + "/checkout");
+		doGet(request, response);
  
 	}
 

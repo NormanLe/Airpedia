@@ -35,7 +35,8 @@
 			<br>
 			<div class="customButton"> <a href="${pageContext.request.contextPath}/makeReservation
 			?airline=${flight.airlineId}&flight=${flight.flightNo}&depart=${flight.departAirport}
-			&arrive=${flight.arrivalAirport}">Choose Flight</a></div>
+			&arrive=${flight.arrivalAirport}&depLegNo=${flight.departLegNo}&arrLegNo=${flight.arriveLegNo}">
+			Choose Flight</a></div>
     	</c:forEach>
     
     </div>

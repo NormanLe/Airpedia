@@ -444,7 +444,7 @@ public class DBUtils {
 
 	public static String generateSeatNumber(Connection conn, String airlineId, int flightNo) {
 		String sql = "select NoOfSeats from Flight where airlineId = '" + airlineId + "' and flightNo = " + flightNo;
-
+	
 		try {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
@@ -453,14 +453,16 @@ public class DBUtils {
 			if (rs.next()) {
 				numSeats = rs.getInt("NoOfSeats");
 				return "" + numSeats + randomChar[(int) (Math.random() * randomChar.length)];
-
 			}
+			
+			
 		} catch (SQLException e) {
 			System.out.println("cannot generate seatnumber");
 		}
 
 		return "";
 	}
+
 	public static String findCityFromAirport(Connection conn, String airlineId){
 		String sql = "select * from Airport where Id = ?";
 
@@ -474,6 +476,34 @@ public class DBUtils {
 		} catch (SQLException e) {
 		}
 		return "";
+	}
+	
+	
+	public static List<String []> getItinerary (Connection conn, int resrNo) {
+		String sql = "select * from leg l inner join includes i where i.resrno =" + resrNo 
+				+ " and i.flightno = l.flightno and i.legno = l.legno and i.airlineid = l.airlineid;";
+		
+		List<String[]> list = new ArrayList<>();
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				String [] arr = new String [9];
+				arr[0] = "" + rs.getString("AirlineId");
+				arr[1] = "" + rs.getInt("FlightNo");
+				arr[2] = "" + rs.getString("DepAirportID");
+				arr[3] = "" + rs.getString("ArrAirportID");
+				arr[4] = "" + rs.getDate("ArrTime");
+				arr[5] = "" + rs.getDate("DepTime");
+				arr[6] = "" + rs.getString("SeatNo");
+				arr[7] = "" + rs.getString("class");
+				arr[8] = "" + rs.getString("Meal");
+				list.add(arr);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return list;
 	}
 	public static FlightData bestSeller(Connection conn) throws SQLException {
 //		String sql = "SELECT I.ResrNo, COUNT(F.FlightNo) AS NumFlights" + " FROM Flight F, Includes I"
@@ -1080,7 +1110,6 @@ public class DBUtils {
 		}
 		return fd;
 	}
-	
 	public static List<Leg> getLegsForFlight(Connection conn, String airlineId, int flightNo) {
 		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND flightNo = %d;", airlineId, flightNo);
 
@@ -1111,12 +1140,30 @@ public class DBUtils {
 			Statement stmt1 = conn.createStatement();
 			stmt1.executeUpdate(String.format("INSERT INTO Reservation(ResrNo, ResrDate, BookingFee, TotalFare, AccountNo) VALUES (%d, NOW(), %f, %f, %d);", r.getResrNo(), r.getBookingFee(), r.getTotalFare(), r.getCustomer().getAccountNo()));
 			Statement stmt2 = conn.createStatement();
-			stmt2.executeUpdate(String.format("INSERT INTO Includes(ResrNo, AirlineID, FlightNo, LegNo, FromStopNo, Date, SeatNo, Class, Meal) VALUES (%d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s');", r.getResrNo(), r.getCustomer().getAccountNo()));
+			//stmt2.executeUpdate(String.format("INSERT INTO Includes(ResrNo, AirlineID, FlightNo, LegNo, FromStopNo, Date, SeatNo, Class, Meal) VALUES (%d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s');", r.getResrNo(), i.getLeg().));
 			Statement stmt3 = conn.createStatement();
 			stmt3.executeUpdate(String.format("INSERT INTO Makes(ResrNo, Id, AccountNo) VALUES (%d, %d, %d);", m.getReservation().getResrNo(), m.getCustomer().getId(), m.getCustomer().getAccountNo()));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public static Leg getLegFromData(Connection conn, String airlineId, int flightNo, String depAirport, String arrAirport) {
+		String sql = String.format("SELECT * FROM Leg WHERE AirlineID = '%s' AND FlightNo = %d AND DepAirportID = '%s' AND ArrAirportID = '%s';", airlineId, flightNo, depAirport, arrAirport);
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			Leg l = new Leg();
+			if (rs.next()) {
+				Airline a = new Airline();
+				a.setId("AirlineId");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 }

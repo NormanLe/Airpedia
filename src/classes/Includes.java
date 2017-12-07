@@ -3,8 +3,8 @@ package classes;
 import java.sql.Date;
 
 public class Includes {
-	Reservation reservation;
-	Leg leg;
+	private Reservation reservation;
+	private Leg leg;
 	private int legNo;
 	private int fromStopNo;
 	private Date date;
@@ -14,6 +14,22 @@ public class Includes {
 	
 	public Includes() {
 		
+	}
+
+	public Reservation getReservation() {
+		return reservation;
+	}
+
+	public void setReservation(Reservation reservation) {
+		this.reservation = reservation;
+	}
+
+	public Leg getLeg() {
+		return leg;
+	}
+
+	public void setLeg(Leg leg) {
+		this.leg = leg;
 	}
 
 	public int getLegNo() {

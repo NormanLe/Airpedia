@@ -29,36 +29,37 @@
        	Customer Name <input type="text">
     </form> 
     -->
-    <table class="tableStyle">
-       
-       
-       <tr>
-          <th>ResrNo</th>
-          <th>Date</th>
-          <th>Fee</th>
-          <th>Fare</th>
-          <th>AccountNo</th>
-          <th>Edit</th>
-          <th>Delete</th>
-       </tr>
-       
-	
-       <c:forEach items="${reservationList}" var="reservation">
-          <tr>
-             <td>${reservation.resrNo}</td>
-             <td>${reservation.resrDate}</td>
-             <td>$${reservation.bookingFee}</td>
-             <td>$${reservation.totalFare}</td>
-             <td>${reservation.customer.accountNo}</td>
-             <td>
-                <a href="editReservation?code=${reservation.resrNo}">Edit</a>
-             </td>
-             <td>
-                <a href="deleteReservation?code=${reservation.resrNo}">Delete</a>
-             </td>
-          </tr>
-       </c:forEach>
-    </table>
+
+		<form method="post">
+			<table class="tableStyle">
+
+
+				<tr>
+					<th>ResrNo</th>
+					<th>Date</th>
+					<th>Fee</th>
+					<th>Fare</th>
+					<th>AccountNo</th>
+					<th>View</th>
+					<th>Delete</th>
+				</tr>
+
+
+				<c:forEach items="${reservationList}" var="reservation">
+					<tr>
+						<td>${reservation.resrNo}</td>
+						<td>${reservation.resrDate}</td>
+						<td>$${reservation.bookingFee}</td>
+						<td>$${reservation.totalFare}</td>
+						<td>${reservation.customer.accountNo}</td>
+						<td><a href="iterinerary?code=${reservation.resrNo}">View</a></td>
+						<td><a href="deleteReservation?code=${reservation.resrNo}">Delete</a>
+						</td>
+					</tr>
+				</c:forEach>
+
+			</table>
+		</form>
 	</c:if>
 	
     <c:if test="${empty reservationList}">

@@ -19,12 +19,10 @@
     <p style="color: red;">${errorString}</p>
         
 	You have chosen airline ${airline}, flight #${flight} <br>
-	Your seat will be ${seatNum}. <br>
+	Your seat will be <span id="seatNum">${seatNum}</span>. <br>
 	You will depart from ${departAirport} and arrive at ${arriveAirport}. <p>
 	
 	<h3>Please make the following selections</h3>
-	
-	Number of People <input type="number" name="numPeople" value="1" onchange="changePrice()"> <br>
 	
 	Trip Type: 
 	<input type="radio" name="tripType" checked value="roundtrip" onclick="changePrice()">Round Trip 
@@ -42,27 +40,60 @@
 	
 	<h3>Your total is $<span id="fare" name="${fare}">${fare}</span></h3>
 	<span id="originalFare" style="display: none">${fare}</span>
-	<div class="customButton">Checkout</div>
+	<input type="text" name="${depLegNo}" style="display: none">
+	<input type="text" name="${arrLegNo}" style="display: none">
+	<form method="post" >
+		<div class="customButton"><a id="checkoutLink" href="">Checkout</a></div>
+		<a id="originalCheckoutLink" href="${pageContext.request.contextPath}/checkout
+		?airline=${airline}&flight=${flight}&seat=${seatNum}&depLegNo=${depLegNo}&arrLegNo=${arrLegNo}"
+		 style="display: none"></a>
+	</form>
 	
 	<script>
+		var className;
+		var food;
+		var tripName;
+		
+		changePrice();
+		
 		function changePrice() {
 			var fare = document.getElementById('originalFare').innerHTML;
 			
 			var fareSpan = document.getElementById('fare');
-			console.log(fareSpan);
-			var numPeople = document.getElementsByName('numPeople')[0].value;
 			var tripType = document.getElementsByName('tripType')[0].checked ? 1 : 0.5;
+			tripName = document.getElementsByName('tripType')[0].checked ? "Round-Trip" : "One-Way";
 			
 			var classType;
-			if (document.getElementsByName('classType')[0].checked)
+			if (document.getElementsByName('classType')[0].checked) {
 				classType = 1;
-			else if (document.getElementsByName('classType')[1].checked)
+				className = "Economy";
+			} else if (document.getElementsByName('classType')[1].checked) {
 				classType = 2;
-			else 
+				className = "Business";
+			} else {
 				classType = 3;
+				className = "First";
+			}
 			
-			fareSpan.innerHTML = numPeople * tripType * classType * fare;
+			if (document.getElementsByName('food')[0].checked) {
+				food = "Fish and Chips";
+			} else if (document.getElementsByName('food')[1].checked) {
+				food = "Chips";
+			} else {
+				food = "Sushi";
+			}
+			
+			fareSpan.innerHTML = tripType * classType * fare;
+			var val = document.getElementById('originalCheckoutLink').href;
+			var seatNum = document.getElementById('seatNum').innerHTML;
+			var append = "&fare=" + fareSpan.innerHTML + "&seatNum=" + seatNum + "&classType=" + className + "&food=" + food + "&tripType=" + tripName;
+			document.getElementById('checkoutLink').href = val + append;
+			
+			console.log(document.getElementById('checkoutLink').href);
 		}
+		
+		
+
 		
 	</script>
 </body>
