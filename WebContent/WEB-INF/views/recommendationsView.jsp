@@ -34,7 +34,7 @@
 			<br>
 			<div class="customButton"> <a href="${pageContext.request.contextPath}/makeReservation
 			?airline=${bestSeller.airlineId}&flight=${bestSeller.flightNo}&depart=${bestSeller.departAirport}
-			&arrive=${bestSeller.arrivalAirport}">Choose Flight</a></div>
+			&arrive=${bestSeller.arrivalAirport}&depLegNo=${bestSeller.departLegNo}&arrLegNo=${bestSeller.arriveLegNo}">Choose Flight</a></div>
 	</div>
     <c:if test="${!empty personalizedFlights}">
     <h1> Personalized Flight Suggestions </h1>       
@@ -53,7 +53,8 @@
 			<br>
 			<div class="customButton"> <a href="${pageContext.request.contextPath}/makeReservation
 			?airline=${flight.airlineId}&flight=${flight.flightNo}&depart=${flight.departAirport}
-			&arrive=${flight.arrivalAirport}">Choose Flight</a></div>
+			&arrive=${flight.arrivalAirport}&depLegNo=${flight.departLegNo}&arrLegNo=${flight.arriveLegNo}">
+			Choose Flight</a></div>
     	</c:forEach>
     </div>
     </c:if>
