@@ -32,7 +32,7 @@ public class ViewIterineraryServlet extends HttpServlet {
 
 		int resrNo = Integer.parseInt(request.getParameter("code"));
 		List<String[]> list = DBUtils.getItinerary(conn, resrNo);
-		System.out.print(list.get(0)[0]);
+		//System.out.print(list.get(0)[0]);
 		request.setAttribute("list", list);
 		request.setAttribute("resrNo", resrNo);
 		RequestDispatcher dispatcher
