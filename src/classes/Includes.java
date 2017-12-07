@@ -5,9 +5,11 @@ import java.sql.Date;
 public class Includes {
 	private Reservation reservation;
 	private Leg leg;
+	String airlineId;
 	private int legNo;
+	private int flightNo;
 	private int fromStopNo;
-	private Date date;
+	private String date;
 	private String seatNo;
 	private String flightClass;
 	private String meal;
@@ -48,11 +50,11 @@ public class Includes {
 		this.fromStopNo = fromStopNo;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -79,6 +81,19 @@ public class Includes {
 	public void setMeal(String meal) {
 		this.meal = meal;
 	}
-	
+
+	public String getAirlineId() {
+		return airlineId;
+	}
+	public void setAirlineId(String airline){
+		this.airlineId = airline;
+	}
+	public int getFlightNo() {
+		return flightNo;
+	}
+
+	public void setFlightNo(int flightNo) {
+		this.flightNo = flightNo;
+	}
 	
 }
