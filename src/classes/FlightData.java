@@ -16,8 +16,15 @@ public class FlightData {
 	private String depCity;
 	private String depAirportName;
 	private String depCountry;
+<<<<<<< HEAD
 	private double fare;
 	private String airlineId;
+	private int departLegNo;
+	private int arriveLegNo;
+=======
+	private double fare;
+	private String airlineId;
+>>>>>>> 0b939ee5397325a293a872dad593a4ca55741531
 
 	public String getDepartAirport() {
 		return departAirport;
@@ -108,5 +115,17 @@ public class FlightData {
 	}
 	public void setAirlineId(String airlineId) {
 		this.airlineId = airlineId;
+	}
+	public int getDepartLegNo() {
+		return departLegNo;
+	}
+	public void setDepartLegNo(int departLegNo) {
+		this.departLegNo = departLegNo;
+	}
+	public int getArriveLegNo() {
+		return arriveLegNo;
+	}
+	public void setArriveLegNo(int arriveLegNo) {
+		this.arriveLegNo = arriveLegNo;
 	}
 }
